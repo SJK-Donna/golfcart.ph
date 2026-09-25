@@ -1,0 +1,284 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+/* ==========================================================================
+   Base Styles & Smooth Scrolling
+   ========================================================================== */
+html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-color: #0B0F12;
+    color: #F0F6FC;
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   Custom Luxury Cursor & Ambient Background Glow (Desktop Only)
+   ========================================================================== */
+@media (min-width: 1024px) {
+    body {
+        cursor: default;
+    }
+
+    #custom-cursor-dot {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 8px;
+        height: 8px;
+        background-color: #749E35;
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.05s ease-out, opacity 0.3s ease;
+    }
+
+    #custom-cursor-ring {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 36px;
+        height: 36px;
+        border: 1.5px solid rgba(116, 158, 53, 0.6);
+        border-radius: 50%;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+        box-shadow: 0 0 15px rgba(116, 158, 53, 0.2);
+    }
+
+    body.cursor-hover #custom-cursor-ring {
+        width: 52px;
+        height: 52px;
+        border-color: #749E35;
+        background-color: rgba(116, 158, 53, 0.12);
+    }
+
+    #mouse-spotlight {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 1;
+        background: radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(116, 158, 53, 0.07), transparent 80%);
+        transition: opacity 0.5s ease;
+    }
+}
+
+/* ==========================================================================
+   Universal Container Mouse-Following Border Light & Glare Effect
+   ========================================================================== */
+.container-light-beam {
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+/* 1. Moving Laser Light Beam on Container Outer Border Following Cursor */
+.container-light-beam::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 2px; /* Border Light Beam Thickness */
+    background: radial-gradient(
+        220px circle at var(--container-mouse-x, -500px) var(--container-mouse-y, -500px), 
+        #A2E048 0%, 
+        #749E35 45%, 
+        transparent 80%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 20;
+}
+
+/* 2. Inner Radial Spotlight Glare Following Cursor Inside Container */
+.container-light-beam::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+        350px circle at var(--container-mouse-x, -500px) var(--container-mouse-y, -500px), 
+        rgba(255, 255, 255, 0.06), 
+        transparent 80%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.container-light-beam:hover::after,
+.container-light-beam:hover::before {
+    opacity: 1;
+}
+
+/* Vehicle Image Smooth Zoom & Elevation */
+.product-card-img {
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.container-light-beam:hover .product-card-img {
+    transform: scale(1.05) translateY(-3px);
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.5));
+}
+
+/* ==========================================================================
+   Custom Luxury Scrollbar
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #0B0F12;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #202933;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #749E35;
+}
+
+/* ==========================================================================
+   Glassmorphism Panels & Hero Effects
+   ========================================================================== */
+.glass-panel {
+    background: rgba(20, 26, 32, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(144, 174, 192, 0.12);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.hero-overlay {
+    background: linear-gradient(180deg, rgba(11, 15, 18, 0.4) 0%, rgba(11, 15, 18, 0.85) 65%, #0B0F12 100%);
+}
+
+.hero-cart-glow {
+    background: radial-gradient(circle, rgba(116, 158, 53, 0.22) 0%, rgba(20, 26, 32, 0) 70%);
+}
+
+/* ==========================================================================
+   Carousel Animations & State Transitions
+   ========================================================================== */
+.carousel-slide {
+    transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.carousel-slide-active {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+    pointer-events: auto;
+}
+
+.carousel-slide-hidden {
+    opacity: 0;
+    transform: scale(0.95) translateX(20px);
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   Interactive Spec Badges
+   ========================================================================== */
+.card-spec-badge {
+    transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.container-light-beam:hover .card-spec-badge {
+    background-color: rgba(116, 158, 53, 0.08);
+    border-color: rgba(116, 158, 53, 0.3);
+}
+
+/* ==========================================================================
+   Button Metallic Shimmer Sweep Effect
+   ========================================================================== */
+.btn-shimmer {
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-shimmer::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        60deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.35) 50%,
+        transparent 70%
+    );
+    transform: rotate(30deg) translateX(-100%);
+    transition: transform 0.8s ease;
+}
+
+.btn-shimmer:hover::after {
+    transform: rotate(30deg) translateX(100%);
+}
+
+/* ==========================================================================
+   Infinite Marquee Scroll Animation
+   ========================================================================== */
+@keyframes infinite-marquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: infinite-marquee 45s linear infinite;
+}
+
+.marquee-container:hover .animate-marquee {
+    animation-play-state: paused;
+}
+
+.client-logo-card {
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.client-logo-card:hover {
+    border-color: rgba(116, 158, 53, 0.6);
+    box-shadow: 0 10px 25px -5px rgba(116, 158, 53, 0.2);
+    transform: translateY(-4px);
+}
+
+.client-logo-img {
+    transition: all 0.4s ease;
+    filter: grayscale(100%) opacity(0.7);
+}
+
+.client-logo-card:hover .client-logo-img {
+    filter: grayscale(0%) opacity(1);
+    transform: scale(1.08);
+}
+
+/* ==========================================================================
+   Form Input Focus Glow
+   ========================================================================== */
+input:focus, select:focus, textarea:focus {
+    box-shadow: 0 0 0 3px rgba(116, 158, 53, 0.25);
+    border-color: #749E35 !important;
+}
