@@ -15,12 +15,12 @@
                 extend: {
                     colors: {
                         brand: {
-                            dark: '#0B0F12',        // Ultra-dark obsidian background
-                            card: '#141A20',        // Elevated card background
-                            border: '#202933',      // Subtle luxury border
+                            dark: '#FFFFFF',        // Clean white page background
+                            card: '#F5F8F3',        // Soft light card background (hint of olive)
+                            border: '#E1E7DD',      // Subtle light border
                             olive: '#749E35',       // Primary Olive Green from GOLFCARTS.PH logo
                             oliveHover: '#5F822B',  // Hover Olive Green
-                            slate: '#90AEC0',       // Accent Slate Blue-Gray from GOLFCARTS.PH logo
+                            slate: '#4F6B7D',       // Accent Slate Blue-Gray (deepened for contrast on white)
                             slateMuted: '#688396'  // Secondary Slate Blue
                         }
                     },
@@ -50,7 +50,7 @@
 
     <!-- Toast Notification Banner -->
     <div id="toast-container" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none max-w-[90vw] sm:max-w-md">
-        <div class="flex items-center gap-3 bg-brand-olive text-slate-950 px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl shadow-2xl font-bold border border-brand-olive text-xs sm:text-sm">
+        <div class="flex items-center gap-3 bg-brand-olive text-slate-900 px-4 py-3 sm:px-5 sm:py-3.5 rounded-xl shadow-2xl font-bold border border-brand-olive text-xs sm:text-sm">
             <i data-lucide="sparkles" class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"></i>
             <span id="toast-text">Action completed successfully!</span>
         </div>
@@ -67,18 +67,18 @@
                 </div>
 
                 <!-- Desktop Nav Links -->
-                <div class="hidden lg:flex items-center space-x-1 border border-brand-border bg-slate-900/60 rounded-full px-4 py-1.5 backdrop-blur-md z-50">
-                    <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="home">Home</button>
-                    <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="about">About Us</button>
-                    <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="products">Products</button>
-                    <button onclick="navigateTo('solutions')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="solutions">Solutions</button>
-                    <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="service">Service & Support</button>
-                    <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-300 hover:text-white" data-page="contact">Contact</button>
+                <div class="hidden lg:flex items-center space-x-1 border border-brand-border bg-white/60 rounded-full px-4 py-1.5 backdrop-blur-md z-50">
+                    <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="home">Home</button>
+                    <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
+                    <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Products</button>
+                    <button onclick="navigateTo('solutions')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="solutions">Solutions</button>
+                    <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service & Support</button>
+                    <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="contact">Contact</button>
                 </div>
 
                 <!-- CTA Button -->
                 <div class="hidden lg:flex items-center gap-4">
-                    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
+                    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
                         <i data-lucide="file-text" class="w-4 h-4"></i>
                         <span>Request Quote</span>
                     </button>
@@ -86,7 +86,7 @@
 
                 <!-- Mobile Menu Toggle Button -->
                 <div class="lg:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl bg-slate-800/80 text-slate-300 hover:text-white focus:outline-none border border-brand-border">
+                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl bg-slate-100/80 text-slate-600 hover:text-slate-900 focus:outline-none border border-brand-border">
                         <i data-lucide="menu" class="w-6 h-6"></i>
                     </button>
                 </div>
@@ -96,32 +96,32 @@
         <!-- Mobile Drawer Navigation -->
         <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-[60px] sm:top-[70px] bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto">
             <div class="flex flex-col space-y-2">
-                <button onclick="navigateTo('home')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('home')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Home</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('about')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('about')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>About Us</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('products')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('products')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Products Catalog</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('solutions')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('solutions')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Solutions</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('service')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('service')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Service & Support</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('contact')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-300 hover:bg-slate-800/80 text-sm">
+                <button onclick="navigateTo('contact')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Contact Us</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <div class="pt-4 border-t border-brand-border/60">
-                    <button onclick="toggleMobileMenu(); openQuoteModal();" class="w-full flex items-center justify-center gap-2 bg-brand-olive text-slate-950 font-bold py-3 rounded-xl shadow-lg text-center text-sm">
+                    <button onclick="toggleMobileMenu(); openQuoteModal();" class="w-full flex items-center justify-center gap-2 bg-brand-olive text-slate-900 font-bold py-3 rounded-xl shadow-lg text-center text-sm">
                         <i data-lucide="file-text" class="w-4 h-4"></i>
                         <span>Request Custom Quote</span>
                     </button>
@@ -136,41 +136,41 @@
     </main>
 
     <!-- Global Quote Request Modal -->
-    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/80 backdrop-blur-md hidden overflow-y-auto">
+    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-white/80 backdrop-blur-md hidden overflow-y-auto">
         <div class="relative w-full max-w-lg rounded-2xl sm:rounded-3xl bg-brand-dark border border-brand-border p-6 sm:p-8 shadow-2xl space-y-6 my-auto max-h-[90vh] overflow-y-auto">
-            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-slate-800/80 text-slate-400 hover:text-white">
+            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-slate-100/80 text-slate-500 hover:text-slate-900">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
             <div>
                 <span class="text-brand-olive text-[10px] font-semibold tracking-widest uppercase">Fast Concierge</span>
-                <h3 class="text-xl sm:text-2xl font-bold text-white">Instant Quote Request</h3>
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Instant Quote Request</h3>
             </div>
 
             <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="space-y-4 text-xs">
                 <div>
-                    <label class="block font-medium text-slate-300 mb-1">Selected Vehicle Model</label>
-                    <select id="modal-product-select" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                    <label class="block font-medium text-slate-600 mb-1">Selected Vehicle Model</label>
+                    <select id="modal-product-select" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                         <!-- Populated Dynamically -->
                     </select>
                 </div>
 
                 <div>
-                    <label class="block font-medium text-slate-300 mb-1">Full Name *</label>
-                    <input required type="text" placeholder="John Doe" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                    <label class="block font-medium text-slate-600 mb-1">Full Name *</label>
+                    <input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                 </div>
 
                 <div>
-                    <label class="block font-medium text-slate-300 mb-1">Email Address *</label>
-                    <input required type="email" placeholder="john@example.com" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                    <label class="block font-medium text-slate-600 mb-1">Email Address *</label>
+                    <input required type="email" placeholder="john@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                 </div>
 
                 <div>
-                    <label class="block font-medium text-slate-300 mb-1">Phone Number *</label>
-                    <input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                    <label class="block font-medium text-slate-600 mb-1">Phone Number *</label>
+                    <input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                 </div>
 
-                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
+                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
                     Send Quote Request
                 </button>
             </form>
@@ -178,7 +178,7 @@
     </div>
 
     <!-- Global Footer -->
-    <footer class="border-t border-brand-border bg-slate-950 pt-12 sm:pt-16 pb-12 text-slate-300 text-xs mt-12 sm:mt-16 z-20 relative">
+    <footer class="border-t border-brand-border bg-white pt-12 sm:pt-16 pb-12 text-slate-600 text-xs mt-12 sm:mt-16 z-20 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
@@ -211,25 +211,25 @@
                     <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">CONNECT WITH US</h4>
                     
                     <div class="flex items-center gap-3 pt-1">
-                        <a href="https://tiktok.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-700 hover:border-brand-olive flex items-center justify-center text-slate-300 hover:text-brand-olive transition-all">
+                        <a href="https://tiktok.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
                             <i data-lucide="video" class="w-4 h-4"></i>
                         </a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-700 hover:border-brand-olive flex items-center justify-center text-slate-300 hover:text-brand-olive transition-all">
+                        <a href="https://facebook.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
                             <i data-lucide="facebook" class="w-4 h-4"></i>
                         </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-700 hover:border-brand-olive flex items-center justify-center text-slate-300 hover:text-brand-olive transition-all">
+                        <a href="https://instagram.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
                             <i data-lucide="instagram" class="w-4 h-4"></i>
                         </a>
-                        <a href="https://youtube.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-700 hover:border-brand-olive flex items-center justify-center text-slate-300 hover:text-brand-olive transition-all">
+                        <a href="https://youtube.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
                             <i data-lucide="youtube" class="w-4 h-4"></i>
                         </a>
                     </div>
 
-                    <div class="space-y-2 pt-2 leading-relaxed text-slate-300">
-                        <p><strong class="text-white">Email:</strong> info@golfcarts.ph</p>
-                        <p><strong class="text-white">Landline:</strong> (02) 7745-5089</p>
-                        <p><strong class="text-white">Manila:</strong> (+63) 999 997 7688<br><span class="pl-12">(+63) 917 631 2184</span></p>
-                        <p><strong class="text-white">Cebu:</strong> (+63) 917 310 5239</p>
+                    <div class="space-y-2 pt-2 leading-relaxed text-slate-600">
+                        <p><strong class="text-slate-900">Email:</strong> info@golfcarts.ph</p>
+                        <p><strong class="text-slate-900">Landline:</strong> (02) 7745-5089</p>
+                        <p><strong class="text-slate-900">Manila:</strong> (+63) 999 997 7688<br><span class="pl-12">(+63) 917 631 2184</span></p>
+                        <p><strong class="text-slate-900">Cebu:</strong> (+63) 917 310 5239</p>
                     </div>
                 </div>
 
@@ -241,12 +241,12 @@
 
                     <div class="space-y-4 text-xs leading-relaxed">
                         <div>
-                            <p class="font-bold text-white mb-0.5">Manila Branch:</p>
-                            <p class="text-slate-400">1877 Honda Cars Manila Building, Paz M. Guazon St. cor Pres. Quirino Ave. Paco, Manila, 1007 National Capital Region</p>
+                            <p class="font-bold text-slate-900 mb-0.5">Manila Branch:</p>
+                            <p class="text-slate-500">1877 Honda Cars Manila Building, Paz M. Guazon St. cor Pres. Quirino Ave. Paco, Manila, 1007 National Capital Region</p>
                         </div>
                         <div>
-                            <p class="font-bold text-white mb-0.5">Cebu Branch:</p>
-                            <p class="text-slate-400">Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu</p>
+                            <p class="font-bold text-slate-900 mb-0.5">Cebu Branch:</p>
+                            <p class="text-slate-500">Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu</p>
                         </div>
                     </div>
                 </div>
@@ -255,9 +255,9 @@
             <div class="pt-8 border-t border-brand-border flex flex-col sm:flex-row items-center justify-between gap-4 text-brand-slate text-[11px]">
                 <p>© 2026 Golfcart.ph. All rights reserved.</p>
                 <div class="flex items-center gap-6">
-                    <span class="hover:text-slate-300 cursor-pointer">Privacy Policy</span>
-                    <span class="hover:text-slate-300 cursor-pointer">Terms of Service</span>
-                    <span class="hover:text-slate-300 cursor-pointer">Telematics Policy</span>
+                    <span class="hover:text-slate-600 cursor-pointer">Privacy Policy</span>
+                    <span class="hover:text-slate-600 cursor-pointer">Terms of Service</span>
+                    <span class="hover:text-slate-600 cursor-pointer">Telematics Policy</span>
                 </div>
             </div>
         </div>

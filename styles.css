@@ -10,8 +10,8 @@ html {
 }
 
 body {
-    background-color: #0B0F12;
-    color: #F0F6FC;
+    background-color: #FFFFFF;
+    color: #1E293B;
     font-family: 'Inter', sans-serif;
     overflow-x: hidden;
 }
@@ -109,7 +109,7 @@ body {
     border-radius: inherit;
     background: radial-gradient(
         350px circle at var(--container-mouse-x, -500px) var(--container-mouse-y, -500px), 
-        rgba(255, 255, 255, 0.06), 
+        rgba(116, 158, 53, 0.06), 
         transparent 80%
     );
     opacity: 0;
@@ -130,7 +130,7 @@ body {
 
 .container-light-beam:hover .product-card-img {
     transform: scale(1.05) translateY(-3px);
-    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.5));
+    filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.18));
 }
 
 /* ==========================================================================
@@ -142,11 +142,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-    background: #0B0F12;
+    background: #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #202933;
+    background: #CBD5E1;
     border-radius: 6px;
 }
 
@@ -158,19 +158,19 @@ body {
    Glassmorphism Panels & Hero Effects
    ========================================================================== */
 .glass-panel {
-    background: rgba(20, 26, 32, 0.75);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(144, 174, 192, 0.12);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.08);
 }
 
 .hero-overlay {
-    background: linear-gradient(180deg, rgba(11, 15, 18, 0.4) 0%, rgba(11, 15, 18, 0.85) 65%, #0B0F12 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.85) 65%, #FFFFFF 100%);
 }
 
 .hero-cart-glow {
-    background: radial-gradient(circle, rgba(116, 158, 53, 0.22) 0%, rgba(20, 26, 32, 0) 70%);
+    background: radial-gradient(circle, rgba(116, 158, 53, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 /* ==========================================================================

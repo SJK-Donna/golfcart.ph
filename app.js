@@ -904,10 +904,10 @@ function updateCarouselUI() {
         if (dot) {
             if (idx === currentSlideIndex) {
                 dot.classList.add('w-8', 'bg-brand-olive');
-                dot.classList.remove('w-2.5', 'bg-slate-700');
+                dot.classList.remove('w-2.5', 'bg-slate-300');
             } else {
                 dot.classList.remove('w-8', 'bg-brand-olive');
-                dot.classList.add('w-2.5', 'bg-slate-700');
+                dot.classList.add('w-2.5', 'bg-slate-300');
             }
         }
     });
@@ -1031,11 +1031,11 @@ function navigateTo(page, slug = null) {
     
     document.querySelectorAll('.nav-link').forEach(btn => {
         if (btn.dataset.page === page) {
-            btn.classList.add('text-brand-olive', 'bg-slate-800/80');
-            btn.classList.remove('text-slate-300');
+            btn.classList.add('text-brand-olive', 'bg-slate-100/80');
+            btn.classList.remove('text-slate-600');
         } else {
-            btn.classList.remove('text-brand-olive', 'bg-slate-800/80');
-            btn.classList.add('text-slate-300');
+            btn.classList.remove('text-brand-olive', 'bg-slate-100/80');
+            btn.classList.add('text-slate-600');
         }
     });
 
@@ -1190,7 +1190,7 @@ function renderHomePage() {
                                 </div>
 
                                 <div class="space-y-2">
-                                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+                                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
                                         ${slide.title}
                                     </h1>
                                     <p class="text-lg sm:text-2xl font-semibold text-brand-slate">
@@ -1198,17 +1198,17 @@ function renderHomePage() {
                                     </p>
                                 </div>
 
-                                <p class="text-slate-400 text-xs sm:text-base leading-relaxed max-w-lg">
+                                <p class="text-slate-500 text-xs sm:text-base leading-relaxed max-w-lg">
                                     ${slide.description}
                                 </p>
 
                                 <div class="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
-                                    <button onclick="navigateTo('product-details', '${slide.slug}')" class="flex items-center gap-2.5 sm:gap-3 bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-extrabold px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl shadow-brand-olive/20 hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                                    <button onclick="navigateTo('product-details', '${slide.slug}')" class="flex items-center gap-2.5 sm:gap-3 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-extrabold px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl shadow-brand-olive/20 hover:scale-105 text-xs sm:text-sm btn-shimmer">
                                         <span>Explore ${slide.modelName}</span>
                                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
                                     </button>
                                     
-                                    <button onclick="openQuoteModal('${slide.modelName}')" class="flex items-center gap-2 bg-slate-900/80 hover:bg-slate-800 text-white font-semibold px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl border border-brand-border backdrop-blur-md transition-all hover:border-brand-olive/50 text-xs sm:text-sm">
+                                    <button onclick="openQuoteModal('${slide.modelName}')" class="flex items-center gap-2 bg-white/80 hover:bg-slate-200 text-slate-900 font-semibold px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl border border-brand-border backdrop-blur-md transition-all hover:border-brand-olive/50 text-xs sm:text-sm">
                                         <span>Request Quote</span>
                                     </button>
                                 </div>
@@ -1221,9 +1221,9 @@ function renderHomePage() {
                             </div>
 
                             <div class="lg:col-span-6 relative flex items-center justify-center">
-                                <div class="container-light-beam relative w-full max-w-lg h-[260px] sm:h-[340px] lg:h-[420px] rounded-3xl bg-gradient-to-b from-brand-card/80 to-slate-950/90 border border-brand-border/80 p-4 sm:p-6 flex items-center justify-center shadow-2xl overflow-hidden group">
+                                <div class="container-light-beam relative w-full max-w-lg h-[260px] sm:h-[340px] lg:h-[420px] rounded-3xl bg-gradient-to-b from-brand-card/80 to-white/90 border border-brand-border/80 p-4 sm:p-6 flex items-center justify-center shadow-2xl overflow-hidden group">
                                     <div class="absolute inset-0 bg-[radial-gradient(#749E35_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
-                                    <img src="${slide.image}" alt="${slide.modelName}" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] transform group-hover:scale-105 transition-transform duration-500">
+                                    <img src="${slide.image}" alt="${slide.modelName}" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
                                 </div>
                             </div>
 
@@ -1235,15 +1235,15 @@ function renderHomePage() {
                 <div class="flex items-center justify-between pt-6 sm:pt-8 border-t border-brand-border/60">
                     <div class="flex items-center gap-2">
                         ${CAROUSEL_SLIDES.map((_, idx) => `
-                            <button id="carousel-dot-${idx}" onclick="goToSlide(${idx})" class="h-2.5 rounded-full transition-all duration-300 ${idx === 0 ? 'w-8 bg-brand-olive' : 'w-2.5 bg-slate-700 hover:bg-slate-500'}" aria-label="Go to slide ${idx + 1}"></button>
+                            <button id="carousel-dot-${idx}" onclick="goToSlide(${idx})" class="h-2.5 rounded-full transition-all duration-300 ${idx === 0 ? 'w-8 bg-brand-olive' : 'w-2.5 bg-slate-300 hover:bg-slate-400'}" aria-label="Go to slide ${idx + 1}"></button>
                         `).join('')}
                     </div>
 
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <button onclick="prevSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white hover:border-brand-olive transition-all" aria-label="Previous Slide">
+                        <button onclick="prevSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-600 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Previous Slide">
                             <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                         </button>
-                        <button onclick="nextSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-300 hover:text-white hover:border-brand-olive transition-all" aria-label="Next Slide">
+                        <button onclick="nextSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-600 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Next Slide">
                             <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                         </button>
                     </div>
@@ -1260,7 +1260,7 @@ function renderHomePage() {
                         <i data-lucide="zap" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </div>
                     <div>
-                        <div class="text-xl sm:text-2xl font-bold text-white">0%</div>
+                        <div class="text-xl sm:text-2xl font-bold text-slate-900">0%</div>
                         <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Carbon Emissions</div>
                     </div>
                 </div>
@@ -1269,7 +1269,7 @@ function renderHomePage() {
                         <i data-lucide="battery" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </div>
                     <div>
-                        <div class="text-xl sm:text-2xl font-bold text-white">100+ km</div>
+                        <div class="text-xl sm:text-2xl font-bold text-slate-900">100+ km</div>
                         <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Lithium Range</div>
                     </div>
                 </div>
@@ -1278,7 +1278,7 @@ function renderHomePage() {
                         <i data-lucide="shield" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </div>
                     <div>
-                        <div class="text-xl sm:text-2xl font-bold text-white">5-Year</div>
+                        <div class="text-xl sm:text-2xl font-bold text-slate-900">5-Year</div>
                         <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Battery Warranty</div>
                     </div>
                 </div>
@@ -1287,7 +1287,7 @@ function renderHomePage() {
                         <i data-lucide="building-2" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </div>
                     <div>
-                        <div class="text-xl sm:text-2xl font-bold text-white">250+</div>
+                        <div class="text-xl sm:text-2xl font-bold text-slate-900">250+</div>
                         <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Commercial Fleets</div>
                     </div>
                 </div>
@@ -1298,7 +1298,7 @@ function renderHomePage() {
         <section class="py-10 sm:py-12 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8 text-center space-y-2">
                 <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Trusted Partnership Network</span>
-                <h3 class="text-xl sm:text-3xl font-extrabold text-white">Trusted by Industry Leaders & Premier Resorts</h3>
+                <h3 class="text-xl sm:text-3xl font-extrabold text-slate-900">Trusted by Industry Leaders & Premier Resorts</h3>
             </div>
 
             <div class="relative w-full overflow-hidden marquee-container">
@@ -1307,7 +1307,7 @@ function renderHomePage() {
 
                 <div class="animate-marquee flex items-center gap-4 sm:gap-6 px-4">
                     ${[...CLIENT_LOGOS, ...CLIENT_LOGOS].map(logoPath => `
-                        <div class="container-light-beam client-logo-card w-32 sm:w-40 h-20 sm:h-24 rounded-2xl bg-slate-950/80 border border-brand-border/80 p-3 flex items-center justify-center flex-shrink-0 cursor-pointer shadow-md">
+                        <div class="container-light-beam client-logo-card w-32 sm:w-40 h-20 sm:h-24 rounded-2xl bg-white/80 border border-brand-border/80 p-3 flex items-center justify-center flex-shrink-0 cursor-pointer shadow-md">
                             <img src="${logoPath}" alt="Client Partner Logo" class="client-logo-img max-h-full max-w-full object-contain" loading="lazy">
                         </div>
                     `).join('')}
@@ -1320,7 +1320,7 @@ function renderHomePage() {
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
                 <div>
                     <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Signature Collection</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1">Featured Vehicles</h2>
+                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">Featured Vehicles</h2>
                 </div>
                 <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-slate font-semibold transition-colors text-sm">
                     <span>View All Models (${PRODUCTS_DATA.length})</span>
@@ -1337,8 +1337,8 @@ function renderHomePage() {
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
                 <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Tailored Industry Mobility</span>
-                <h2 class="text-2xl sm:text-4xl font-extrabold text-white mt-1">Engineered for Every Setting</h2>
-                <p class="text-slate-400 mt-2 sm:mt-3 text-xs sm:text-sm">
+                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">Engineered for Every Setting</h2>
+                <p class="text-slate-500 mt-2 sm:mt-3 text-xs sm:text-sm">
                     From championship golf courses to luxury resorts and industrial logistics, discover customized fleet solutions.
                 </p>
             </div>
@@ -1346,13 +1346,13 @@ function renderHomePage() {
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 ${SOLUTIONS_DATA.map(sol => `
                     <div class="container-light-beam group relative rounded-3xl overflow-hidden bg-brand-card border border-brand-border hover:border-brand-olive/40 transition-all shadow-xl">
-                        <div class="h-48 sm:h-64 overflow-hidden relative bg-slate-950/60 p-4 flex items-center justify-center">
+                        <div class="h-48 sm:h-64 overflow-hidden relative bg-white/60 p-4 flex items-center justify-center">
                             <img src="${sol.image}" alt="${sol.title}" class="product-card-img max-h-full object-contain group-hover:scale-105 transition-transform duration-500">
                             <div class="absolute inset-0 bg-gradient-to-t from-brand-dark via-transparent to-transparent"></div>
                         </div>
                         <div class="p-6 sm:p-8 relative z-10 -mt-6">
-                            <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">${sol.title}</h3>
-                            <p class="text-slate-300 text-xs sm:text-sm mb-6 line-clamp-2">${sol.description}</p>
+                            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-2">${sol.title}</h3>
+                            <p class="text-slate-600 text-xs sm:text-sm mb-6 line-clamp-2">${sol.description}</p>
                             <button onclick="navigateTo('solutions')" class="inline-flex items-center gap-2 text-brand-olive text-xs sm:text-sm font-semibold hover:text-brand-slate">
                                 <span>Explore Solutions</span>
                                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
@@ -1382,21 +1382,21 @@ function renderProductsPage() {
         
         <!-- Category Banner Header -->
         ${currentBanner ? `
-            <section class="relative bg-gradient-to-r from-brand-card via-brand-dark to-slate-950 border-b border-brand-border py-8 sm:py-12 px-4 overflow-hidden">
+            <section class="relative bg-gradient-to-r from-brand-card via-brand-dark to-white border-b border-brand-border py-8 sm:py-12 px-4 overflow-hidden">
                 <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
                     <div class="lg:col-span-7 space-y-2 sm:space-y-3">
                         <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">
                             ${currentBanner.title}
                         </span>
-                        <h1 class="text-2xl sm:text-5xl font-extrabold text-white tracking-tight">
+                        <h1 class="text-2xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
                             ${currentBanner.headline}
                         </h1>
-                        <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+                        <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                             ${currentBanner.subheadline}
                         </p>
                     </div>
                     <div class="lg:col-span-5 flex justify-center lg:justify-end">
-                        <div class="container-light-beam w-full sm:w-64 h-36 sm:h-48 rounded-2xl bg-slate-950/80 border border-brand-border p-4 flex items-center justify-center shadow-xl">
+                        <div class="container-light-beam w-full sm:w-64 h-36 sm:h-48 rounded-2xl bg-white/80 border border-brand-border p-4 flex items-center justify-center shadow-xl">
                             <img src="${currentBanner.image}" alt="${currentBanner.title}" class="product-card-img max-h-full max-w-full object-contain">
                         </div>
                     </div>
@@ -1406,8 +1406,8 @@ function renderProductsPage() {
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
                 <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
                     <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Electric Showroom</span>
-                    <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Vehicle & Accessory Catalog</h1>
-                    <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+                    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
+                    <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                         Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.
                     </p>
                 </div>
@@ -1420,7 +1420,7 @@ function renderProductsPage() {
                 <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none z-10">
                     ${categories.map(cat => `
                         <button onclick="setCategoryFilter('${cat}')" class="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                            productFilterCategory === cat ? 'bg-brand-olive text-slate-950 shadow-lg font-bold' : 'bg-slate-800/60 text-slate-300 hover:bg-slate-800'
+                            productFilterCategory === cat ? 'bg-brand-olive text-slate-900 shadow-lg font-bold' : 'bg-slate-100/60 text-slate-600 hover:bg-slate-200'
                         }">
                             ${cat}
                         </button>
@@ -1429,7 +1429,7 @@ function renderProductsPage() {
 
                 <div class="relative w-full md:w-72 z-10">
                     <i data-lucide="search" class="w-4 h-4 text-brand-slate absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input id="product-search-input" type="text" value="${productSearchQuery}" placeholder="Search products or accessories..." class="w-full bg-slate-950 border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white focus:outline-none focus:border-brand-olive relative z-20">
+                    <input id="product-search-input" type="text" value="${productSearchQuery}" placeholder="Search products or accessories..." class="w-full bg-white border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-brand-olive relative z-20">
                 </div>
             </div>
 
@@ -1438,7 +1438,7 @@ function renderProductsPage() {
                 ${filtered.length > 0 ? filtered.map(p => renderProductCardHTML(p)).join('') : `
                     <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
                         <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
-                        <p class="text-slate-300 font-semibold">No items found matching criteria.</p>
+                        <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
                     </div>
                 `}
             </div>
@@ -1469,7 +1469,7 @@ function bindProductsFilterEvents() {
                     : `
                         <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
                             <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
-                            <p class="text-slate-300 font-semibold">No items found matching criteria.</p>
+                            <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
                         </div>
                     `;
 
@@ -1485,10 +1485,10 @@ function renderProductCardHTML(product) {
     return `
     <div class="container-light-beam product-card group rounded-2xl bg-brand-card border border-brand-border overflow-hidden flex flex-col justify-between shadow-lg">
         <div>
-            <div class="relative h-48 sm:h-56 overflow-hidden bg-slate-950/60 p-4 flex items-center justify-center">
+            <div class="relative h-48 sm:h-56 overflow-hidden bg-white/60 p-4 flex items-center justify-center">
                 <img src="${product.image}" alt="${product.name}" class="product-card-img max-h-full object-contain">
                 <div class="absolute top-3 left-3 flex items-center gap-1.5 z-20">
-                    <span class="px-2.5 py-1 rounded-full bg-slate-950/80 backdrop-blur-md text-brand-olive text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase border border-brand-border">
+                    <span class="px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-md text-brand-olive text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase border border-brand-border">
                         ${product.category}
                     </span>
                     ${product.glbModel ? `
@@ -1499,17 +1499,17 @@ function renderProductCardHTML(product) {
                     ` : ''}
                 </div>
                 <div class="absolute bottom-3 right-3 z-20">
-                    <span class="px-2 py-1 rounded-lg bg-slate-900/90 text-white text-[11px] font-bold border border-brand-border">
+                    <span class="px-2 py-1 rounded-lg bg-white/90 text-slate-900 text-[11px] font-bold border border-brand-border">
                         ${product.priceLabel}
                     </span>
                 </div>
             </div>
 
             <div class="p-4 sm:p-5 space-y-2.5 sm:space-y-3 z-10 relative">
-                <h3 class="text-base sm:text-lg font-bold text-white group-hover:text-brand-olive transition-colors">${product.name}</h3>
-                <p class="text-xs text-slate-400 line-clamp-2">${product.description}</p>
+                <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-olive transition-colors">${product.name}</h3>
+                <p class="text-xs text-slate-500 line-clamp-2">${product.description}</p>
                 
-                <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] sm:text-xs border-t border-brand-border text-slate-300">
+                <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] sm:text-xs border-t border-brand-border text-slate-600">
                     <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="users" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.seating}</span></div>
                     <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="battery" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.range}</span></div>
                     <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="gauge" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.speed}</span></div>
@@ -1519,10 +1519,10 @@ function renderProductCardHTML(product) {
         </div>
 
         <div class="p-4 sm:p-5 pt-0 grid grid-cols-2 gap-2 z-10 relative">
-            <button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white text-xs font-semibold text-center transition-colors">
+            <button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold text-center transition-colors">
                 View Details
             </button>
-            <button onclick="openQuoteModal('${product.name}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-950 text-xs font-bold text-center transition-colors btn-shimmer">
+            <button onclick="openQuoteModal('${product.name}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold text-center transition-colors btn-shimmer">
                 Request Quote
             </button>
         </div>
@@ -1535,7 +1535,7 @@ function renderProductDetailsPage() {
 
     return `
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-        <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 text-brand-slate hover:text-white text-xs sm:text-sm font-medium transition-colors">
+        <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 text-brand-slate hover:text-slate-900 text-xs sm:text-sm font-medium transition-colors">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
             <span>Back to Vehicles</span>
         </button>
@@ -1544,20 +1544,20 @@ function renderProductDetailsPage() {
             <!-- Product Stage -->
             <div class="lg:col-span-7 space-y-4">
                 
-                <div class="container-light-beam relative rounded-3xl overflow-hidden bg-slate-950 border border-brand-border h-[300px] sm:h-[400px] lg:h-[500px] flex items-center justify-center p-4 sm:p-6 shadow-2xl group">
+                <div class="container-light-beam relative rounded-3xl overflow-hidden bg-white border border-brand-border h-[300px] sm:h-[400px] lg:h-[500px] flex items-center justify-center p-4 sm:p-6 shadow-2xl group">
                     
-                    <img id="detail-main-img" src="${product.image}" alt="${product.name}" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)]">
+                    <img id="detail-main-img" src="${product.image}" alt="${product.name}" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.18)]">
 
                     ${product.glbModel ? `
                         <div class="absolute top-4 right-4 z-20">
-                            <button onclick="enable3DMode('${product.glbModel}')" class="px-3.5 py-1.5 rounded-full bg-brand-olive hover:bg-brand-oliveHover text-slate-950 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 transition-all">
+                            <button onclick="enable3DMode('${product.glbModel}')" class="px-3.5 py-1.5 rounded-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold uppercase tracking-wider shadow-lg flex items-center gap-2 transition-all">
                                 <i data-lucide="box" class="w-4 h-4"></i>
                                 <span>Launch 3D View</span>
                             </button>
                         </div>
                     ` : ''}
 
-                    <div id="3d-canvas-container" class="hidden absolute inset-0 bg-slate-950 z-30 flex items-center justify-center">
+                    <div id="3d-canvas-container" class="hidden absolute inset-0 bg-white z-30 flex items-center justify-center">
                         <!-- Populated on 3D trigger -->
                     </div>
 
@@ -1566,7 +1566,7 @@ function renderProductDetailsPage() {
                 <!-- Gallery Thumbnails -->
                 <div class="flex items-center gap-3 sm:gap-4 overflow-x-auto pb-2">
                     ${product.gallery.map(img => `
-                        <button onclick="document.getElementById('detail-main-img').src='${img}'; const c=document.getElementById('3d-canvas-container'); if(c) c.classList.add('hidden');" class="container-light-beam w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-brand-border hover:border-brand-olive transition-all bg-slate-950 p-2 flex items-center justify-center flex-shrink-0">
+                        <button onclick="document.getElementById('detail-main-img').src='${img}'; const c=document.getElementById('3d-canvas-container'); if(c) c.classList.add('hidden');" class="container-light-beam w-16 h-16 sm:w-24 sm:h-24 rounded-2xl overflow-hidden border-2 border-brand-border hover:border-brand-olive transition-all bg-white p-2 flex items-center justify-center flex-shrink-0">
                             <img src="${img}" class="max-h-full object-contain">
                         </button>
                     `).join('')}
@@ -1577,20 +1577,20 @@ function renderProductDetailsPage() {
             <div class="lg:col-span-5 space-y-6">
                 <div>
                     <span class="text-brand-olive text-xs font-semibold uppercase tracking-widest">${product.category}</span>
-                    <h1 class="text-2xl sm:text-4xl font-extrabold text-white mt-1">${product.name}</h1>
+                    <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">${product.name}</h1>
                     <p class="text-brand-slate font-semibold text-xs sm:text-sm mt-1">${product.tagline}</p>
-                    <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mt-4">${product.description}</p>
+                    <p class="text-slate-600 text-xs sm:text-sm leading-relaxed mt-4">${product.description}</p>
                 </div>
 
                 <!-- Specs Quick Bar -->
                 <div class="container-light-beam grid grid-cols-2 gap-3 p-4 rounded-2xl bg-brand-card border border-brand-border text-xs">
-                    <div><span class="text-brand-slate uppercase">Seating</span><div class="font-bold text-white mt-0.5">${product.seating}</div></div>
-                    <div><span class="text-brand-slate uppercase">Range</span><div class="font-bold text-white mt-0.5">${product.range}</div></div>
-                    <div><span class="text-brand-slate uppercase">Top Speed</span><div class="font-bold text-white mt-0.5">${product.speed}</div></div>
-                    <div><span class="text-brand-slate uppercase">Battery</span><div class="font-bold text-white mt-0.5">${product.battery}</div></div>
+                    <div><span class="text-brand-slate uppercase">Seating</span><div class="font-bold text-slate-900 mt-0.5">${product.seating}</div></div>
+                    <div><span class="text-brand-slate uppercase">Range</span><div class="font-bold text-slate-900 mt-0.5">${product.range}</div></div>
+                    <div><span class="text-brand-slate uppercase">Top Speed</span><div class="font-bold text-slate-900 mt-0.5">${product.speed}</div></div>
+                    <div><span class="text-brand-slate uppercase">Battery</span><div class="font-bold text-slate-900 mt-0.5">${product.battery}</div></div>
                 </div>
 
-                <button onclick="openQuoteModal('${product.name}')" class="w-full flex items-center justify-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold py-3.5 sm:py-4 rounded-xl shadow-xl text-xs sm:text-base transition-all btn-shimmer">
+                <button onclick="openQuoteModal('${product.name}')" class="w-full flex items-center justify-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 sm:py-4 rounded-xl shadow-xl text-xs sm:text-base transition-all btn-shimmer">
                     <i data-lucide="file-text" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                     <span>Request Quote for ${product.name}</span>
                 </button>
@@ -1600,10 +1600,10 @@ function renderProductDetailsPage() {
         <!-- Features & Technical Spec Matrix -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
             <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-4">
-                <h3 class="text-lg sm:text-xl font-bold text-white">Standard Premium Features</h3>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Standard Premium Features</h3>
                 <div class="space-y-2">
                     ${product.features.map(f => `
-                        <div class="flex items-center gap-3 text-xs text-slate-300">
+                        <div class="flex items-center gap-3 text-xs text-slate-600">
                             <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-olive flex-shrink-0"></i>
                             <span>${f}</span>
                         </div>
@@ -1612,12 +1612,12 @@ function renderProductDetailsPage() {
             </div>
 
             <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-4">
-                <h3 class="text-lg sm:text-xl font-bold text-white">Technical Specifications</h3>
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900">Technical Specifications</h3>
                 <div class="space-y-3">
                     ${Object.entries(product.specs).map(([k, v]) => `
                         <div class="flex items-center justify-between text-xs pb-2 border-b border-brand-border">
                             <span class="text-brand-slate">${k}</span>
-                            <span class="font-bold text-white text-right">${v}</span>
+                            <span class="font-bold text-slate-900 text-right">${v}</span>
                         </div>
                     `).join('')}
                 </div>
@@ -1642,7 +1642,7 @@ function enable3DMode(glbPath) {
                 exposure="1.0"
                 class="w-full h-full">
             </model-viewer>
-            <button onclick="document.getElementById('3d-canvas-container').classList.add('hidden')" class="absolute top-4 right-4 bg-slate-900 border border-brand-border text-white px-3 py-1 rounded-xl text-xs font-bold z-40">
+            <button onclick="document.getElementById('3d-canvas-container').classList.add('hidden')" class="absolute top-4 right-4 bg-white border border-brand-border text-slate-900 px-3 py-1 rounded-xl text-xs font-bold z-40">
                 ✕ Close 3D
             </button>
         `;
@@ -1654,8 +1654,8 @@ function renderSolutionsPage() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
         <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Commercial Fleet Solutions</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Tailored Mobility for Every Industry</h1>
-            <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Tailored Mobility for Every Industry</h1>
+            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 From championship golf venues to high-end hospitality and heavy commercial operations, we engineer eco-friendly vehicle solutions tailored to your operational workflows.
             </p>
         </div>
@@ -1664,25 +1664,25 @@ function renderSolutionsPage() {
             ${SOLUTIONS_DATA.map((sol, idx) => `
                 <div class="container-light-beam grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center p-6 sm:p-12 rounded-3xl bg-brand-card border border-brand-border">
                     <div class="lg:col-span-6 ${idx % 2 === 1 ? 'lg:order-2' : ''}">
-                        <div class="rounded-2xl overflow-hidden border border-brand-border h-64 sm:h-96 bg-slate-950 p-4 flex items-center justify-center">
+                        <div class="rounded-2xl overflow-hidden border border-brand-border h-64 sm:h-96 bg-white p-4 flex items-center justify-center">
                             <img src="${sol.image}" alt="${sol.title}" class="product-card-img max-h-full object-contain">
                         </div>
                     </div>
                     <div class="lg:col-span-6 space-y-4 sm:space-y-6 ${idx % 2 === 1 ? 'lg:order-1' : ''}">
                         <div>
                             <span class="text-brand-olive text-xs font-semibold uppercase">${sol.subtitle}</span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-1">${sol.title}</h2>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">${sol.title}</h2>
                         </div>
-                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">${sol.description}</p>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">${sol.description}</p>
                         <div class="space-y-2">
                             ${sol.benefits.map(b => `
-                                <div class="flex items-center gap-2 text-xs text-slate-300">
+                                <div class="flex items-center gap-2 text-xs text-slate-600">
                                     <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-olive flex-shrink-0"></i>
                                     <span>${b}</span>
                                 </div>
                             `).join('')}
                         </div>
-                        <button onclick="openQuoteModal('${sol.title}')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold px-6 py-3 rounded-xl shadow-lg text-xs sm:text-sm btn-shimmer">
+                        <button onclick="openQuoteModal('${sol.title}')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-xs sm:text-sm btn-shimmer">
                             <span>Inquire Fleet Pricing</span>
                         </button>
                     </div>
@@ -1743,8 +1743,8 @@ function renderServicePage() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-20">
         <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
             <span class="text-brand-olive text-xs font-semibold uppercase tracking-widest">After-Sales Excellence</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Service, Spare Parts & Support</h1>
-            <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Service, Spare Parts & Support</h1>
+            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 We provide mobile technician dispatch, original factory spare parts, and remote telemetry battery health monitoring.
             </p>
         </div>
@@ -1755,8 +1755,8 @@ function renderServicePage() {
                     <i data-lucide="shield-check" class="w-4 h-4"></i>
                     <span>7-Point Quality Guarantee</span>
                 </div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white">Comprehensive Preventive Maintenance</h2>
-                <p class="text-slate-400 text-xs sm:text-sm">Our rigorous inspection routine engineered to maximize fleet uptime and longevity.</p>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Comprehensive Preventive Maintenance</h2>
+                <p class="text-slate-500 text-xs sm:text-sm">Our rigorous inspection routine engineered to maximize fleet uptime and longevity.</p>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -1764,47 +1764,47 @@ function renderServicePage() {
                     <div class="container-light-beam group relative rounded-2xl bg-brand-card border border-brand-border p-6 transition-all duration-300 hover:border-brand-olive/60 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-olive/10 flex flex-col justify-between overflow-hidden ${
                         idx === 6 ? 'sm:col-span-2 lg:col-span-2' : ''
                     }">
-                        <span class="absolute top-3 right-4 text-3xl font-black text-slate-800/40 group-hover:text-brand-olive/20 transition-colors pointer-events-none">
+                        <span class="absolute top-3 right-4 text-3xl font-black text-slate-300/40 group-hover:text-brand-olive/20 transition-colors pointer-events-none">
                             ${item.num}
                         </span>
 
                         <div class="space-y-4 z-10 relative">
-                            <div class="w-14 h-14 rounded-2xl bg-slate-950 border border-brand-border group-hover:border-brand-olive/50 flex items-center justify-center p-3 transition-all duration-300 shadow-inner group-hover:shadow-brand-olive/20">
+                            <div class="w-14 h-14 rounded-2xl bg-white border border-brand-border group-hover:border-brand-olive/50 flex items-center justify-center p-3 transition-all duration-300 shadow-inner group-hover:shadow-brand-olive/20">
                                 <img src="${item.icon}" alt="${item.title}" class="w-full h-full object-contain filter brightness-0 invert group-hover:scale-110 transition-transform">
                             </div>
 
                             <div class="space-y-1.5">
-                                <h4 class="font-bold text-white text-base sm:text-lg group-hover:text-brand-olive transition-colors">
+                                <h4 class="font-bold text-slate-900 text-base sm:text-lg group-hover:text-brand-olive transition-colors">
                                     ${item.title}
                                 </h4>
-                                <p class="text-slate-400 text-xs leading-relaxed">
+                                <p class="text-slate-500 text-xs leading-relaxed">
                                     ${item.desc}
                                 </p>
                             </div>
                         </div>
 
-                        <div class="mt-6 w-full h-0.5 bg-slate-800 group-hover:bg-gradient-to-r group-hover:from-brand-olive group-hover:to-transparent transition-all"></div>
+                        <div class="mt-6 w-full h-0.5 bg-slate-100 group-hover:bg-gradient-to-r group-hover:from-brand-olive group-hover:to-transparent transition-all"></div>
                     </div>
                 `).join('')}
             </div>
         </div>
 
         <div class="container-light-beam p-6 sm:p-12 rounded-3xl bg-brand-card border border-brand-border max-w-3xl mx-auto shadow-2xl">
-            <h3 class="text-xl sm:text-2xl font-bold text-white mb-6 text-center z-10 relative">Schedule Mobile Service Dispatch</h3>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 text-center z-10 relative">Schedule Mobile Service Dispatch</h3>
             <form onsubmit="event.preventDefault(); showToast('Service Request Submitted! Ref: #SRV-9821');" class="space-y-4 text-xs z-10 relative">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="block mb-1 text-slate-300">Name</label><input required type="text" placeholder="John Doe" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
-                    <div><label class="block mb-1 text-slate-300">Organization</label><input required type="text" placeholder="Club or Resort Name" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
+                    <div><label class="block mb-1 text-slate-600">Name</label><input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
+                    <div><label class="block mb-1 text-slate-600">Organization</label><input required type="text" placeholder="Club or Resort Name" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
                 </div>
-                <div><label class="block mb-1 text-slate-300">Service Required</label>
-                    <select class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                <div><label class="block mb-1 text-slate-600">Service Required</label>
+                    <select class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                         <option>Comprehensive Preventive Maintenance (7-Point Check)</option>
                         <option>On-Site Technician Repair</option>
                         <option>Original Spare Parts Order</option>
                         <option>Lithium Battery Health Check</option>
                     </select>
                 </div>
-                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm btn-shimmer">Submit Request</button>
+                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm btn-shimmer">Submit Request</button>
             </form>
         </div>
     </div>
@@ -1818,8 +1818,8 @@ function renderAboutPage() {
         <!-- About Page Header Banner -->
         <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Pioneering Mobility</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">About Golfcart.ph</h1>
-            <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Golfcart.ph</h1>
+            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 Empowering outdoor lifestyle and electric utility transportation across the Philippines.
             </p>
         </div>
@@ -1827,19 +1827,19 @@ function renderAboutPage() {
         <!-- Section 1: Brand Story & SJK Guahan Overview -->
         <div class="container-light-beam grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-12 shadow-2xl">
             <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-md h-64 sm:h-80 rounded-2xl bg-gradient-to-br from-brand-olive/20 via-brand-dark to-slate-950 border border-brand-border p-6 flex items-center justify-center overflow-hidden group">
+                <div class="relative w-full max-w-md h-64 sm:h-80 rounded-2xl bg-gradient-to-br from-brand-olive/20 via-brand-dark to-white border border-brand-border p-6 flex items-center justify-center overflow-hidden group">
                     <div class="absolute inset-0 bg-[radial-gradient(#749E35_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
-                    <img src="image/Products/CA500.png" alt="CarryAll 500 Utility Cart" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.8)] transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="image/Products/CA500.png" alt="CarryAll 500 Utility Cart" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
                 </div>
             </div>
 
             <div class="lg:col-span-7 space-y-4 sm:space-y-6 z-10 relative">
-                <div class="space-y-4 text-slate-300 text-xs sm:text-base leading-relaxed">
+                <div class="space-y-4 text-slate-600 text-xs sm:text-base leading-relaxed">
                     <p>
-                        <strong class="text-white font-bold">Golf Carts PH</strong> falls under the <strong class="text-brand-olive font-bold">SJK Guahan group</strong>, whose focus is on providing superior service through durable and reliable products. Our brand has a strong connection with the outdoors and the lifestyle that comes with it. Our mission in SJK Guahan is to continue to find ways to enhance the enjoyment of being outdoors through products you can afford and trust.
+                        <strong class="text-slate-900 font-bold">Golf Carts PH</strong> falls under the <strong class="text-brand-olive font-bold">SJK Guahan group</strong>, whose focus is on providing superior service through durable and reliable products. Our brand has a strong connection with the outdoors and the lifestyle that comes with it. Our mission in SJK Guahan is to continue to find ways to enhance the enjoyment of being outdoors through products you can afford and trust.
                     </p>
                     <p>
-                        SJK Guahan is a 50/50 joint venture between two groups from the Philippines and Guam that started by bringing Clubcar golf carts into the country. As we expanded into golf courses, we sought mowers and partnered with Textron's <em class="text-white">Jacobsen</em> mower lineup.
+                        SJK Guahan is a 50/50 joint venture between two groups from the Philippines and Guam that started by bringing Clubcar golf carts into the country. As we expanded into golf courses, we sought mowers and partnered with Textron's <em class="text-slate-900">Jacobsen</em> mower lineup.
                     </p>
                 </div>
 
@@ -1856,8 +1856,8 @@ function renderAboutPage() {
                 <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
                     <i data-lucide="users" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white uppercase tracking-wider">WHO WE ARE</h3>
-                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHO WE ARE</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
                     We are the name for golfcarts and electric utility vehicles in the Philippines. We focus on selling vehicles that suit our customers' requirements and go beyond and over when it comes to customization and service to make your buggy stand out.
                 </p>
             </div>
@@ -1866,8 +1866,8 @@ function renderAboutPage() {
                 <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
                     <i data-lucide="wrench" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white uppercase tracking-wider">WHAT WE DO</h3>
-                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHAT WE DO</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
                     We customize the right cart for your very needs. We have a range of suppliers that can provide quality products you can trust when it comes to mobility.
                 </p>
             </div>
@@ -1876,34 +1876,34 @@ function renderAboutPage() {
                 <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
                     <i data-lucide="heart" class="w-6 h-6"></i>
                 </div>
-                <h3 class="text-lg sm:text-xl font-bold text-white uppercase tracking-wider">WHY WE DO IT</h3>
-                <p class="text-slate-400 text-xs sm:text-sm leading-relaxed">
+                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHY WE DO IT</h3>
+                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
                     We want to break free from the traditional golfcart and showcase how fun and exciting it can be with friends and family to take these carts out in the open. Through our products we want to push for electric and green energy vehicles which you can enjoy in your favorite places.
                 </p>
             </div>
         </div>
 
         <!-- Section 3: Interactive Testimonials Carousel -->
-        <div class="container-light-beam bg-gradient-to-r from-brand-card via-slate-900 to-brand-card border border-brand-border rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
+        <div class="container-light-beam bg-gradient-to-r from-brand-card via-slate-50 to-brand-card border border-brand-border rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
             <div class="text-center space-y-6 sm:space-y-8 max-w-4xl mx-auto z-10 relative">
                 <h2 class="text-xl sm:text-3xl font-extrabold text-brand-olive uppercase tracking-widest">
                     OUR TESTIMONIALS
                 </h2>
 
                 <div class="min-h-[100px] flex flex-col items-center justify-center space-y-3 px-4 sm:px-8">
-                    <p id="testimonial-quote-text" class="text-slate-200 text-sm sm:text-lg italic leading-relaxed font-light">
+                    <p id="testimonial-quote-text" class="text-slate-700 text-sm sm:text-lg italic leading-relaxed font-light">
                         "${TESTIMONIALS_DATA[currentTestimonialIndex].quote}"
                     </p>
-                    <span id="testimonial-author-text" class="text-white font-bold text-xs sm:text-sm tracking-wide">
+                    <span id="testimonial-author-text" class="text-slate-900 font-bold text-xs sm:text-sm tracking-wide">
                         ${TESTIMONIALS_DATA[currentTestimonialIndex].author}
                     </span>
                 </div>
 
                 <div class="flex items-center justify-center gap-4 sm:gap-6 pt-2">
-                    <button onclick="prevTestimonial()" class="p-2.5 sm:p-3 rounded-full bg-slate-950 border border-brand-border text-slate-300 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Previous Testimonial">
+                    <button onclick="prevTestimonial()" class="p-2.5 sm:p-3 rounded-full bg-white border border-brand-border text-slate-600 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Previous Testimonial">
                         <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </button>
-                    <button onclick="nextTestimonial()" class="p-3 rounded-full bg-slate-950 border border-brand-border text-slate-300 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Next Testimonial">
+                    <button onclick="nextTestimonial()" class="p-3 rounded-full bg-white border border-brand-border text-slate-600 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Next Testimonial">
                         <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
                     </button>
                 </div>
@@ -1919,8 +1919,8 @@ function renderContactPage() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
         <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Get in Touch</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">Request a Custom Quote</h1>
-            <p class="text-slate-400 text-xs sm:text-base leading-relaxed">
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Request a Custom Quote</h1>
+            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 Contact our sales specialists for volume fleet packages, individual purchases, or dealer partner opportunities.
             </p>
         </div>
@@ -1928,7 +1928,7 @@ function renderContactPage() {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
             <div class="lg:col-span-5 space-y-6">
                 <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-6">
-                    <h3 class="text-lg sm:text-xl font-bold text-white z-10 relative">Experience Center</h3>
+                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 z-10 relative">Experience Center</h3>
                     <div class="space-y-4 text-xs z-10 relative">
                         <div class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-brand-olive flex-shrink-0"></i><span>1877 Honda Cars Manila Building, Paz M. Guazon St., Paco, Manila</span></div>
                         <div class="flex items-start gap-3"><i data-lucide="phone" class="w-5 h-5 text-brand-olive flex-shrink-0"></i><span>+63 (999) 997-7688</span></div>
@@ -1941,20 +1941,20 @@ function renderContactPage() {
                 <div class="container-light-beam p-6 sm:p-10 rounded-3xl bg-brand-card border border-brand-border">
                     <form onsubmit="event.preventDefault(); const ref='QT-'+Math.floor(100000+Math.random()*900000); showToast('Quote Submitted! Ref: #'+ref);" class="space-y-4 text-xs z-10 relative">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block mb-1 text-slate-300">Full Name *</label><input required type="text" placeholder="Jane Smith" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
-                            <div><label class="block mb-1 text-slate-300">Company Name</label><input type="text" placeholder="Ocean Club LLC" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
+                            <div><label class="block mb-1 text-slate-600">Full Name *</label><input required type="text" placeholder="Jane Smith" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
+                            <div><label class="block mb-1 text-slate-600">Company Name</label><input type="text" placeholder="Ocean Club LLC" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
                         </div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block mb-1 text-slate-300">Email *</label><input required type="email" placeholder="jane@example.com" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
-                            <div><label class="block mb-1 text-slate-300">Phone *</label><input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></div>
+                            <div><label class="block mb-1 text-slate-600">Email *</label><input required type="email" placeholder="jane@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
+                            <div><label class="block mb-1 text-slate-600">Phone *</label><input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
                         </div>
-                        <div><label class="block mb-1 text-slate-300">Vehicle Model</label>
-                            <select class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive">
+                        <div><label class="block mb-1 text-slate-600">Vehicle Model</label>
+                            <select class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                                 ${PRODUCTS_DATA.map(p => `<option>${p.name}</option>`).join('')}
                             </select>
                         </div>
-                        <div><label class="block mb-1 text-slate-300">Message / Custom Requirements</label><textarea rows="4" placeholder="Mention preferred colors, custom accessories, or fleet size..." class="w-full bg-slate-950 border border-brand-border rounded-xl p-3 text-white focus:outline-none focus:border-brand-olive"></textarea></div>
-                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-950 font-bold py-4 rounded-xl shadow-xl text-xs sm:text-sm transition-all btn-shimmer">Submit Quote Request</button>
+                        <div><label class="block mb-1 text-slate-600">Message / Custom Requirements</label><textarea rows="4" placeholder="Mention preferred colors, custom accessories, or fleet size..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea></div>
+                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-4 rounded-xl shadow-xl text-xs sm:text-sm transition-all btn-shimmer">Submit Quote Request</button>
                     </form>
                 </div>
             </div>
