@@ -884,12 +884,21 @@ function updateCarouselUI() {
         const slide = document.getElementById(`hero-slide-${idx}`);
         const dot = document.getElementById(`carousel-dot-${idx}`);
         if (slide) {
+            const img = slide.querySelector('.product-card-img');
             if (idx === currentSlideIndex) {
                 slide.classList.remove('carousel-slide-hidden');
                 slide.classList.add('carousel-slide-active');
+                
+                // Trigger 2D Drive-In Motion on the Cart Image
+                if (img) {
+                    img.classList.remove('animate-cart-drive');
+                    void img.offsetWidth; // Force Reflow
+                    img.classList.add('animate-cart-drive');
+                }
             } else {
                 slide.classList.remove('carousel-slide-active');
                 slide.classList.add('carousel-slide-hidden');
+                if (img) img.classList.remove('animate-cart-drive');
             }
         }
         if (dot) {
