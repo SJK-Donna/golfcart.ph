@@ -1262,8 +1262,8 @@ function renderHomePage() {
     }, 100);
 
     return `
-    <div class="space-y-16 sm:space-y-24 pb-16">
-        <!-- Hero Carousel Section -->
+    <div class="pb-16">
+        <!-- Main Hero Carousel Section -->
         <section class="relative sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
             <div class="hero-banner relative w-full overflow-hidden">
                 <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent z-10 pointer-events-none"></div>
@@ -1303,9 +1303,9 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- RESORT VIDEO SECTION (FULL WIDTH) -->
-        <section class="w-full px-2 sm:px-4 lg:px-6">
-            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+        <!-- RESORT VIDEO SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <section class="w-full">
+            <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <video 
                     autoplay 
                     loop 
@@ -1317,12 +1317,12 @@ function renderHomePage() {
                     Your browser does not support the video tag.
                 </video>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
-                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-10 space-y-3">
+                <div class="absolute inset-0 p-6 sm:p-12 lg:p-16 flex flex-col justify-end items-start z-10 space-y-3 sm:space-y-4">
                     <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Resort</span>
-                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Experience Silent, Unmatched Luxury</h3>
-                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Discover our eco-friendly electric vehicles in action across premier resorts, championship golf fairways, and commercial venues nationwide.</p>
+                    <h3 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">Experience Silent, Unmatched Luxury</h3>
+                    <p class="text-slate-200 text-xs sm:text-base lg:text-lg max-w-2xl leading-relaxed drop-shadow">Discover our eco-friendly electric vehicles in action across premier resorts, championship golf fairways, and commercial venues nationwide.</p>
                     <div class="pt-2">
-                        <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                        <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
                             <i data-lucide="play-circle" class="w-4 h-4"></i>
                             <span>Explore for More</span>
                         </button>
@@ -1331,21 +1331,21 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- INDUSTRIAL IMAGE SECTION (FULL WIDTH) -->
-        <section class="w-full px-2 sm:px-4 lg:px-6 mt-6 sm:mt-8">
-            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+        <!-- INDUSTRIAL IMAGE SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <section class="w-full">
+            <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <img 
                     src="image/industrial.png" 
                     alt="Industrial Utility Vehicle" 
                     class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent"></div>
-                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-10 space-y-3">
+                <div class="absolute inset-0 p-6 sm:p-12 lg:p-16 flex flex-col justify-end items-start z-10 space-y-3 sm:space-y-4">
                     <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Industrial Workhorse</span>
-                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Heavy Payload & Unmatched Performance</h3>
-                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Built for demanding groundskeeping, heavy cargo hauling, estate management, and zero-emission facility logistics.</p>
+                    <h3 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">Heavy Payload & Unmatched Performance</h3>
+                    <p class="text-slate-200 text-xs sm:text-base lg:text-lg max-w-2xl leading-relaxed drop-shadow">Built for demanding groundskeeping, heavy cargo hauling, estate management, and zero-emission facility logistics.</p>
                     <div class="pt-2">
-                        <button onclick="setCategoryAndNavigate('Industrial')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                        <button onclick="setCategoryAndNavigate('Industrial')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
                             <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
                             <span>Explore Industrial Carts</span>
                         </button>
@@ -1354,9 +1354,9 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- GOLF OPERATIONS CAROUSEL SECTION -->
-        <section class="w-full px-2 sm:px-4 lg:px-6 mt-6 sm:mt-8" onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()">
-            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+        <!-- GOLF OPERATIONS CAROUSEL SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <section class="w-full" onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()">
+            <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <div id="golf-slide-0" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-0">
                     <img src="image/4.png" alt="Golf Operations Vehicle 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 </div>
@@ -1370,12 +1370,12 @@ function renderHomePage() {
                     <img src="image/7.png" alt="Golf Operations Vehicle 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
                 </div>
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent z-10 pointer-events-none"></div>
-                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-20 space-y-3">
+                <div class="absolute inset-0 p-6 sm:p-12 lg:p-16 flex flex-col justify-end items-start z-20 space-y-3 sm:space-y-4">
                     <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Golf Operations</span>
-                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Championship Fairway Mobility & Fleet Care</h3>
-                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Engineered for tournament play, course management, turf preservation, and high-efficiency golfer transport.</p>
+                    <h3 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight drop-shadow-md">Championship Fairway Mobility & Fleet Care</h3>
+                    <p class="text-slate-200 text-xs sm:text-base lg:text-lg max-w-2xl leading-relaxed drop-shadow">Engineered for tournament play, course management, turf preservation, and high-efficiency golfer transport.</p>
                     <div class="pt-2 flex items-center gap-3">
-                        <button onclick="setCategoryAndNavigate('Golf Operations')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                        <button onclick="setCategoryAndNavigate('Golf Operations')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
                             <i data-lucide="flag" class="w-4 h-4"></i>
                             <span>Explore Golf Fleet</span>
                         </button>
@@ -1401,7 +1401,7 @@ function renderHomePage() {
         </section>
 
         <!-- Dynamic Client Logos Infinite Marquee Ticker -->
-        <section class="py-10 sm:py-12 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
+        <section class="py-12 sm:py-16 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8 text-center space-y-2">
                 <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Trusted Partnership Network</span>
                 <h3 class="text-xl sm:text-3xl font-extrabold text-slate-900">Trusted by Industry Leaders & Premier Resorts</h3>
@@ -1422,7 +1422,7 @@ function renderHomePage() {
         </section>
 
         <!-- Featured Products Grid -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
                 <div>
                     <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Signature Collection</span>
@@ -1440,7 +1440,7 @@ function renderHomePage() {
         </section>
 
         <!-- Industry Solutions Overview -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
             <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
                 <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Tailored Industry Mobility</span>
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">Engineered for Every Setting</h2>
