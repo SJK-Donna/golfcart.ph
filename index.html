@@ -58,56 +58,51 @@
     </div>
 
     <!-- Clean Navigation Header (Dropdown Removed) -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-3 sm:py-5 bg-transparent">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-2 sm:py-2.5 bg-transparent">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between">
-                
+            <!-- Header Container: logo, menu, cart, quote & SJK logo in one bar -->
+            <div id="header-bar" class="flex items-center justify-between gap-4 rounded-full border border-white/70 bg-white/75 backdrop-blur-md shadow-lg shadow-slate-900/10 pl-4 pr-1.5 sm:pl-6 sm:pr-3 py-1 sm:py-2 transition-all duration-300">
+
                 <!-- Brand Logo -->
-                <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer group">
-                    <img src="image/GCPH_logo.png" alt="Golfcart.ph logo" class="h-9 sm:h-12 w-auto max-w-[160px] sm:max-w-[200px] object-contain drop-shadow-[0_0_20px_rgba(136,176,75,0.25)] transition-transform group-hover:scale-[1.02]" />
+                <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer group flex-shrink-0">
+                    <img src="image/GCPH_logo.png" alt="Golfcart.ph logo" class="h-9 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]" />
                 </div>
 
                 <!-- Desktop Nav Links -->
-                <div class="hidden lg:flex items-center space-x-1 border border-brand-border bg-white/60 rounded-full px-4 py-1.5 backdrop-blur-md z-50">
+                <nav class="hidden lg:flex items-center space-x-1">
                     <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="home">Home</button>
                     <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Cart</button>
                     <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service</button>
                     <button onclick="navigateTo('blogs')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="blogs">Blogs</button>
                     <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
                     <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="contact">Contact</button>
+                </nav>
+
+                <!-- Cart, Request Quote & SJK Logo -->
+                <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
+                    <button onclick="navigateTo('products')" aria-label="Shopping Cart" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all hover:scale-105 flex items-center justify-center">
+                        <i class="fa-solid fa-cart-shopping text-base"></i>
+                    </button>
+                    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span>Request Quote</span>
+                    </button>
+                    <a href="/" class="flex items-center pl-1 pr-2">
+                        <img src="image/sjk_logo.png" alt="SJK Logo" class="h-5 w-auto object-contain">
+                    </a>
                 </div>
-
-                <!-- CTA Button -->
-              <div class="hidden lg:flex items-center gap-4">
-    <!-- Request Quote Button -->
-       <!-- Shopping Cart Button -->
-    <button aria-label="Shopping Cart"  bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all hover:scale-105 flex items-center justify-center">
-        <i class="fa-solid fa-cart-shopping text-base"></i>
-    </button>
-    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
-        <i data-lucide="file-text" class="w-4 h-4"></i>
-        <span>Request Quote</span>
-    </button>
-
-  
-
-    <!-- Small SJK Logo -->
-    <a href="/" class="flex items-center">
-        <img src="image/sjk_logo.png" alt="SJK Logo" class="h-5 w-auto object-contain">
-    </a>
-</div>
 
                 <!-- Mobile Menu Toggle Button -->
                 <div class="lg:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="p-2.5 rounded-xl bg-slate-100/80 text-slate-600 hover:text-slate-900 focus:outline-none border border-brand-border">
-                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    <button id="mobile-menu-btn" class="p-2 rounded-full bg-slate-100/80 text-slate-600 hover:text-slate-900 focus:outline-none border border-brand-border">
+                        <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
         </div>
 
         <!-- Mobile Drawer Navigation -->
-        <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-[60px] sm:top-[70px] bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-70px)] overflow-y-auto">
+        <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-16 sm:top-20 bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
             <div class="flex flex-col space-y-2">
                 <button onclick="navigateTo('home')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Home</span>
