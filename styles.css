@@ -16,49 +16,7 @@ body {
     overflow-x: hidden;
 }
 
-/* ==========================================================================
-   Custom Luxury Cursor & Ambient Background Glow (Desktop Only)
-   ========================================================================== */
-@media (min-width: 1024px) {
-    body {
-        cursor: default;
-    }
 
-    #custom-cursor-dot {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 8px;
-        height: 8px;
-        background-color: #749E35;
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9999;
-        transform: translate(-50%, -50%);
-        transition: transform 0.05s ease-out, opacity 0.3s ease;
-    }
-
-    #custom-cursor-ring {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 36px;
-        height: 36px;
-        border: 1.5px solid rgba(116, 158, 53, 0.6);
-        border-radius: 50%;
-        pointer-events: none;
-        z-index: 9998;
-        transform: translate(-50%, -50%);
-        transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
-        box-shadow: 0 0 15px rgba(116, 158, 53, 0.2);
-    }
-
-    body.cursor-hover #custom-cursor-ring {
-        width: 52px;
-        height: 52px;
-        border-color: #749E35;
-        background-color: rgba(116, 158, 53, 0.12);
-    }
 
     #mouse-spotlight {
         position: fixed;
@@ -68,7 +26,7 @@ body {
         background: radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(116, 158, 53, 0.07), transparent 80%);
         transition: opacity 0.5s ease;
     }
-}
+
 
 /* ==========================================================================
    Universal Container Mouse-Following Border Light & Glare Effect

@@ -16,7 +16,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-2-2-golf',
         slug: 'tempo-2-2-golf',
         name: 'Tempo 2+2 Golf',
-        category: 'Golf',
+        category: 'Golf Operations',
         tagline: 'Four (4) Seater Back to Back',
         description: 'Engineered for golf course operations and group play, combining classic reliability with back-to-back seating capacity.',
         priceLabel: 'Inquire for Price',
@@ -36,7 +36,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-premium-plus',
         slug: 'tempo-premium-plus',
         name: 'Tempo Premium+',
-        category: 'Golf',
+        category: 'Golf Operations',
         tagline: 'Luxurious Comfort & Added Accessories',
         description: 'Tempo Premium+ takes the Tempo Premium to a more luxurious experience with its additional custom accessories and premium interior trim.',
         priceLabel: 'Inquire for Price',
@@ -55,7 +55,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-premium',
         slug: 'tempo-premium',
         name: 'Tempo Premium',
-        category: 'Golf',
+        category: 'Golf Operations',
         tagline: 'Industry Leading Durability & Reliable Comfort',
         description: 'Tempo Premium is built with proven engineering, industry leading durability, and reliable comfort for everyday course management.',
         priceLabel: 'Inquire for Price',
@@ -74,7 +74,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-base-plus',
         slug: 'tempo-base-plus',
         name: 'Tempo Base+',
-        category: 'Golf',
+        category: 'Golf Operations',
         tagline: 'Modern Design Elevated',
         description: 'Tempo Base+ takes the sleek and modern design of the Tempo Base to new heights with upgraded trim and enhanced battery output.',
         priceLabel: 'Inquire for Price',
@@ -93,7 +93,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-base',
         slug: 'tempo-base',
         name: 'Tempo Base',
-        category: 'Golf',
+        category: 'Golf Operations',
         tagline: 'Reliable & Efficient Course Transport',
         description: 'The core fleet standard for golf courses worldwide, offering uncompromised reliability and low total cost of ownership.',
         priceLabel: 'Inquire for Price',
@@ -116,7 +116,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-2-2-lifted',
         slug: 'tempo-2-2-lifted',
         name: 'Tempo 2+2 Lifted',
-        category: 'Personal',
+        category: 'Personal Golfcart',
         tagline: 'Conquer Tougher Terrains in Style',
         description: 'A Clubcar Tempo that can conquer tougher terrains with its elevated suspension lift kit and rugged all-terrain tire package.',
         priceLabel: 'Inquire for Price',
@@ -135,7 +135,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-2-2-explorer',
         slug: 'tempo-2-2-explorer',
         name: 'Tempo 2+2 Explorer',
-        category: 'Personal',
+        category: 'Personal Golfcart',
         tagline: 'Upgrade Your Subdivision Mobility',
         description: 'Upgrade your subdivision and neighborhood transportation with the Club Car Tempo 2+2 Explorer, built for everyday lifestyle cruising.',
         priceLabel: 'Inquire for Price',
@@ -154,7 +154,7 @@ const PRODUCTS_DATA = [
         id: 'tempo-2-2-family',
         slug: 'tempo-2-2-family',
         name: 'Tempo 2+2 Family',
-        category: 'Personal',
+        category: 'Personal Golfcart',
         tagline: 'Neighborhood Transport Built for Family',
         description: 'Places safety, comfort, and fun at the forefront of your residential living experience.',
         priceLabel: 'Inquire for Price',
@@ -173,7 +173,7 @@ const PRODUCTS_DATA = [
         id: 'club-car-onward',
         slug: 'club-car-onward',
         name: 'Club Car Onward',
-        category: 'Personal',
+        category: 'Personal Golfcart',
         tagline: 'Premium Safety, Comfort, and Customization',
         description: 'Crafted for personal luxury and subdivision cruising with maximum styling options and smooth automotive handling.',
         priceLabel: 'Inquire for Price',
@@ -196,7 +196,7 @@ const PRODUCTS_DATA = [
         id: 'villager-6',
         slug: 'villager-6',
         name: 'Villager 6',
-        category: 'Commercial',
+        category: 'Resort',
         tagline: '4 Seats Facing Forward, 2 Seats Facing Back',
         description: 'Ideal for luxury resort transfers, tour groups, and VIP hotel guest shuttle operations.',
         priceLabel: 'Inquire for Price',
@@ -215,7 +215,7 @@ const PRODUCTS_DATA = [
         id: 'club-car-4-plus-2-lifted',
         slug: 'club-car-4-plus-2-lifted',
         name: 'Club Car 4+2 Lifted',
-        category: 'Commercial',
+        category: 'Resort',
         tagline: 'Four (4) Forward & Two (2) Back Lifted Shuttle',
         description: 'Elevated guest transportation built to handle resort trails, gravel roads, and unpaved terrain effortlessly.',
         priceLabel: 'Inquire for Price',
@@ -234,7 +234,7 @@ const PRODUCTS_DATA = [
         id: 'villager-8',
         slug: 'villager-8',
         name: 'Villager 8',
-        category: 'Commercial',
+        category: 'Resort',
         tagline: 'Six (6) Seats Facing Forward, Two (2) Back',
         description: 'High-capacity resort shuttle engineered to carry 8 passengers in quiet, eco-friendly luxury.',
         priceLabel: 'Inquire for Price',
@@ -736,29 +736,35 @@ const PRODUCTS_DATA = [
 
 // Category Headers Data Map
 const CATEGORY_BANNERS = {
-    'Golf': {
-        title: 'Golf Mobility',
-        headline: 'Control Costs. Simplify Operations. Win-Win.',
-        subheadline: 'Precision engineered for championship courses, player satisfaction, and country club fairways.',
-        image: 'image/Products/Tempo 2+2 - Golf.png'
-    },
-    'Personal': {
+    'Personal Golfcart': {
         title: 'Personal & Subdivision',
         headline: 'Places Safety, Durability, and Fun First',
         subheadline: 'At the forefront of your residential and gated community living experience.',
         image: 'image/Products/Tempo 2+2 - Family - Sangria Red.png'
     },
+    'Resort': {
+        title: 'Resort & Hospitality',
+        headline: 'First-Class Hospitality Shuttle Mobility',
+        subheadline: 'Quiet, comfortable guest transfers across resorts, hotels, and leisure destinations.',
+        image: 'image/Products/Club Car 6+2.png'
+    },
     'Commercial': {
         title: 'Commercial Fleet',
-        headline: 'First-Class Hospitality Shuttle Mobility',
-        subheadline: 'When you need to move people efficiently across resorts, hotels, and campus grounds.',
-        image: 'image/Products/Club Car 6+2.png'
+        headline: 'Move Groups Efficiently',
+        subheadline: 'High-capacity shuttles for campuses, business parks, and mass transit routes.',
+        image: 'image/Products/Minibus 14.png'
     },
     'Industrial': {
         title: 'Industrial Workhorses',
         headline: 'Fleet Tracker + Unmatched Towing Performance',
         subheadline: 'Heavy payload capacity built for demanding groundskeeping, utility, and campus logistics.',
         image: 'image/Products/Transporter 4.png'
+    },
+    'Golf Operations': {
+        title: 'Golf Mobility',
+        headline: 'Control Costs. Simplify Operations. Win-Win.',
+        subheadline: 'Precision engineered for championship courses, player satisfaction, and country club fairways.',
+        image: 'image/Products/Tempo 2+2 - Golf.png'
     },
     'Accessories': {
         title: 'Original Accessories',
@@ -777,7 +783,7 @@ const CAROUSEL_SLIDES = [
         title: "Unforgettable Moments",
         subtitle: "In Every Ride",
         modelName: "Tempo Base",
-        category: "Golf",
+        category: "Golf Operations",
         description: "Places safety, durability, and fun at the forefront of your golf & residential mobility experience.",
         image: "image/Products/Tempo 2+2 - Golf.png",
         slug: "tempo-2-2-golf"
@@ -786,7 +792,7 @@ const CAROUSEL_SLIDES = [
         title: "The Club Car Tempo",
         subtitle: "Residential & Family Luxury",
         modelName: "Tempo 2+2 Family",
-        category: "Personal",
+        category: "Personal Golfcart",
         description: "Places safety and style at the forefront of your community experience. Perfect for bringing family and friends around.",
         image: "image/Products/Tempo 2+2 - Family - Sangria Red.png",
         slug: "tempo-2-2-family-sangria"
@@ -804,7 +810,7 @@ const CAROUSEL_SLIDES = [
         title: "Enjoy the Outdoors",
         subtitle: "Memorable Group Travel",
         modelName: "Villager 6",
-        category: "Commercial",
+        category: "Resort",
         description: "Make the ride as memorable as the destination with ultra-smooth suspension and comfortable passenger seating.",
         image: "image/Products/Villager 6.png",
         slug: "villager-6"
@@ -968,6 +974,53 @@ const SOLUTIONS_DATA = [
     }
 ];
 
+// Blog Articles Data (sample posts - replace with real articles)
+const BLOGS_DATA = [
+    {
+        slug: 'choosing-the-right-golf-cart',
+        title: 'How to Choose the Right Golf Cart for Your Needs',
+        category: 'Buying Guide',
+        date: '2026-09-15',
+        image: 'image/Products/Tempo 2+2 - Family - Sangria Red.png',
+        excerpt: 'Personal, resort, commercial or golf course use? Here is what to consider before you pick a model.',
+        content: [
+            'Start with how the cart will be used. A family cart for a gated subdivision needs comfort and safety features, while a resort shuttle needs seating capacity and a smooth, quiet ride.',
+            'Next, count your passengers. Two-seaters suit golf and personal errands, 2+2 models add rear-facing seats for family and friends, and 6 to 14 seat shuttles are built for moving groups.',
+            'Finally, think about terrain. Lifted models handle gravel roads and unpaved trails, while standard models are ideal for paved paths and fairways.'
+        ]
+    },
+    {
+        slug: 'electric-cart-battery-care',
+        title: 'Battery Care Tips to Keep Your Electric Cart Running Longer',
+        category: 'Maintenance',
+        date: '2026-08-28',
+        image: 'image/Products/Villager 6.png',
+        excerpt: 'Simple charging and storage habits that protect your battery and keep your fleet on the road.',
+        content: [
+            'Charge after every use instead of waiting for the battery to run low. Regular charging keeps the battery healthy and ready for the next trip.',
+            'Store your cart in a cool, shaded place. Heat is one of the biggest causes of battery wear.',
+            'Schedule regular check-ups with our service team so small issues are caught before they become costly repairs.'
+        ]
+    },
+    {
+        slug: 'resort-guest-mobility',
+        title: 'Elevating the Guest Experience with Resort Shuttles',
+        category: 'Resort',
+        date: '2026-08-10',
+        image: 'image/Products/Villager 8.png',
+        excerpt: 'Quiet, eco-friendly shuttles help resorts move guests comfortably between villas, pools and restaurants.',
+        content: [
+            'First impressions matter. A quiet, comfortable shuttle from the lobby to the villa sets the tone for a guest\'s whole stay.',
+            'Electric shuttles produce zero emissions on site, which keeps pathways quiet and gardens clean.',
+            'With options from 4+2 lifted carts to 8-seat Villagers, resorts can match vehicles to every route on the property.'
+        ]
+    }
+];
+
+function formatBlogDate(dateStr) {
+    return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
 // State Engine Variables
 let currentPage = 'home';
 let currentSlug = null;
@@ -1029,8 +1082,9 @@ function navigateTo(page, slug = null) {
     const drawer = document.getElementById('mobile-drawer');
     if (drawer) drawer.classList.add('hidden');
     
+    const activePage = page === 'blog-details' ? 'blogs' : page;
     document.querySelectorAll('.nav-link').forEach(btn => {
-        if (btn.dataset.page === page) {
+        if (btn.dataset.page === activePage) {
             btn.classList.add('text-brand-olive', 'bg-slate-100/80');
             btn.classList.remove('text-slate-600');
         } else {
@@ -1151,6 +1205,10 @@ function renderApp() {
         viewport.innerHTML = renderSolutionsPage();
     } else if (currentPage === 'service') {
         viewport.innerHTML = renderServicePage();
+    } else if (currentPage === 'blogs') {
+        viewport.innerHTML = renderBlogsPage();
+    } else if (currentPage === 'blog-details') {
+        viewport.innerHTML = renderBlogDetailsPage();
     } else if (currentPage === 'about') {
         viewport.innerHTML = renderAboutPage();
     } else if (currentPage === 'contact') {
@@ -1367,7 +1425,7 @@ function renderHomePage() {
 }
 
 function renderProductsPage() {
-    const categories = ['All', 'Golf', 'Personal', 'Commercial', 'Industrial', 'Accessories'];
+    const categories = ['All', ...Object.keys(CATEGORY_BANNERS)];
     const currentBanner = CATEGORY_BANNERS[productFilterCategory];
 
     const filtered = PRODUCTS_DATA.filter(p => {
@@ -1806,6 +1864,77 @@ function renderServicePage() {
                 </div>
                 <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm btn-shimmer">Submit Request</button>
             </form>
+        </div>
+    </div>
+    `;
+}
+
+function renderBlogsPage() {
+    return `
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
+        <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
+            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">News & Insights</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Golfcart.ph Blog</h1>
+            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
+                Buying guides, maintenance tips, and stories from the world of electric mobility.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            ${BLOGS_DATA.map(post => `
+                <article onclick="navigateTo('blog-details', '${post.slug}')" class="container-light-beam group cursor-pointer flex flex-col rounded-3xl bg-brand-card border border-brand-border overflow-hidden shadow-xl hover:border-brand-olive/50 transition-all">
+                    <div class="h-48 sm:h-56 bg-white p-4 flex items-center justify-center overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="product-card-img max-h-full object-contain group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="flex flex-col flex-1 p-5 sm:p-6 space-y-3">
+                        <div class="flex items-center justify-between text-xs">
+                            <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
+                            <span class="text-slate-500">${formatBlogDate(post.date)}</span>
+                        </div>
+                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-brand-olive transition-colors">${post.title}</h2>
+                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed flex-1">${post.excerpt}</p>
+                        <span class="inline-flex items-center gap-1 text-brand-olive text-xs sm:text-sm font-bold">
+                            Read More <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                        </span>
+                    </div>
+                </article>
+            `).join('')}
+        </div>
+    </div>
+    `;
+}
+
+function renderBlogDetailsPage() {
+    const post = BLOGS_DATA.find(p => p.slug === currentSlug);
+    if (!post) return renderBlogsPage();
+
+    return `
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
+        <button onclick="navigateTo('blogs')" class="inline-flex items-center gap-2 text-slate-600 hover:text-brand-olive text-xs sm:text-sm font-semibold transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Blogs
+        </button>
+
+        <div class="space-y-3">
+            <div class="flex items-center gap-3 text-xs">
+                <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
+                <span class="text-slate-500">${formatBlogDate(post.date)}</span>
+            </div>
+            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${post.title}</h1>
+        </div>
+
+        <div class="rounded-3xl bg-white border border-brand-border h-64 sm:h-96 p-6 flex items-center justify-center">
+            <img src="${post.image}" alt="${post.title}" class="max-h-full object-contain">
+        </div>
+
+        <div class="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
+            ${post.content.map(p => `<p>${p}</p>`).join('')}
+        </div>
+
+        <div class="container-light-beam flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-brand-card border border-brand-border">
+            <p class="text-slate-900 font-bold text-sm sm:text-base">Looking for the right cart?</p>
+            <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-xs sm:text-sm btn-shimmer">
+                <span>Request a Quote</span>
+            </button>
         </div>
     </div>
     `;

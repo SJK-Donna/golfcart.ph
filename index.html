@@ -69,10 +69,11 @@
                 <!-- Desktop Nav Links -->
                 <div class="hidden lg:flex items-center space-x-1 border border-brand-border bg-white/60 rounded-full px-4 py-1.5 backdrop-blur-md z-50">
                     <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="home">Home</button>
-                    <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
-                    <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Products</button>
+                    <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Cart</button>
                     <button onclick="navigateTo('solutions')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="solutions">Solutions</button>
                     <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service & Support</button>
+                    <button onclick="navigateTo('blogs')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="blogs">Blogs</button>
+                    <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
                     <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="contact">Contact</button>
                 </div>
 
@@ -100,12 +101,8 @@
                     <span>Home</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('about')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>About Us</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
-                </button>
                 <button onclick="navigateTo('products')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>Products Catalog</span>
+                    <span>Cart</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <button onclick="navigateTo('solutions')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
@@ -114,6 +111,14 @@
                 </button>
                 <button onclick="navigateTo('service')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Service & Support</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
+                </button>
+                <button onclick="navigateTo('blogs')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
+                    <span>Blogs</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
+                </button>
+                <button onclick="navigateTo('about')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
+                    <span>About Us</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <button onclick="navigateTo('contact')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
@@ -187,9 +192,11 @@
                     <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">QUICK LINKS</h4>
                     <ul class="space-y-2.5 font-medium">
                         <li><button onclick="navigateTo('home')" class="hover:text-brand-olive transition-colors">Home</button></li>
-                        <li><button onclick="navigateTo('about')" class="hover:text-brand-olive transition-colors">About</button></li>
-                        <li><button onclick="navigateTo('products')" class="hover:text-brand-olive transition-colors">Products</button></li>
+                        <li><button onclick="navigateTo('products')" class="hover:text-brand-olive transition-colors">Cart</button></li>
+                        <li><button onclick="navigateTo('solutions')" class="hover:text-brand-olive transition-colors">Solutions</button></li>
                         <li><button onclick="navigateTo('service')" class="hover:text-brand-olive transition-colors">Services</button></li>
+                        <li><button onclick="navigateTo('blogs')" class="hover:text-brand-olive transition-colors">Blogs</button></li>
+                        <li><button onclick="navigateTo('about')" class="hover:text-brand-olive transition-colors">About</button></li>
                         <li><button onclick="navigateTo('contact')" class="hover:text-brand-olive transition-colors">Contact us</button></li>
                     </ul>
                 </div>
@@ -198,10 +205,11 @@
                 <div class="space-y-4">
                     <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">KEY INDUSTRIES</h4>
                     <ul class="space-y-2.5 font-medium">
-                        <li><button onclick="setCategoryAndNavigate('Golf')" class="hover:text-brand-olive transition-colors">Golf</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Personal')" class="hover:text-brand-olive transition-colors">Personal</button></li>
+                        <li><button onclick="setCategoryAndNavigate('Personal Golfcart')" class="hover:text-brand-olive transition-colors">Personal Golfcart</button></li>
+                        <li><button onclick="setCategoryAndNavigate('Resort')" class="hover:text-brand-olive transition-colors">Resort</button></li>
                         <li><button onclick="setCategoryAndNavigate('Commercial')" class="hover:text-brand-olive transition-colors">Commercial</button></li>
                         <li><button onclick="setCategoryAndNavigate('Industrial')" class="hover:text-brand-olive transition-colors">Industrial</button></li>
+                        <li><button onclick="setCategoryAndNavigate('Golf Operations')" class="hover:text-brand-olive transition-colors">Golf Operations</button></li>
                         <li><button onclick="setCategoryAndNavigate('Accessories')" class="hover:text-brand-olive transition-colors">Accessories</button></li>
                     </ul>
                 </div>
