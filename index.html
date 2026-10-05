@@ -7,6 +7,7 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
     <!-- Tailwind Custom Configuration with GOLFCARTS.PH Palette -->
     <script>
@@ -70,20 +71,31 @@
                 <div class="hidden lg:flex items-center space-x-1 border border-brand-border bg-white/60 rounded-full px-4 py-1.5 backdrop-blur-md z-50">
                     <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="home">Home</button>
                     <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Cart</button>
-                    <button onclick="navigateTo('solutions')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="solutions">Solutions</button>
-                    <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service & Support</button>
+                    <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service</button>
                     <button onclick="navigateTo('blogs')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="blogs">Blogs</button>
                     <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
                     <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="contact">Contact</button>
                 </div>
 
                 <!-- CTA Button -->
-                <div class="hidden lg:flex items-center gap-4">
-                    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        <span>Request Quote</span>
-                    </button>
-                </div>
+              <div class="hidden lg:flex items-center gap-4">
+    <!-- Request Quote Button -->
+       <!-- Shopping Cart Button -->
+    <button aria-label="Shopping Cart"  bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all hover:scale-105 flex items-center justify-center">
+        <i class="fa-solid fa-cart-shopping text-base"></i>
+    </button>
+    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>Request Quote</span>
+    </button>
+
+  
+
+    <!-- Small SJK Logo -->
+    <a href="/" class="flex items-center">
+        <img src="image/sjk_logo.png" alt="SJK Logo" class="h-5 w-auto object-contain">
+    </a>
+</div>
 
                 <!-- Mobile Menu Toggle Button -->
                 <div class="lg:hidden flex items-center">
