@@ -780,49 +780,28 @@ let carouselTimer = null;
 
 const CAROUSEL_SLIDES = [
     {
-        title: "Unforgettable Moments",
-        subtitle: "In Every Ride",
-        modelName: "Tempo Base",
-        category: "Golf",
-        description: "Places safety, durability, and fun at the forefront of your golf & residential mobility experience.",
-        image: "image/Products/Tempo 2+2 - Golf.png",
-        slug: "tempo-2-2-golf"
+        image: "image/Hero/hero-1.webp",
+        alt: "Fairway? Covered. Club Car golf cart on the course",
+        ctaLabel: "Explore Products",
+        ctaAction: "navigateTo('products')"
     },
     {
-        title: "The Club Car Tempo",
-        subtitle: "Residential & Family Luxury",
-        modelName: "Tempo 2+2 Family",
-        category: "Personal",
-        description: "Places safety and style at the forefront of your community experience. Perfect for bringing family and friends around.",
-        image: "image/Products/Tempo 2+2 - Family - Sangria Red.png",
-        slug: "tempo-2-2-family-sangria"
+        image: "image/Hero/hero-2.webp",
+        alt: "End of Year Sale - 5% off Club Car golf carts",
+        ctaLabel: "Shop the Sale",
+        ctaAction: "navigateTo('products')"
     },
     {
-        title: "Create Lasting Memories",
-        subtitle: "High-Capacity Mass Transit",
-        modelName: "Minibus 14",
-        category: "Commercial",
-        description: "When you need to move people efficiently, nothing gets the job done better than commercial shuttles from Golfcart.ph.",
-        image: "image/Products/Minibus 14.png",
-        slug: "club-car-minibus"
+        image: "image/Hero/hero-3.webp",
+        alt: "More than just golf carts. We keep you rolling.",
+        ctaLabel: "Service & Support",
+        ctaAction: "navigateTo('service')"
     },
     {
-        title: "Enjoy the Outdoors",
-        subtitle: "Memorable Group Travel",
-        modelName: "Villager 6",
-        category: "Commercial",
-        description: "Make the ride as memorable as the destination with ultra-smooth suspension and comfortable passenger seating.",
-        image: "image/Products/Villager 6.png",
-        slug: "villager-6"
-    },
-    {
-        title: "Do Your Best Work",
-        subtitle: "Heavy-Duty Utility Hauler",
-        modelName: "CarryAll 500",
-        category: "Industrial",
-        description: "Built to handle tough jobs across commercial facilities, groundskeeping compounds, and golf courses with zero emissions.",
-        image: "image/Products/CA500.png",
-        slug: "carryall-500"
+        image: "image/Hero/hero-4.webp",
+        alt: "One cart is great. A whole fleet? Even better.",
+        ctaLabel: "Fleet Solutions",
+        ctaAction: "navigateTo('solutions')"
     }
 ];
 
