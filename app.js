@@ -1009,14 +1009,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
 function initScrollHeader() {
     window.addEventListener('scroll', () => {
-        const header = document.getElementById('main-header');
-        if (header) {
+        const bar = document.getElementById('header-bar');
+        if (bar) {
             if (window.scrollY > 30) {
-                header.classList.add('bg-brand-dark/90', 'backdrop-blur-md', 'border-b', 'border-brand-border', 'py-3', 'shadow-xl');
-                header.classList.remove('bg-transparent', 'py-5');
+                bar.classList.add('bg-white/95', 'shadow-xl');
+                bar.classList.remove('bg-white/75', 'shadow-lg');
             } else {
-                header.classList.remove('bg-brand-dark/90', 'backdrop-blur-md', 'border-b', 'border-brand-border', 'py-3', 'shadow-xl');
-                header.classList.add('bg-transparent', 'py-5');
+                bar.classList.remove('bg-white/95', 'shadow-xl');
+                bar.classList.add('bg-white/75', 'shadow-lg');
             }
         }
     });
