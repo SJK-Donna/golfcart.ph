@@ -774,49 +774,28 @@ let carouselTimer = null;
 
 const CAROUSEL_SLIDES = [
     {
-        title: "Unforgettable Moments",
-        subtitle: "In Every Ride",
-        modelName: "Tempo Base",
-        category: "Golf",
-        description: "Places safety, durability, and fun at the forefront of your golf & residential mobility experience.",
-        image: "image/Products/Tempo 2+2 - Golf.png",
-        slug: "tempo-2-2-golf"
+        image: "image/Hero/hero-1.webp",
+        alt: "Fairway? Covered. Club Car golf cart on the course",
+        ctaLabel: "Explore Products",
+        ctaAction: "navigateTo('products')"
     },
     {
-        title: "The Club Car Tempo",
-        subtitle: "Residential & Family Luxury",
-        modelName: "Tempo 2+2 Family",
-        category: "Personal",
-        description: "Places safety and style at the forefront of your community experience. Perfect for bringing family and friends around.",
-        image: "image/Products/Tempo 2+2 - Family - Sangria Red.png",
-        slug: "tempo-2-2-family-sangria"
+        image: "image/Hero/hero-2.webp",
+        alt: "End of Year Sale - 5% off Club Car golf carts",
+        ctaLabel: "Shop the Sale",
+        ctaAction: "navigateTo('products')"
     },
     {
-        title: "Create Lasting Memories",
-        subtitle: "High-Capacity Mass Transit",
-        modelName: "Minibus 14",
-        category: "Commercial",
-        description: "When you need to move people efficiently, nothing gets the job done better than commercial shuttles from Golfcart.ph.",
-        image: "image/Products/Minibus 14.png",
-        slug: "club-car-minibus"
+        image: "image/Hero/hero-3.webp",
+        alt: "More than just golf carts. We keep you rolling.",
+        ctaLabel: "Service & Support",
+        ctaAction: "navigateTo('service')"
     },
     {
-        title: "Enjoy the Outdoors",
-        subtitle: "Memorable Group Travel",
-        modelName: "Villager 6",
-        category: "Commercial",
-        description: "Make the ride as memorable as the destination with ultra-smooth suspension and comfortable passenger seating.",
-        image: "image/Products/Villager 6.png",
-        slug: "villager-6"
-    },
-    {
-        title: "Do Your Best Work",
-        subtitle: "Heavy-Duty Utility Hauler",
-        modelName: "CarryAll 500",
-        category: "Industrial",
-        description: "Built to handle tough jobs across commercial facilities, groundskeeping compounds, and golf courses with zero emissions.",
-        image: "image/Products/CA500.png",
-        slug: "carryall-500"
+        image: "image/Hero/hero-4.webp",
+        alt: "One cart is great. A whole fleet? Even better.",
+        ctaLabel: "Fleet Solutions",
+        ctaAction: "navigateTo('solutions')"
     }
 ];
 
@@ -884,21 +863,12 @@ function updateCarouselUI() {
         const slide = document.getElementById(`hero-slide-${idx}`);
         const dot = document.getElementById(`carousel-dot-${idx}`);
         if (slide) {
-            const img = slide.querySelector('.product-card-img');
             if (idx === currentSlideIndex) {
                 slide.classList.remove('carousel-slide-hidden');
                 slide.classList.add('carousel-slide-active');
-                
-                // Trigger 2D Drive-In Motion on the Cart Image
-                if (img) {
-                    img.classList.remove('animate-cart-drive');
-                    void img.offsetWidth; // Force Reflow
-                    img.classList.add('animate-cart-drive');
-                }
             } else {
                 slide.classList.remove('carousel-slide-active');
                 slide.classList.add('carousel-slide-hidden');
-                if (img) img.classList.remove('animate-cart-drive');
             }
         }
         if (dot) {
@@ -1173,66 +1143,28 @@ function renderHomePage() {
 
     return `
     <div class="space-y-16 sm:space-y-24 pb-16">
-        <!-- Hero Carousel Section -->
-        <section class="relative min-h-[80vh] sm:min-h-[85vh] lg:min-h-[90vh] flex items-center justify-center overflow-hidden -mt-16 sm:-mt-20 bg-brand-dark pt-16 sm:pt-20" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
-            <div class="absolute inset-0 pointer-events-none hero-cart-glow"></div>
-            
-            <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 w-full">
-                <div class="relative min-h-[440px] sm:min-h-[480px] lg:min-h-[520px] flex items-center">
-                    
-                    ${CAROUSEL_SLIDES.map((slide, idx) => `
-                        <div id="hero-slide-${idx}" class="carousel-slide ${idx === 0 ? 'carousel-slide-active' : 'carousel-slide-hidden'} absolute inset-0 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                            
-                            <div class="lg:col-span-6 space-y-4 sm:space-y-6 z-20">
-                                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-semibold uppercase tracking-widest backdrop-blur-md">
-                                    <i data-lucide="zap" class="w-3.5 h-3.5 fill-current"></i>
-                                    <span>${slide.category}</span>
-                                </div>
+        <!-- Hero Carousel Section: full-bleed 16:9 banners (1920x1080) -->
+        <section class="relative sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
+            <div class="hero-banner relative w-full overflow-hidden">
+                <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent z-10 pointer-events-none"></div>
+                ${CAROUSEL_SLIDES.map((slide, idx) => `
+                    <div id="hero-slide-${idx}" class="carousel-slide hero-banner-slide ${idx === 0 ? 'carousel-slide-active' : 'carousel-slide-hidden'} absolute inset-0">
+                        <img src="${slide.image}" alt="${slide.alt}" class="hero-banner-img absolute inset-x-0 top-0 w-full object-cover" ${idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
 
-                                <div class="space-y-2">
-                                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-tight">
-                                        ${slide.title}
-                                    </h1>
-                                    <p class="text-lg sm:text-2xl font-semibold text-brand-slate">
-                                        ${slide.subtitle}
-                                    </p>
-                                </div>
-
-                                <p class="text-slate-500 text-xs sm:text-base leading-relaxed max-w-lg">
-                                    ${slide.description}
-                                </p>
-
-                                <div class="pt-2 flex flex-wrap items-center gap-3 sm:gap-4">
-                                    <button onclick="navigateTo('product-details', '${slide.slug}')" class="flex items-center gap-2.5 sm:gap-3 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-extrabold px-5 py-3 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl shadow-brand-olive/20 hover:scale-105 text-xs sm:text-sm btn-shimmer">
-                                        <span>Explore ${slide.modelName}</span>
-                                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                                    </button>
-                                    
-                                    <button onclick="openQuoteModal('${slide.modelName}')" class="flex items-center gap-2 bg-white/80 hover:bg-slate-200 text-slate-900 font-semibold px-5 py-3 sm:px-6 sm:py-3.5 rounded-xl border border-brand-border backdrop-blur-md transition-all hover:border-brand-olive/50 text-xs sm:text-sm">
-                                        <span>Request Quote</span>
-                                    </button>
-                                </div>
-
-                                <div class="pt-1">
-                                    <span class="inline-block px-3 py-1 rounded-md bg-brand-card border border-brand-border text-brand-olive font-mono text-[11px] sm:text-xs font-bold uppercase tracking-widest">
-                                        Model: ${slide.modelName}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="lg:col-span-6 relative flex items-center justify-center">
-                                <div class="container-light-beam relative w-full max-w-lg h-[260px] sm:h-[340px] lg:h-[420px] rounded-3xl bg-gradient-to-b from-brand-card/80 to-white/90 border border-brand-border/80 p-4 sm:p-6 flex items-center justify-center shadow-2xl overflow-hidden group">
-                                    <div class="absolute inset-0 bg-[radial-gradient(#749E35_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
-                                    <img src="${slide.image}" alt="${slide.modelName}" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_20px_30px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
-                                </div>
-                            </div>
-
+                        <div class="hero-banner-actions absolute left-4 sm:left-[4.2%] z-20 flex flex-wrap items-center gap-2 sm:gap-4">
+                            <button onclick="${slide.ctaAction}" class="flex items-center gap-2 sm:gap-3 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-extrabold px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl shadow-black/30 hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                                <span>${slide.ctaLabel}</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="openQuoteModal()" class="flex items-center gap-2 bg-white/85 hover:bg-white text-slate-900 font-semibold px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-xl border border-white/60 backdrop-blur-md transition-all shadow-xl shadow-black/20 text-xs sm:text-sm">
+                                <span>Request Quote</span>
+                            </button>
                         </div>
-                    `).join('')}
+                    </div>
+                `).join('')}
 
-                </div>
-
-                <div class="flex items-center justify-between pt-6 sm:pt-8 border-t border-brand-border/60">
+                <!-- Carousel Controls -->
+                <div class="absolute inset-x-0 bottom-3 sm:bottom-5 z-30 px-4 sm:px-8 flex items-center justify-between">
                     <div class="flex items-center gap-2">
                         ${CAROUSEL_SLIDES.map((_, idx) => `
                             <button id="carousel-dot-${idx}" onclick="goToSlide(${idx})" class="h-2.5 rounded-full transition-all duration-300 ${idx === 0 ? 'w-8 bg-brand-olive' : 'w-2.5 bg-slate-300 hover:bg-slate-400'}" aria-label="Go to slide ${idx + 1}"></button>
@@ -1240,15 +1172,14 @@ function renderHomePage() {
                     </div>
 
                     <div class="flex items-center gap-2 sm:gap-3">
-                        <button onclick="prevSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-600 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Previous Slide">
+                        <button onclick="prevSlide()" class="p-2 sm:p-3 rounded-xl bg-white/80 backdrop-blur-md border border-white/60 text-slate-700 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Previous Slide">
                             <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                         </button>
-                        <button onclick="nextSlide()" class="p-2.5 sm:p-3 rounded-xl bg-brand-card border border-brand-border text-slate-600 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Next Slide">
+                        <button onclick="nextSlide()" class="p-2 sm:p-3 rounded-xl bg-white/80 backdrop-blur-md border border-white/60 text-slate-700 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Next Slide">
                             <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
                         </button>
                     </div>
                 </div>
-
             </div>
         </section>
 
