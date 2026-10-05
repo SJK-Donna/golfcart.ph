@@ -132,6 +132,38 @@ body {
 }
 
 /* ==========================================================================
+   Homepage Hero Banner (source images are 1920x1080, 16:9)
+   ========================================================================== */
+/* Mobile: full 16:9 image with a strip below it for the buttons & controls */
+.hero-banner {
+    height: calc(56.25vw + 104px);
+}
+
+.hero-banner-img {
+    height: 56.25vw;
+}
+
+.hero-banner-actions {
+    bottom: 52px;
+}
+
+/* Tablet & desktop: edge-to-edge 16:9, capped to the visible screen height */
+@media (min-width: 640px) {
+    .hero-banner {
+        height: min(56.25vw, 100vh);
+        height: min(56.25vw, 100svh);
+    }
+
+    .hero-banner-img {
+        height: 100%;
+    }
+
+    .hero-banner-actions {
+        bottom: max(11%, 5rem);
+    }
+}
+
+/* ==========================================================================
    Carousel Animations & State Transitions
    ========================================================================== */
 .carousel-slide {
@@ -239,4 +271,9 @@ body {
 input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 3px rgba(116, 158, 53, 0.25);
     border-color: #749E35 !important;
+}
+/* Hero banners crossfade in place (no scale/slide, so no edge gaps) */
+.hero-banner-slide.carousel-slide-hidden,
+.hero-banner-slide.carousel-slide-active {
+    transform: none;
 }
