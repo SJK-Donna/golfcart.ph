@@ -206,8 +206,8 @@ const PRODUCTS_DATA = [
         battery: '72V 160Ah High-Capacity Lithium',
         chargingTime: '4.0 Hours',
         powertrain: '6.3 kW Heavy Duty AC Motor',
-        image: 'image/Products/Villager 6.png',
-        gallery: ['image/Products/Villager 6.png', 'image/Products/Villager 8.png', 'image/Products/Club Car 6.png'],
+        image: 'image/Products/Villager industrial.png',
+        gallery: ['image/Products/Villager industrial.png', 'image/Products/Villager 8.png', 'image/Products/Club Car industrial.png'],
         features: ['Extended Roof Canopy with Rain Gutter Trim', 'Ultra-Soft Memory Foam Marine Cushioning', 'Rear Fold-Down Footrest Deck', 'Heavy Duty Commercial Axle Suspension'],
         specs: { 'Motor Type': '6.3 kW AC Motor', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Galvanized Steel Frame', 'Brakes': 'Hydraulic Disc Brakes + Regenerative' }
     },
@@ -774,7 +774,7 @@ const CATEGORY_BANNERS = {
     }
 };
 
-// Carousel Engine Variables
+// Main Hero Carousel Variables
 let currentSlideIndex = 0;
 let carouselTimer = null;
 
@@ -798,12 +798,72 @@ const CAROUSEL_SLIDES = [
         ctaAction: "navigateTo('service')"
     },
     {
-        image: "image/Hero/hero-4.webp",
+        image: "image/Hero/hero-5.png",
         alt: "One cart is great. A whole fleet? Even better.",
         ctaLabel: "Fleet Solutions",
         ctaAction: "navigateTo('solutions')"
     }
 ];
+
+// ==========================================
+// GOLF OPERATIONS CAROUSEL ENGINE
+// ==========================================
+let currentGolfSlide = 0;
+const totalGolfSlides = 4;
+let golfCarouselTimer = null;
+
+function setGolfSlide(index) {
+    currentGolfSlide = index;
+    updateGolfCarouselUI();
+}
+
+function nextGolfSlide() {
+    currentGolfSlide = (currentGolfSlide + 1) % totalGolfSlides;
+    updateGolfCarouselUI();
+}
+
+function prevGolfSlide() {
+    currentGolfSlide = (currentGolfSlide - 1 + totalGolfSlides) % totalGolfSlides;
+    updateGolfCarouselUI();
+}
+
+function startGolfCarousel() {
+    stopGolfCarousel();
+    golfCarouselTimer = setInterval(() => {
+        nextGolfSlide();
+    }, 4500);
+}
+
+function stopGolfCarousel() {
+    if (golfCarouselTimer) clearInterval(golfCarouselTimer);
+}
+
+function updateGolfCarouselUI() {
+    for (let i = 0; i < totalGolfSlides; i++) {
+        const slide = document.getElementById(`golf-slide-${i}`);
+        const dot = document.getElementById(`golf-dot-${i}`);
+        
+        if (slide) {
+            if (i === currentGolfSlide) {
+                slide.classList.remove('opacity-0');
+                slide.classList.add('opacity-100');
+            } else {
+                slide.classList.remove('opacity-100');
+                slide.classList.add('opacity-0');
+            }
+        }
+        
+        if (dot) {
+            if (i === currentGolfSlide) {
+                dot.classList.add('w-6', 'bg-brand-olive');
+                dot.classList.remove('w-2', 'bg-white/60');
+            } else {
+                dot.classList.remove('w-6', 'bg-brand-olive');
+                dot.classList.add('w-2', 'bg-white/60');
+            }
+        }
+    }
+}
 
 // Testimonials Carousel State for About Page
 let currentTestimonialIndex = 0;
@@ -908,7 +968,7 @@ const SOLUTIONS_DATA = [
         title: 'Luxury Resorts & Hotels',
         subtitle: 'Silent, sophisticated guest transfers for world-class hospitality',
         description: 'Deliver uncompromised comfort with luxury guest shuttles designed for beach resorts, mountain retreats, and estate properties. Zero engine noise guarantees uninterrupted tranquility for guests.',
-        image: 'image/Products/Club Car 6.png',
+        image: 'image/Products/Club Car industrial.png',
         benefits: [
             'Whisper-quiet electric drive preserves peaceful resort atmosphere',
             'All-weather roll-down clear side enclosures for tropical rain',
@@ -944,7 +1004,7 @@ const SOLUTIONS_DATA = [
     }
 ];
 
-// Blog Articles Data (sample posts - replace with real articles)
+// Blog Articles Data
 const BLOGS_DATA = [
     {
         slug: 'choosing-the-right-golf-cart',
@@ -964,7 +1024,7 @@ const BLOGS_DATA = [
         title: 'Battery Care Tips to Keep Your Electric Cart Running Longer',
         category: 'Maintenance',
         date: '2026-08-28',
-        image: 'image/Products/Villager 6.png',
+        image: 'image/Products/Villager industrial.png',
         excerpt: 'Simple charging and storage habits that protect your battery and keep your fleet on the road.',
         content: [
             'Charge after every use instead of waiting for the battery to run low. Regular charging keeps the battery healthy and ready for the next trip.',
@@ -1005,6 +1065,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initCustomCursor();
     initMouseSpotlight();
     renderApp();
+    startGolfCarousel();
 });
 
 function initScrollHeader() {
@@ -1052,13 +1113,15 @@ function navigateTo(page, slug = null) {
     const drawer = document.getElementById('mobile-drawer');
     if (drawer) drawer.classList.add('hidden');
     
-    const activePage = page === 'blog-details' ? 'blogs' : page;
+    const activePage = (page === 'blog-details' || page === 'product-details') ? (page === 'blog-details' ? 'blogs' : 'products') : page;
+    
+    // Toggle active state classes dynamically across desktop navigation items
     document.querySelectorAll('.nav-link').forEach(btn => {
         if (btn.dataset.page === activePage) {
-            btn.classList.add('text-brand-olive', 'bg-slate-100/80');
+            btn.classList.add('bg-slate-100/80', 'font-bold', 'text-slate-900');
             btn.classList.remove('text-slate-600');
         } else {
-            btn.classList.remove('text-brand-olive', 'bg-slate-100/80');
+            btn.classList.remove('bg-slate-100/80', 'font-bold', 'text-slate-900');
             btn.classList.add('text-slate-600');
         }
     });
@@ -1141,13 +1204,11 @@ function initMouseSpotlight() {
     const spotlight = document.getElementById('mouse-spotlight');
 
     window.addEventListener('mousemove', (e) => {
-        // Global desktop background spotlight
         if (spotlight) {
             spotlight.style.setProperty('--mouse-x', `${e.clientX}px`);
             spotlight.style.setProperty('--mouse-y', `${e.clientY}px`);
         }
 
-        // Global Container Light Beam Tracker (Applies to all containers with .container-light-beam class)
         const hoveredContainer = e.target.closest('.container-light-beam');
         if (hoveredContainer) {
             const rect = hoveredContainer.getBoundingClientRect();
@@ -1166,6 +1227,7 @@ function renderApp() {
     
     if (currentPage === 'home') {
         viewport.innerHTML = renderHomePage();
+        startGolfCarousel();
     } else if (currentPage === 'products') {
         viewport.innerHTML = renderProductsPage();
         bindProductsFilterEvents();
@@ -1201,7 +1263,7 @@ function renderHomePage() {
 
     return `
     <div class="space-y-16 sm:space-y-24 pb-16">
-        <!-- Hero Carousel Section: full-bleed 16:9 banners (1920x1080) -->
+        <!-- Hero Carousel Section -->
         <section class="relative sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
             <div class="hero-banner relative w-full overflow-hidden">
                 <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent z-10 pointer-events-none"></div>
@@ -1241,43 +1303,98 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- Spec Highlights Ticker Bar -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="container-light-beam grid grid-cols-2 md:grid-cols-4 gap-4 p-5 sm:p-8 rounded-2xl bg-brand-card border border-brand-border shadow-xl">
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="p-2.5 sm:p-3 rounded-xl bg-brand-olive/10 text-brand-olive flex-shrink-0">
-                        <i data-lucide="zap" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                    </div>
-                    <div>
-                        <div class="text-xl sm:text-2xl font-bold text-slate-900">0%</div>
-                        <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Carbon Emissions</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="p-2.5 sm:p-3 rounded-xl bg-brand-olive/10 text-brand-olive flex-shrink-0">
-                        <i data-lucide="battery" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                    </div>
-                    <div>
-                        <div class="text-xl sm:text-2xl font-bold text-slate-900">100+ km</div>
-                        <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Lithium Range</div>
-                    </div>
-                </div>
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="p-2.5 sm:p-3 rounded-xl bg-brand-olive/10 text-brand-olive flex-shrink-0">
-                        <i data-lucide="shield" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                    </div>
-                    <div>
-                        <div class="text-xl sm:text-2xl font-bold text-slate-900">5-Year</div>
-                        <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Battery Warranty</div>
+        <!-- RESORT VIDEO SECTION (FULL WIDTH) -->
+        <section class="w-full px-2 sm:px-4 lg:px-6">
+            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+                <video 
+                    autoplay 
+                    loop 
+                    muted 
+                    playsinline 
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                >
+                    <source src="video/resort_video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/30 to-transparent"></div>
+                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-10 space-y-3">
+                    <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Resort</span>
+                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Experience Silent, Unmatched Luxury</h3>
+                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Discover our eco-friendly electric vehicles in action across premier resorts, championship golf fairways, and commercial venues nationwide.</p>
+                    <div class="pt-2">
+                        <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                            <i data-lucide="play-circle" class="w-4 h-4"></i>
+                            <span>Explore for More</span>
+                        </button>
                     </div>
                 </div>
-                <div class="flex items-center gap-3 sm:gap-4">
-                    <div class="p-2.5 sm:p-3 rounded-xl bg-brand-olive/10 text-brand-olive flex-shrink-0">
-                        <i data-lucide="building-2" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+            </div>
+        </section>
+
+        <!-- INDUSTRIAL IMAGE SECTION (FULL WIDTH) -->
+        <section class="w-full px-2 sm:px-4 lg:px-6 mt-6 sm:mt-8">
+            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+                <img 
+                    src="image/industrial.png" 
+                    alt="Industrial Utility Vehicle" 
+                    class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/30 to-transparent"></div>
+                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-10 space-y-3">
+                    <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Industrial Workhorse</span>
+                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Heavy Payload & Unmatched Performance</h3>
+                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Built for demanding groundskeeping, heavy cargo hauling, estate management, and zero-emission facility logistics.</p>
+                    <div class="pt-2">
+                        <button onclick="setCategoryAndNavigate('Industrial')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                            <i data-lucide="arrow-right-circle" class="w-4 h-4"></i>
+                            <span>Explore Industrial Carts</span>
+                        </button>
                     </div>
-                    <div>
-                        <div class="text-xl sm:text-2xl font-bold text-slate-900">250+</div>
-                        <div class="text-[10px] sm:text-xs text-brand-slate uppercase font-medium tracking-wider">Commercial Fleets</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- GOLF OPERATIONS CAROUSEL SECTION -->
+        <section class="w-full px-2 sm:px-4 lg:px-6 mt-6 sm:mt-8" onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()">
+            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[480px] bg-slate-900 group">
+                <div id="golf-slide-0" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-0">
+                    <img src="image/4.png" alt="Golf Operations Vehicle 1" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div id="golf-slide-1" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                    <img src="image/5.png" alt="Golf Operations Vehicle 2" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div id="golf-slide-2" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                    <img src="image/6.png" alt="Golf Operations Vehicle 3" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div id="golf-slide-3" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-0 z-0">
+                    <img src="image/7.png" alt="Golf Operations Vehicle 4" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/40 to-transparent z-10 pointer-events-none"></div>
+                <div class="absolute inset-0 p-6 sm:p-12 flex flex-col justify-end items-start z-20 space-y-3">
+                    <span class="px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-xs font-bold uppercase tracking-widest shadow-lg">Golf Operations</span>
+                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">Championship Fairway Mobility & Fleet Care</h3>
+                    <p class="text-slate-200 text-xs sm:text-base max-w-2xl leading-relaxed drop-shadow">Engineered for tournament play, course management, turf preservation, and high-efficiency golfer transport.</p>
+                    <div class="pt-2 flex items-center gap-3">
+                        <button onclick="setCategoryAndNavigate('Golf Operations')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                            <i data-lucide="flag" class="w-4 h-4"></i>
+                            <span>Explore Golf Fleet</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 z-30 flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 bg-black/40 backdrop-blur-md px-3 py-2 rounded-full border border-white/20">
+                        <button id="golf-dot-0" onclick="setGolfSlide(0)" class="w-6 h-2 rounded-full bg-brand-olive transition-all" aria-label="Slide 1"></button>
+                        <button id="golf-dot-1" onclick="setGolfSlide(1)" class="w-2 h-2 rounded-full bg-white/60 hover:bg-white transition-all" aria-label="Slide 2"></button>
+                        <button id="golf-dot-2" onclick="setGolfSlide(2)" class="w-2 h-2 rounded-full bg-white/60 hover:bg-white transition-all" aria-label="Slide 3"></button>
+                        <button id="golf-dot-3" onclick="setGolfSlide(3)" class="w-2 h-2 rounded-full bg-white/60 hover:bg-white transition-all" aria-label="Slide 4"></button>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button onclick="prevGolfSlide()" class="p-2 sm:p-2.5 rounded-xl bg-white/80 backdrop-blur-md hover:bg-white text-slate-900 border border-white/40 transition-all hover:scale-105" aria-label="Previous Slide">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        </button>
+                        <button onclick="nextGolfSlide()" class="p-2 sm:p-2.5 rounded-xl bg-white/80 backdrop-blur-md hover:bg-white text-slate-900 border border-white/40 transition-all hover:scale-105" aria-label="Next Slide">
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -1355,6 +1472,7 @@ function renderHomePage() {
     `;
 }
 
+// RENDER CART / PRODUCTS PAGE
 function renderProductsPage() {
     const categories = ['All', ...Object.keys(CATEGORY_BANNERS)];
     const currentBanner = CATEGORY_BANNERS[productFilterCategory];
@@ -1367,70 +1485,68 @@ function renderProductsPage() {
     });
 
     return `
-    <div class="space-y-8 sm:space-y-12 pb-16">
+    <div id="cart-page-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 pb-16">
         
-        <!-- Category Banner Header -->
+        <!-- 1. CATEGORY SUB-MENU BAR (DIRECTLY BELOW MAIN NAVIGATION HEADER) -->
+        <div class="container-light-beam flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-2xl bg-brand-card border border-brand-border shadow-md">
+            <!-- Category Filter Buttons -->
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none z-10">
+                ${categories.map(cat => `
+                    <button onclick="setCategoryFilter('${cat}')" class="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
+                        productFilterCategory === cat ? 'bg-brand-olive text-slate-900 shadow-md font-bold' : 'bg-white/70 text-slate-600 hover:bg-slate-200/80'
+                    }">
+                        ${cat}
+                    </button>
+                `).join('')}
+            </div>
+
+            <!-- Search Input Bar -->
+            <div class="relative w-full md:w-72 z-10">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+                <input id="product-search-input" type="text" value="${productSearchQuery}" placeholder="Search products or accessories..." class="w-full bg-white border border-brand-border rounded-xl pl-10 pr-4 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-olive">
+            </div>
+        </div>
+
+        <!-- 2. DYNAMIC CATEGORY BANNER OR DEFAULT HEADLINE (UNDER THE SUB-MENU BAR) -->
         ${currentBanner ? `
-            <section class="relative bg-gradient-to-r from-brand-card via-brand-dark to-white border-b border-brand-border py-8 sm:py-12 px-4 overflow-hidden">
-                <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
+            <section class="relative bg-gradient-to-r from-brand-card via-brand-dark to-white border border-brand-border rounded-3xl p-6 sm:p-10 shadow-lg overflow-hidden">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
                     <div class="lg:col-span-7 space-y-2 sm:space-y-3">
                         <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">
                             ${currentBanner.title}
                         </span>
-                        <h1 class="text-2xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+                        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
                             ${currentBanner.headline}
                         </h1>
-                        <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
+                        <p class="text-slate-600 text-xs sm:text-base leading-relaxed">
                             ${currentBanner.subheadline}
                         </p>
                     </div>
                     <div class="lg:col-span-5 flex justify-center lg:justify-end">
-                        <div class="container-light-beam w-full sm:w-64 h-36 sm:h-48 rounded-2xl bg-white/80 border border-brand-border p-4 flex items-center justify-center shadow-xl">
+                        <div class="w-full sm:w-64 h-36 sm:h-48 rounded-2xl bg-white/80 border border-brand-border p-4 flex items-center justify-center shadow-md">
                             <img src="${currentBanner.image}" alt="${currentBanner.title}" class="product-card-img max-h-full max-w-full object-contain">
                         </div>
                     </div>
                 </div>
             </section>
         ` : `
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-                <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
-                    <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Electric Showroom</span>
-                    <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
-                    <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                        Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.
-                    </p>
-                </div>
+            <div class="text-center space-y-2 pt-2 pb-2">
+                <span class="text-brand-olive text-xs font-bold tracking-widest uppercase">Electric Showroom</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
+                <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+                    Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.
+                </p>
             </div>
         `}
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
-            <!-- Pill Tab Filter & Search Controls -->
-            <div class="container-light-beam flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 p-4 rounded-2xl bg-brand-card border border-brand-border shadow-xl">
-                <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none z-10">
-                    ${categories.map(cat => `
-                        <button onclick="setCategoryFilter('${cat}')" class="px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                            productFilterCategory === cat ? 'bg-brand-olive text-slate-900 shadow-lg font-bold' : 'bg-slate-100/60 text-slate-600 hover:bg-slate-200'
-                        }">
-                            ${cat}
-                        </button>
-                    `).join('')}
+        <!-- 3. PRODUCT GRID CONTAINER -->
+        <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            ${filtered.length > 0 ? filtered.map(p => renderProductCardHTML(p)).join('') : `
+                <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
+                    <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
+                    <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
                 </div>
-
-                <div class="relative w-full md:w-72 z-10">
-                    <i data-lucide="search" class="w-4 h-4 text-brand-slate absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                    <input id="product-search-input" type="text" value="${productSearchQuery}" placeholder="Search products or accessories..." class="w-full bg-white border border-brand-border rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-900 focus:outline-none focus:border-brand-olive relative z-20">
-                </div>
-            </div>
-
-            <!-- Product Grid with Container ID for Targeted Dom Updates -->
-            <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${filtered.length > 0 ? filtered.map(p => renderProductCardHTML(p)).join('') : `
-                    <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
-                        <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
-                        <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
-                    </div>
-                `}
-            </div>
+            `}
         </div>
 
     </div>
@@ -1443,7 +1559,6 @@ function bindProductsFilterEvents() {
         input.addEventListener('input', (e) => {
             productSearchQuery = e.target.value;
             
-            // Only update the product grid and result counter rather than re-rendering the full page
             const gridContainer = document.getElementById('product-grid-container');
             if (gridContainer) {
                 const filtered = PRODUCTS_DATA.filter(p => {
@@ -1547,7 +1662,6 @@ function renderProductDetailsPage() {
                     ` : ''}
 
                     <div id="3d-canvas-container" class="hidden absolute inset-0 bg-white z-30 flex items-center justify-center">
-                        <!-- Populated on 3D trigger -->
                     </div>
 
                 </div>
