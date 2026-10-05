@@ -57,12 +57,11 @@
         </div>
     </div>
 
-    <!-- Clean Navigation Header (Dropdown Removed) -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-2 sm:py-2.5 bg-transparent">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Header Container: logo, menu, cart, quote & SJK logo in one bar -->
-            <div id="header-bar" class="flex items-center justify-between gap-4 rounded-full border border-white/70 bg-white/75 backdrop-blur-md shadow-lg shadow-slate-900/10 pl-4 pr-1.5 sm:pl-6 sm:pr-3 py-1 sm:py-2 transition-all duration-300">
-
+    <!-- Clean Navigation Header (Full Width Bar) -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-2 sm:py-3 bg-transparent">
+        <div class="w-full px-2 sm:px-4 lg:px-6">
+            <!-- Header Container: full width with clean rounded rectangle border -->
+            <div id="header-bar" class="w-full flex items-center justify-between gap-4 rounded-2xl border border-white/70 bg-white/80 backdrop-blur-md shadow-lg shadow-slate-900/10 pl-4 pr-2 sm:pl-6 sm:pr-4 py-2 transition-all duration-300">
                 <!-- Brand Logo -->
                 <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer group flex-shrink-0">
                     <img src="image/GCPH_logo.png" alt="Golfcart.ph logo" class="h-9 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]" />
@@ -142,9 +141,49 @@
         </div>
     </header>
 
-    <!-- Main View Container -->
-    <main id="app-viewport" class="pt-16 sm:pt-20 flex-grow z-10">
-        <!-- SPA Pages Render Dynamically Here -->
+
+   <!-- Main View Container -->
+<main id="app-viewport" class="pt-24 sm:pt-28 flex-grow z-10">
+    <!-- Cart / Products Page View -->
+    <div id="cart-page-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- 1. CATALOG HEADLINE & SUBTITLE (MAIN) -->
+        <div class="text-center space-y-2 pt-2 pb-4">
+            <span class="text-brand-olive text-xs font-bold tracking-widest uppercase">Electric Showroom</span>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
+            <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto">Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.</p>
+        </div>
+
+        <!-- 2. CATEGORY SUB-MENU BAR (PLACED AFTER MAIN HEADLINE) -->
+        <div class="bg-brand-card/80 border border-brand-border rounded-2xl p-2.5 sm:p-3 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+            <!-- Category Filter Buttons -->
+            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-brand-olive text-slate-900 transition-all">All</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Personal Golfcart</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Resort</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Commercial</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Industrial</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Golf Operations</button>
+                <button class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all whitespace-nowrap">Accessories</button>
+            </div>
+
+            <!-- Search Input Bar -->
+            <div class="relative w-full md:w-72">
+                <input type="text" placeholder="Search products or accessories..." class="w-full bg-white border border-brand-border rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-olive">
+                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+            </div>
+        </div>
+
+    </div>
+</main>
+            <!-- 2. CATALOG HEADLINE & SUBTITLE -->
+            <div class="text-center space-y-2 py-4">
+                <span class="text-brand-olive text-xs font-bold tracking-widest uppercase">Electric Showroom</span>
+                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
+                <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto">Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.</p>
+            </div>
+
+        </div>
     </main>
 
     <!-- Global Quote Request Modal -->
