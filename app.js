@@ -206,8 +206,8 @@ const PRODUCTS_DATA = [
         battery: '72V 160Ah High-Capacity Lithium',
         chargingTime: '4.0 Hours',
         powertrain: '6.3 kW Heavy Duty AC Motor',
-        image: 'image/Products/Villager industrial.png',
-        gallery: ['image/Products/Villager industrial.png', 'image/Products/Villager 8.png', 'image/Products/Club Car industrial.png'],
+        image: 'image/Products/Villager 6.png',
+        gallery: ['image/Products/Villager 6.png', 'image/Products/Villager 8.png'],
         features: ['Extended Roof Canopy with Rain Gutter Trim', 'Ultra-Soft Memory Foam Marine Cushioning', 'Rear Fold-Down Footrest Deck', 'Heavy Duty Commercial Axle Suspension'],
         specs: { 'Motor Type': '6.3 kW AC Motor', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Galvanized Steel Frame', 'Brakes': 'Hydraulic Disc Brakes + Regenerative' }
     },
@@ -968,7 +968,7 @@ const SOLUTIONS_DATA = [
         title: 'Luxury Resorts & Hotels',
         subtitle: 'Silent, sophisticated guest transfers for world-class hospitality',
         description: 'Deliver uncompromised comfort with luxury guest shuttles designed for beach resorts, mountain retreats, and estate properties. Zero engine noise guarantees uninterrupted tranquility for guests.',
-        image: 'image/Products/Club Car industrial.png',
+        image: 'image/Products/Villager 8.png',
         benefits: [
             'Whisper-quiet electric drive preserves peaceful resort atmosphere',
             'All-weather roll-down clear side enclosures for tropical rain',
@@ -1024,7 +1024,7 @@ const BLOGS_DATA = [
         title: 'Battery Care Tips to Keep Your Electric Cart Running Longer',
         category: 'Maintenance',
         date: '2026-08-28',
-        image: 'image/Products/Villager industrial.png',
+        image: 'image/Products/Villager 6.png',
         excerpt: 'Simple charging and storage habits that protect your battery and keep your fleet on the road.',
         content: [
             'Charge after every use instead of waiting for the battery to run low. Regular charging keeps the battery healthy and ready for the next trip.',
@@ -1264,7 +1264,7 @@ function renderHomePage() {
     return `
     <div class="space-y-16 sm:space-y-24 pb-16">
         <!-- Main Hero Carousel Section -->
-        <section class="relative sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
+        <section class="relative -mt-6 sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
             <div class="hero-banner relative w-full overflow-hidden">
                 <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent z-10 pointer-events-none"></div>
                 ${CAROUSEL_SLIDES.map((slide, idx) => `
