@@ -831,7 +831,7 @@ function startGolfCarousel() {
     stopGolfCarousel();
     golfCarouselTimer = setInterval(() => {
         nextGolfSlide();
-    }, 4500);
+    }, 2000); // Updated: auto slides every 2 seconds
 }
 
 function stopGolfCarousel() {
@@ -917,7 +917,7 @@ function startCarouselAutoPlay() {
     stopCarouselAutoPlay();
     carouselTimer = setInterval(() => {
         nextSlide();
-    }, 5500);
+    }, 2000); // Updated: auto slides every 2 seconds
 }
 
 function stopCarouselAutoPlay() {
@@ -1262,7 +1262,7 @@ function renderHomePage() {
     }, 100);
 
     return `
-    <div class="pb-16">
+    <div class="space-y-16 sm:space-y-24 pb-16">
         <!-- Main Hero Carousel Section -->
         <section class="relative sm:-mt-20 bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
             <div class="hero-banner relative w-full overflow-hidden">
@@ -1303,7 +1303,7 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- RESORT VIDEO SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <!-- RESORT VIDEO SECTION (FULL WIDTH) -->
         <section class="w-full">
             <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <video 
@@ -1331,7 +1331,7 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- INDUSTRIAL IMAGE SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <!-- INDUSTRIAL IMAGE SECTION (FULL WIDTH) -->
         <section class="w-full">
             <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <img 
@@ -1354,7 +1354,7 @@ function renderHomePage() {
             </div>
         </section>
 
-        <!-- GOLF OPERATIONS CAROUSEL SECTION (FULL WIDTH & MATCHED HERO DIMENSIONS) -->
+        <!-- GOLF OPERATIONS CAROUSEL SECTION (FULL WIDTH) -->
         <section class="w-full" onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()">
             <div class="container-light-beam relative overflow-hidden bg-slate-900 group h-[450px] sm:h-[600px] lg:h-[700px]">
                 <div id="golf-slide-0" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 opacity-100 z-0">
@@ -1400,6 +1400,40 @@ function renderHomePage() {
             </div>
         </section>
 
+        <!-- WHO IS GOLFCART.PH VIDEO SECTION (CONTAINED WIDTH WITH TEXT ABOVE) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+            <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
+                <span class="px-3.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">
+                    Who is Golfcart.ph?
+                </span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">
+                    Pioneering Electric Mobility in the Philippines
+                </h2>
+                <p class="text-slate-600 text-xs sm:text-base leading-relaxed">
+                    Operating under SJK Guahan Inc., Golfcart.ph is the premier distributor and customizer of luxury, resort, golf, and commercial utility electric vehicles across the country.
+                </p>
+            </div>
+
+            <div class="container-light-beam relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[350px] sm:h-[500px] lg:h-[600px] bg-slate-900 group">
+                <video 
+                    autoplay 
+                    loop 
+                    muted 
+                    playsinline 
+                    class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                >
+                    <source src="video/intro_golfcartph.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="absolute bottom-6 right-6 z-20">
+                    <button onclick="navigateTo('about')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl transition-all shadow-xl hover:scale-105 text-xs sm:text-sm btn-shimmer">
+                        <i data-lucide="info" class="w-4 h-4"></i>
+                        <span>Learn More About Us</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <!-- Dynamic Client Logos Infinite Marquee Ticker -->
         <section class="py-12 sm:py-16 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8 text-center space-y-2">
@@ -1422,7 +1456,7 @@ function renderHomePage() {
         </section>
 
         <!-- Featured Products Grid -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-4">
                 <div>
                     <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Signature Collection</span>
@@ -1440,7 +1474,7 @@ function renderHomePage() {
         </section>
 
         <!-- Industry Solutions Overview -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16">
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
                 <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Tailored Industry Mobility</span>
                 <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 mt-1">Engineered for Every Setting</h2>
@@ -2128,7 +2162,7 @@ function renderContactPage() {
                             </select>
                         </div>
                         <div><label class="block mb-1 text-slate-600">Message / Custom Requirements</label><textarea rows="4" placeholder="Mention preferred colors, custom accessories, or fleet size..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea></div>
-                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-4 rounded-xl shadow-xl text-xs sm:text-sm transition-all btn-shimmer">Submit Quote Request</button>
+                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-4 rounded-xl shadow-xl text-xs sm:text-sm btn-shimmer">Submit Quote Request</button>
                     </form>
                 </div>
             </div>
