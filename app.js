@@ -293,7 +293,7 @@ const PRODUCTS_DATA = [
         accessoryTags: ['minibus'],
         canopyColors: ['Black'],
         tagline: 'Fourteen (14) Seater Mass Shuttle Solution',
-        description: 'When you need to move groups efficiently, nothing gets the job done better than the GC Minibus from Golfcart.ph.',
+        description: 'When you need to move groups efficiently, nothing gets the job done better than the GC Minibus from Golfcarts.ph.',
         priceLabel: 'Inquire for Price',
         seating: '14 Seats',
         range: '110 km per charge',
@@ -1757,7 +1757,7 @@ function renderHomeLineup() {
 
     return `
         <section id="home-lineup" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            ${renderHomeSectionHeading('Vehicle Lineup', 'More Golfcart.ph Vehicles')}
+            ${renderHomeSectionHeading('Vehicle Lineup', 'More Golfcarts.ph Vehicles')}
             <div class="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none pb-1">
                 ${HOME_LINEUP_TABS.map(cat => `
                     <button onclick="setHomeLineupFilter('${cat}')" class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
@@ -1849,10 +1849,10 @@ function renderHomePage() {
                     </video>
                 </div>
                 <div class="lg:col-span-5 space-y-5">
-                    <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">Who is Golfcart.ph?</span>
+                    <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">Who is Golfcarts.ph?</span>
                     <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Pioneering Electric Mobility in the Philippines</h2>
                     <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                        Operating under SJK Guahan Inc., Golfcart.ph is the premier distributor and customizer of luxury, resort, golf, and commercial utility electric vehicles across the country.
+                        Operating under SJK Guahan Inc., Golfcarts.ph is the premier distributor and customizer of luxury, resort, golf, and commercial utility electric vehicles across the country.
                     </p>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
@@ -1974,7 +1974,7 @@ function renderHomePage() {
             <!-- 8. BLOG -->
             <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                    ${renderHomeSectionHeading('The Golfcart.ph Blog', 'Guides, Tips & Stories', 'left')}
+                    ${renderHomeSectionHeading('The Golfcarts.ph Blog', 'Guides, Tips & Stories', 'left')}
                     <button onclick="navigateTo('blogs')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-oliveHover font-semibold text-sm">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -3025,7 +3025,7 @@ function renderServicePage() {
     return `
     <!-- Header banner (full width, slides under the fixed header like the homepage hero) -->
     <section class="relative sm:-mt-[65px] bg-slate-900 overflow-hidden">
-        <img src="image/Hero/hero-3.webp" alt="Golfcart.ph service technician working on a Club Car" fetchpriority="high" class="w-full aspect-[16/9] max-h-[78vh] object-cover">
+        <img src="image/Hero/hero-3.webp" alt="Golfcarts.ph service technician working on a Club Car" fetchpriority="high" class="w-full aspect-[16/9] max-h-[78vh] object-cover">
         <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent pointer-events-none"></div>
     </section>
 
@@ -3113,7 +3113,7 @@ function renderBlogsPage() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
         <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">News & Insights</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Golfcart.ph Blog</h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Golfcarts.ph Blog</h1>
             <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 Buying guides, maintenance tips, and stories from the world of electric mobility.
             </p>
@@ -3186,7 +3186,7 @@ function renderAboutPage() {
         <!-- About Page Header Banner -->
         <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Pioneering Mobility</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Golfcart.ph</h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Golfcarts.ph</h1>
             <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 Empowering outdoor lifestyle and electric utility transportation across the Philippines.
             </p>
