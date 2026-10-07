@@ -38,9 +38,6 @@
 
     <!-- Lucide Icons CDN -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Google WebGL Model Viewer CDN (Optional for 3D Vehicles) -->
-    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
 </head>
 <body class="min-h-screen flex flex-col justify-between selection:bg-brand-olive selection:text-black relative">
 
@@ -58,10 +55,10 @@
     </div>
 
     <!-- Clean Navigation Header (Full Width Bar) -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-2 sm:py-3 bg-transparent">
-        <div class="w-full px-2 sm:px-4 lg:px-6">
-            <!-- Header Container: full width with clean rounded rectangle border -->
-            <div id="header-bar" class="w-full flex items-center justify-between gap-4 rounded-2xl border border-white/70 bg-white/80 backdrop-blur-md shadow-lg shadow-slate-900/10 pl-4 pr-2 sm:pl-6 sm:pr-4 py-2 transition-all duration-300">
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-40 transition-all duration-300">
+        <div class="w-full">
+            <!-- Header Container: edge-to-edge bar flush with the top of the page -->
+            <div id="header-bar" class="w-full flex items-center justify-between gap-4 border-b border-brand-border/70 bg-white/80 backdrop-blur-md shadow-lg shadow-slate-900/10 px-4 sm:px-6 lg:px-10 py-3 transition-all duration-300">
                 <!-- Brand Logo -->
                 <div onclick="navigateTo('home')" class="flex items-center gap-3 cursor-pointer group flex-shrink-0">
                     <img src="image/GCPH_logo.png" alt="Golfcart.ph logo" class="h-9 sm:h-10 w-auto max-w-[140px] sm:max-w-[180px] object-contain transition-transform group-hover:scale-[1.02]" />
@@ -101,7 +98,7 @@
         </div>
 
         <!-- Mobile Drawer Navigation -->
-        <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-16 sm:top-20 bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
+        <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-[63px] sm:top-[65px] bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
             <div class="flex flex-col space-y-2">
                 <button onclick="navigateTo('home')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Home</span>
@@ -111,6 +108,12 @@
                     <span>Cart</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
+                <button onclick="setCategoryAndNavigate('Personal Golfcart')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
+                    <span>Personal Golfcart</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
+                </button>
+                <!-- Resort / Industrial and Township / Golf Solution accordions (built from NAV_SEGMENTS in app.js) -->
+                <div id="mobile-segment-menus" class="space-y-1"></div>
                 <button onclick="navigateTo('solutions')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Solutions</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
@@ -142,49 +145,78 @@
     </header>
 
     <!-- Main View Container -->
-    <main id="app-viewport" class="pt-24 sm:pt-28 flex-grow z-10">
+    <main id="app-viewport" class="pt-[63px] sm:pt-[65px] flex-grow z-10">
         <!-- SPA View Templates Render Dynamically Here -->
     </main>
 
     <!-- Global Quote Request Modal -->
-    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-white/80 backdrop-blur-md hidden overflow-y-auto">
-        <div class="relative w-full max-w-lg rounded-2xl sm:rounded-3xl bg-brand-dark border border-brand-border p-6 sm:p-8 shadow-2xl space-y-6 my-auto max-h-[90vh] overflow-y-auto">
-            <button onclick="closeQuoteModal()" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-slate-100/80 text-slate-500 hover:text-slate-900">
+    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-white/80 backdrop-blur-md hidden overflow-y-auto">
+        <!-- Landscape layout: request form on the left, accessories on the right -->
+        <div class="relative w-full max-w-5xl rounded-2xl sm:rounded-3xl bg-brand-dark border border-brand-border p-6 sm:p-8 shadow-2xl my-auto max-h-[94vh] overflow-y-auto lg:overflow-visible">
+            <button onclick="closeQuoteModal()" aria-label="Close" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-slate-100/80 text-slate-500 hover:text-slate-900 z-10">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
 
-            <div>
-                <span class="text-brand-olive text-[10px] font-semibold tracking-widest uppercase">Fast Concierge</span>
-                <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Instant Quote Request</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+                <!-- Left: request details -->
+                <div class="space-y-5">
+                    <div>
+                        <span class="text-brand-olive text-[10px] font-semibold tracking-widest uppercase">Fast Concierge</span>
+                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Instant Quote Request</h3>
+                    </div>
+
+                    <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="space-y-4 text-xs">
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">Selected Vehicle Model</label>
+                            <select id="modal-product-select" onchange="onQuoteModelChange()" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
+                                <!-- Populated Dynamically -->
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">Full Name *</label>
+                            <input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block font-medium text-slate-600 mb-1">Email Address *</label>
+                                <input required type="email" placeholder="john@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
+                            </div>
+                            <div>
+                                <label class="block font-medium text-slate-600 mb-1">Phone Number *</label>
+                                <input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-slate-600 mb-1">Notes (optional)</label>
+                            <textarea id="modal-notes" rows="3" placeholder="Preferred color, quantity, delivery location..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
+                            Send Quote Request
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right: accessories compatible with the selected model (built by renderAccessoryPicker in app.js) -->
+                <div class="flex flex-col rounded-2xl border border-brand-border bg-brand-card p-4 sm:p-5 lg:mt-8 lg:h-[500px] text-xs">
+                    <div class="flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-2">
+                            <i data-lucide="plus-circle" class="w-4 h-4 text-brand-olive"></i>
+                            <span class="font-bold text-slate-900 text-sm">Add Accessories</span>
+                        </div>
+                        <span id="accessory-toggle" class="text-[11px] font-semibold text-brand-oliveHover"></span>
+                    </div>
+                    <div class="flex gap-2 mt-3 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
+                        <i data-lucide="tag" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"></i>
+                        <p><span class="font-semibold">Please note:</span> All optional accessories are add-ons and carry an additional cost. Exact accessory pricing will be calculated in your final quote.</p>
+                    </div>
+                    <div id="modal-accessory-chips" class="flex flex-wrap gap-1.5 mt-3 empty:hidden"></div>
+                    <div id="modal-accessory-picker" class="mt-3 flex-1 min-h-0 max-h-72 lg:max-h-none overflow-y-auto pr-1 space-y-4"></div>
+                </div>
             </div>
-
-            <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="space-y-4 text-xs">
-                <div>
-                    <label class="block font-medium text-slate-600 mb-1">Selected Vehicle Model</label>
-                    <select id="modal-product-select" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        <!-- Populated Dynamically -->
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block font-medium text-slate-600 mb-1">Full Name *</label>
-                    <input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                </div>
-
-                <div>
-                    <label class="block font-medium text-slate-600 mb-1">Email Address *</label>
-                    <input required type="email" placeholder="john@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                </div>
-
-                <div>
-                    <label class="block font-medium text-slate-600 mb-1">Phone Number *</label>
-                    <input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                </div>
-
-                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
-                    Send Quote Request
-                </button>
-            </form>
         </div>
     </div>
 
@@ -192,68 +224,13 @@
     <footer class="border-t border-brand-border bg-white pt-12 sm:pt-16 pb-12 text-slate-600 text-xs mt-12 sm:mt-16 z-20 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
             
+            <!-- Footer columns: Brand | Models | Solutions & Tools | Learn & Connect -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-                <!-- QUICK LINKS -->
-                <div class="space-y-4">
-                    <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">QUICK LINKS</h4>
-                    <ul class="space-y-2.5 font-medium">
-                        <li><button onclick="navigateTo('home')" class="hover:text-brand-olive transition-colors">Home</button></li>
-                        <li><button onclick="navigateTo('products')" class="hover:text-brand-olive transition-colors">Cart</button></li>
-                        <li><button onclick="navigateTo('solutions')" class="hover:text-brand-olive transition-colors">Solutions</button></li>
-                        <li><button onclick="navigateTo('service')" class="hover:text-brand-olive transition-colors">Services</button></li>
-                        <li><button onclick="navigateTo('blogs')" class="hover:text-brand-olive transition-colors">Blogs</button></li>
-                        <li><button onclick="navigateTo('about')" class="hover:text-brand-olive transition-colors">About</button></li>
-                        <li><button onclick="navigateTo('contact')" class="hover:text-brand-olive transition-colors">Contact us</button></li>
-                    </ul>
-                </div>
-
-                <!-- KEY INDUSTRIES -->
-                <div class="space-y-4">
-                    <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">KEY INDUSTRIES</h4>
-                    <ul class="space-y-2.5 font-medium">
-                        <li><button onclick="setCategoryAndNavigate('Personal Golfcart')" class="hover:text-brand-olive transition-colors">Personal Golfcart</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Resort')" class="hover:text-brand-olive transition-colors">Resort</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Commercial')" class="hover:text-brand-olive transition-colors">Commercial</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Industrial')" class="hover:text-brand-olive transition-colors">Industrial</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Golf Operations')" class="hover:text-brand-olive transition-colors">Golf Operations</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Accessories')" class="hover:text-brand-olive transition-colors">Accessories</button></li>
-                    </ul>
-                </div>
-
-                <!-- CONNECT WITH US -->
-                <div class="space-y-4">
-                    <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">CONNECT WITH US</h4>
-                    
-                    <div class="flex items-center gap-3 pt-1">
-                        <a href="https://tiktok.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
-                            <i data-lucide="video" class="w-4 h-4"></i>
-                        </a>
-                        <a href="https://facebook.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
-                            <i data-lucide="facebook" class="w-4 h-4"></i>
-                        </a>
-                        <a href="https://instagram.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
-                            <i data-lucide="instagram" class="w-4 h-4"></i>
-                        </a>
-                        <a href="https://youtube.com" target="_blank" rel="noopener" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all">
-                            <i data-lucide="youtube" class="w-4 h-4"></i>
-                        </a>
-                    </div>
-
-                    <div class="space-y-2 pt-2 leading-relaxed text-slate-600">
-                        <p><strong class="text-slate-900">Email:</strong> info@golfcarts.ph</p>
-                        <p><strong class="text-slate-900">Landline:</strong> (02) 7745-5089</p>
-                        <p><strong class="text-slate-900">Manila:</strong> (+63) 999 997 7688<br><span class="pl-12">(+63) 917 631 2184</span></p>
-                        <p><strong class="text-slate-900">Cebu:</strong> (+63) 917 310 5239</p>
-                    </div>
-                </div>
-
-                <!-- BRAND & BRANCH LOCATIONS -->
-                <div class="space-y-6">
-                    <div class="flex items-center">
-                        <img src="image/GCPH_logo.png" alt="Golfcart.ph" class="h-10 sm:h-12 w-auto object-contain">
-                    </div>
-
-                    <div class="space-y-4 text-xs leading-relaxed">
+                <!-- BRAND & BRANCHES -->
+                <div class="space-y-5">
+                    <img src="image/GCPH_logo.png" alt="Golfcart.ph" class="h-10 sm:h-12 w-auto object-contain">
+                    <p class="leading-relaxed">Premier distributor and customizer of electric golf carts, resort shuttles, and utility vehicles in the Philippines, operating under SJK Guahan Inc.</p>
+                    <div class="space-y-3 leading-relaxed">
                         <div>
                             <p class="font-bold text-slate-900 mb-0.5">Manila Branch:</p>
                             <p class="text-slate-500">1877 Honda Cars Manila Building, Paz M. Guazon St. cor Pres. Quirino Ave. Paco, Manila, 1007 National Capital Region</p>
@@ -262,6 +239,70 @@
                             <p class="font-bold text-slate-900 mb-0.5">Cebu Branch:</p>
                             <p class="text-slate-500">Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu</p>
                         </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all"><i class="fa-brands fa-tiktok text-sm"></i></a>
+                        <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all"><i class="fa-brands fa-instagram text-sm"></i></a>
+                        <a href="https://youtube.com" target="_blank" rel="noopener" aria-label="YouTube" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all"><i class="fa-brands fa-youtube text-sm"></i></a>
+                    </div>
+                </div>
+
+                <!-- MODELS -->
+                <div class="space-y-4">
+                    <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">MODELS</h4>
+                    <ul class="space-y-2.5 font-medium">
+                        <li><button onclick="navigateTo('product-details', 'tempo-2-2-family')" class="hover:text-brand-olive transition-colors">Tempo 2+2</button></li>
+                        <li><button onclick="navigateTo('product-details', 'tempo-2-2-golf')" class="hover:text-brand-olive transition-colors">Tempo 2+2 Golf</button></li>
+                        <li><button onclick="navigateTo('product-details', 'club-car-onward')" class="hover:text-brand-olive transition-colors">Club Car Onward</button></li>
+                        <li><button onclick="navigateTo('product-details', 'villager-6')" class="hover:text-brand-olive transition-colors">Villager 6</button></li>
+                        <li><button onclick="navigateTo('product-details', 'villager-8')" class="hover:text-brand-olive transition-colors">Villager 8</button></li>
+                        <li><button onclick="navigateTo('product-details', 'club-car-minibus')" class="hover:text-brand-olive transition-colors">GC Minibus 14</button></li>
+                        <li><button onclick="navigateTo('product-details', 'carryall-500')" class="hover:text-brand-olive transition-colors">CarryAll 500</button></li>
+                        <li><button onclick="navigateTo('product-details', 'cafe-express')" class="hover:text-brand-olive transition-colors">Café Express</button></li>
+                        <li><button onclick="navigateTo('products')" class="font-bold text-slate-900 hover:text-brand-olive transition-colors">All Models &rarr;</button></li>
+                    </ul>
+                </div>
+
+                <!-- SOLUTIONS & TOOLS -->
+                <div class="space-y-6">
+                    <div class="space-y-4">
+                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">SOLUTIONS</h4>
+                        <ul class="space-y-2.5 font-medium">
+                        <li><button onclick="setCategoryAndNavigate('Personal Golfcart')" class="hover:text-brand-olive transition-colors">Personal Golfcart</button></li>
+                        <li><button onclick="openSegment('resort')" class="hover:text-brand-olive transition-colors">Resort</button></li>
+                        <li><button onclick="openSegment('industrial')" class="hover:text-brand-olive transition-colors">Industrial and Township</button></li>
+                        <li><button onclick="openSegment('golf')" class="hover:text-brand-olive transition-colors">Golf Solution</button></li>
+                        <li><button onclick="setCategoryAndNavigate('Accessories')" class="hover:text-brand-olive transition-colors">Accessories</button></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-4">
+                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">TOOLS</h4>
+                        <ul class="space-y-2.5 font-medium">
+                        <li><button onclick="openQuoteModal()" class="hover:text-brand-olive transition-colors">Request a Quote</button></li>
+                        <li><button onclick="goToHomeSection('home-branches')" class="hover:text-brand-olive transition-colors">Find a Branch</button></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- LEARN & CONNECT -->
+                <div class="space-y-6">
+                    <div class="space-y-4">
+                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">LEARN</h4>
+                        <ul class="space-y-2.5 font-medium">
+                        <li><button onclick="navigateTo('about')" class="hover:text-brand-olive transition-colors">About Golfcart.ph</button></li>
+                        <li><button onclick="navigateTo('solutions')" class="hover:text-brand-olive transition-colors">Fleet Solutions</button></li>
+                        <li><button onclick="navigateTo('service')" class="hover:text-brand-olive transition-colors">Service & Support</button></li>
+                        <li><button onclick="navigateTo('blogs')" class="hover:text-brand-olive transition-colors">Blog</button></li>
+                        <li><button onclick="navigateTo('contact')" class="hover:text-brand-olive transition-colors">Contact Us</button></li>
+                        </ul>
+                    </div>
+                    <div class="space-y-2 leading-relaxed">
+                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs mb-3">CONNECT</h4>
+                        <p><strong class="text-slate-900">Email:</strong> info@golfcarts.ph</p>
+                        <p><strong class="text-slate-900">Landline:</strong> (02) 7745-5089</p>
+                        <p><strong class="text-slate-900">Manila:</strong> (+63) 999 997 7688<br><span class="pl-12">(+63) 917 631 2184</span></p>
+                        <p><strong class="text-slate-900">Cebu:</strong> (+63) 917 310 5239</p>
                     </div>
                 </div>
             </div>

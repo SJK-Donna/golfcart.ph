@@ -277,3 +277,366 @@ input:focus, select:focus, textarea:focus {
 .hero-banner-slide.carousel-slide-active {
     transform: none;
 }
+
+/* ==========================================================================
+   Cart Category Tab Sub-Menus (Resort / Industrial and Township / Golf Solution)
+   ========================================================================== */
+.segment-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    padding-top: 0.6rem; /* hover bridge between bar and panel */
+    transform: translate(-50%, 6px);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 60;
+}
+
+.segment-menu:hover > .segment-dropdown,
+.segment-menu:focus-within > .segment-dropdown {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, 0);
+}
+
+.segment-dropdown-inner {
+    width: max-content;
+    max-width: min(92vw, 760px);
+    padding: 1.25rem 1.5rem;
+    border-radius: 1rem;
+    background: #FFFFFF;
+    border: 1px solid #E1E7DD;
+    box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.25);
+}
+
+.segment-dropdown-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.3rem 0.5rem;
+    margin-left: -0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    color: #475569;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.segment-dropdown-item:hover,
+.segment-dropdown-item:focus-visible {
+    background-color: rgba(116, 158, 53, 0.1);
+    color: #0F172A;
+}
+
+/* Mobile accordion chevron */
+.mobile-segment summary::-webkit-details-marker {
+    display: none;
+}
+
+.mobile-segment[open] .mobile-segment-chevron {
+    transform: rotate(180deg);
+}
+
+.mobile-segment-chevron {
+    transition: transform 0.2s ease;
+}
+
+/* Highlight the model card a menu item scrolled to */
+.segment-card-flash {
+    box-shadow: 0 0 0 3px rgba(116, 158, 53, 0.55);
+}
+
+/* Tabs scroll sideways on small screens, so sub-menus live in the mobile drawer instead */
+@media (max-width: 767px) {
+    .segment-dropdown {
+        display: none;
+    }
+}
+
+/* ==========================================================================
+   Homepage FAQ Accordion
+   ========================================================================== */
+.home-faq summary::-webkit-details-marker {
+    display: none;
+}
+
+.home-faq-icon {
+    transition: transform 0.25s ease;
+}
+
+.home-faq[open] .home-faq-icon {
+    transform: rotate(45deg);
+}
+
+.home-faq[open] {
+    border-color: rgba(116, 158, 53, 0.45);
+}
+
+/* ==========================================================================
+   Vehicle Detail Page: Sticky Tabs, Color Swatches, Spec Accordions
+   ========================================================================== */
+.detail-tab {
+    position: relative;
+    padding: 1rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #64748B;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+}
+
+.detail-tab:hover {
+    color: #0F172A;
+}
+
+.detail-tab::after {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0;
+    height: 3px;
+    border-radius: 3px;
+    background: #749E35;
+    transform: scaleX(0);
+    transition: transform 0.25s ease;
+}
+
+.detail-tab-active {
+    color: #0F172A;
+}
+
+.detail-tab-active::after {
+    transform: scaleX(1);
+}
+
+.detail-swatch {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    border: 3px solid #FFFFFF;
+    box-shadow: 0 0 0 1px #CBD5E1;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.detail-swatch:hover {
+    transform: scale(1.08);
+}
+
+.detail-swatch-active {
+    box-shadow: 0 0 0 2px #749E35;
+}
+
+.detail-spec-group summary::-webkit-details-marker {
+    display: none;
+}
+
+.detail-spec-chevron {
+    transition: transform 0.25s ease;
+}
+
+.detail-spec-group[open] .detail-spec-chevron {
+    transform: rotate(180deg);
+}
+
+/* Cart photos: fill the card and trim the transparent padding baked into the 1080x1080 PNGs */
+.cart-img-fill {
+    width: 108%;
+    height: 108%;
+    max-width: none;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   Homepage Solution Panels (expanding accordion) & Scroll Reveal
+   ========================================================================== */
+.home-panels {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.home-panel {
+    position: relative;
+    flex: 1 1 0%;
+    min-height: 420px;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: #0F172A;
+    cursor: pointer;
+    box-shadow: 0 20px 40px -20px rgba(15, 23, 42, 0.45);
+}
+
+.home-panel-media {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.home-panel:hover .home-panel-media {
+    transform: scale(1.06);
+}
+
+/* Desktop: panels sit side by side; the hovered one widens and shows its details */
+@media (min-width: 1024px) {
+    .home-panels {
+        flex-direction: row;
+        height: 600px;
+    }
+
+    .home-panel {
+        min-height: 0;
+        transition: flex-grow 0.7s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .home-panels:hover .home-panel {
+        flex-grow: 0.75;
+    }
+
+    .home-panels .home-panel:hover {
+        flex-grow: 1.9;
+    }
+
+    .home-panel-details {
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        transform: translateY(10px);
+        transition: max-height 0.6s ease, opacity 0.4s ease, transform 0.5s ease;
+    }
+
+    .home-panel:hover .home-panel-details,
+    .home-panel:focus-within .home-panel-details {
+        max-height: 220px;
+        opacity: 1;
+        transform: translateY(0);
+        transition-delay: 0.15s;
+    }
+}
+
+/* Fade-up on scroll; JS adds .is-visible when the element enters the viewport */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    /* --reveal-delay staggers only the fade-in, not later hover transitions */
+    transition: opacity 0.8s ease var(--reveal-delay, 0s), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0s), flex-grow 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+    opacity: 1;
+    transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .home-panel,
+    .home-panel-media,
+    .home-panel-details {
+        transition: none !important;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Horizontal scrollers (tab rows) keep scrolling but hide the scrollbar */
+.scrollbar-none {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+    display: none;
+}
+
+/* Seat & canopy color options (vehicle page): selectable pills with an active ring like the body swatches */
+.detail-trim {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.45rem;
+    border-radius: 9999px;
+    background: #FFFFFF;
+    border: 1px solid #E1E7DD;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #334155;
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.detail-trim:hover {
+    border-color: rgba(116, 158, 53, 0.6);
+    transform: translateY(-1px);
+}
+
+.detail-trim-active {
+    border-color: #749E35;
+    box-shadow: 0 0 0 2px rgba(116, 158, 53, 0.35);
+    color: #0F172A;
+    font-weight: 700;
+}
+
+.detail-trim-dot {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 9999px;
+    border: 1px solid #CBD5E1;
+    flex-shrink: 0;
+}
+
+/* Battery comparison meters fill in when the section scrolls into view */
+.battery-bar {
+    width: 0;
+    transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+}
+
+#home-battery.is-visible .battery-bar {
+    width: var(--bar);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .battery-bar {
+        width: var(--bar);
+        transition: none;
+    }
+}
+
+/* Cart page category banner: slow "Ken Burns" zoom on the photo, copy slides in on each category switch */
+.category-banner-img {
+    animation: banner-zoom 16s ease-in-out infinite alternate;
+    transform-origin: 70% 50%;
+}
+
+.category-banner-copy > * {
+    animation: banner-copy-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.category-banner-copy > *:nth-child(2) { animation-delay: 0.08s; }
+.category-banner-copy > *:nth-child(3) { animation-delay: 0.16s; }
+.category-banner-copy > *:nth-child(4) { animation-delay: 0.24s; }
+
+@keyframes banner-zoom {
+    from { transform: scale(1); }
+    to { transform: scale(1.08); }
+}
+
+@keyframes banner-copy-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-banner-img,
+    .category-banner-copy > * {
+        animation: none;
+    }
+}
