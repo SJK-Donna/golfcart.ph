@@ -939,7 +939,7 @@ let carouselTimer = null;
 
 const CAROUSEL_SLIDES = [
     {
-        image: "image/Hero/hero-1.webp",
+        image: "image/Hero/hero-1.jpg",
         alt: "Fairway? Covered. Club Car golf cart on the course",
         ctaLabel: "Explore Products",
         ctaAction: "navigateTo('products')"
