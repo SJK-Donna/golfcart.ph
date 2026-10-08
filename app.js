@@ -2399,6 +2399,35 @@ const CLUB_CAR_SEAT_GROUPS = [
         'Coffee Brown Ventilated Premium Seats'
     ] }
 ];
+
+// Seat photos from the "Versions" sheet's Guide tab (Photo Links column), saved to image/Seats.
+// Two photos = front and rear seat. Only used with CLUB_CAR_SEAT_GROUPS (Carryall seats are a different style).
+// The sheet links "GC Beige" to the file named "GC Brown Rear Seat"; both GC front links point to one
+// shared photo, so only the rear photos are used for GC Beige / Dark Brown. Coffee Brown has no photo yet.
+const SEAT_PHOTOS = {
+    'White': ['standard-white'], 'Beige': ['standard-beige'], 'Black': ['standard-black'], 'Grey': ['standard-grey'],
+    'Modern Premium Light Beige': ['modern-light-beige'], 'Premium Camello': ['modern-camello'],
+    'Modern Premium Black': ['modern-black'], 'Premium Black and Grey': ['modern-black-grey'],
+    'Modern Premium Grey': ['modern-grey'], 'Elite Bright White': ['elite-bright-white'],
+    'Premium Light Beige': ['classic-light-beige'], 'Premium Off White': ['classic-off-white'],
+    'Premium Black': ['classic-black'], 'Premium Grey': ['classic-grey'],
+    'Premium Camello & Light Beige': ['classic-camello-light-beige'], 'Premium Camello & Off White': ['classic-camello-off-white'],
+    'Premium Camello (Special Promo)': ['classic-camello'], 'Premium Black and Grey (Special Promo)': ['classic-black-grey'],
+    'High-Back Sport Black Carbon Fiber with Silver Inlay': ['highback-black-silver'],
+    'High-Back Luxury Honey Beige with Black Inlay': ['highback-honey-black'],
+    'High-Back Luxury Briar Brown': ['highback-briar-brown'],
+    'Tsunami Silver Red & Black': ['tsunami-red-front', 'tsunami-red-rear'],
+    'Tsunami Silver Grey & Black': ['tsunami-grey-front', 'tsunami-grey-rear'],
+    'Tsunami Silver Blue & Black': ['tsunami-blue-front', 'tsunami-blue-rear'],
+    'GC White with Arm Rest': ['gc-white-front', 'gc-white-rear'],
+    'GC Beige with Arm Rest': ['gc-brown-rear'],
+    'GC Dark Brown with Arm Rest': ['gc-dark-brown-rear']
+};
+
+function getSeatPhotos(seatGroups, option) {
+    if (seatGroups !== CLUB_CAR_SEAT_GROUPS) return [];
+    return (SEAT_PHOTOS[option] || []).map(name => `image/Seats/${name}.jpg`);
+}
 const COLOR_FAMILIES = {
     tempo: {
         body: [
@@ -2786,7 +2815,27 @@ function selectDetailTrim(type, value) {
     });
     const label = document.getElementById(`detail-${type}-name`);
     if (label) label.textContent = value;
+    if (type === 'seat') updateSeatPhoto(value);
     updateDetailBuildSummary();
+}
+
+// Shows the real photo(s) of the chosen seat under the seat picker; hidden when the seat has no photo
+function updateSeatPhoto(value) {
+    const panel = document.getElementById('detail-seat-photo');
+    if (!panel) return;
+    const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    const family = product && COLOR_FAMILIES[product.colorFamily];
+    const photos = getSeatPhotos(family && family.seatGroups, value);
+    panel.classList.toggle('hidden', !photos.length);
+    if (!photos.length) return;
+    const labels = photos.length > 1 ? ['Front seat', 'Rear seat'] : [''];
+    panel.querySelector('.seat-photo-grid').innerHTML = photos.map((src, i) => `
+        <figure class="seat-photo">
+            <img src="${src}" alt="${value}${labels[i] ? ' ' + labels[i].toLowerCase() : ''}" loading="lazy">
+            ${labels[i] ? `<figcaption>${labels[i]}</figcaption>` : ''}
+        </figure>
+    `).join('');
+    panel.querySelector('.seat-photo-name').textContent = value;
 }
 
 const DETAIL_FEATURE_ICONS = ['sparkles', 'shield-check', 'zap', 'settings-2', 'armchair', 'sun'];
@@ -3235,6 +3284,12 @@ function renderProductDetailsPage() {
                                         </div>
                                     </div>
                                 `).join('')}
+                                ${t.type === 'seat' && seatGroups === CLUB_CAR_SEAT_GROUPS ? `
+                                    <div id="detail-seat-photo" class="seat-photo-panel hidden" aria-live="polite">
+                                        <p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">Seat photo: <span class="seat-photo-name normal-case tracking-normal text-slate-600"></span></p>
+                                        <div class="seat-photo-grid"></div>
+                                    </div>
+                                ` : ''}
                             </div>
                         `).join('')}
 
