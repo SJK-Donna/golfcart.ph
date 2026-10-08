@@ -65,23 +65,18 @@
                 </div>
 
                 <!-- Desktop Nav Links -->
-                <nav class="hidden lg:flex items-center space-x-1">
-                    <button onclick="navigateTo('home')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="home">Home</button>
-                    <button onclick="navigateTo('products')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="products">Cart</button>
-                    <button onclick="navigateTo('service')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="service">Service</button>
-                    <button onclick="navigateTo('blogs')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="blogs">Blogs</button>
-                    <button onclick="navigateTo('about')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="about">About Us</button>
-                    <button onclick="navigateTo('contact')" class="nav-link px-4 py-2 rounded-full text-sm font-medium transition-all text-slate-600 hover:text-slate-900" data-page="contact">Contact</button>
-                </nav>
+                <!-- Main navigation from the website blueprint: three buying pillars + value, fleet and aftersales routes
+                     (built from MAIN_NAV / NAV_SEGMENTS in app.js) -->
+                <nav id="main-nav" aria-label="Main" class="hidden xl:flex items-center gap-0.5"></nav>
 
-                <!-- Cart, Request Quote & SJK Logo -->
-                <div class="hidden lg:flex items-center gap-3 flex-shrink-0">
-                    <button onclick="navigateTo('products')" aria-label="Shopping Cart" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all hover:scale-105 flex items-center justify-center">
+                <!-- Cart, Build Your Cart & SJK Logo -->
+                <div class="hidden xl:flex items-center gap-3 flex-shrink-0">
+                    <button onclick="navigateTo('products')" aria-label="All carts" class="w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-all hover:scale-105 flex items-center justify-center">
                         <i class="fa-solid fa-cart-shopping text-base"></i>
                     </button>
-                    <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        <span>Request Quote</span>
+                    <button onclick="buildYourCart()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-full transition-all shadow-lg shadow-brand-olive/20 hover:scale-105 text-sm btn-shimmer whitespace-nowrap">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                        <span>Build Your Cart</span>
                     </button>
                     <a href="/" class="flex items-center pl-1 pr-2">
                         <img src="image/sjk_logo.png" alt="SJK Logo" class="h-5 w-auto object-contain">
@@ -89,7 +84,7 @@
                 </div>
 
                 <!-- Mobile Menu Toggle Button -->
-                <div class="lg:hidden flex items-center">
+                <div class="xl:hidden flex items-center">
                     <button id="mobile-menu-btn" class="p-2 rounded-full bg-slate-100/80 text-slate-600 hover:text-slate-900 focus:outline-none border border-brand-border">
                         <i data-lucide="menu" class="w-5 h-5"></i>
                     </button>
@@ -98,28 +93,28 @@
         </div>
 
         <!-- Mobile Drawer Navigation -->
-        <div id="mobile-drawer" class="lg:hidden hidden fixed inset-x-0 top-[63px] sm:top-[65px] bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
+        <div id="mobile-drawer" class="xl:hidden hidden fixed inset-x-0 top-[63px] sm:top-[65px] bg-brand-dark/95 backdrop-blur-2xl border-b border-brand-border px-6 py-6 transition-all shadow-2xl max-h-[calc(100vh-80px)] overflow-y-auto">
             <div class="flex flex-col space-y-2">
                 <button onclick="navigateTo('home')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
                     <span>Home</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
-                <button onclick="navigateTo('products')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>Cart</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
-                </button>
-                <button onclick="setCategoryAndNavigate('Personal Golfcart')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>Personal Golfcart</span>
-                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
-                </button>
-                <!-- Resort / Industrial and Township / Golf Solution accordions (built from NAV_SEGMENTS in app.js) -->
+                <!-- The Golfer / Lifestyle & Private Use / Resort & Hospitality / Remanufactured accordions (built from NAV_SEGMENTS in app.js) -->
                 <div id="mobile-segment-menus" class="space-y-1"></div>
                 <button onclick="navigateTo('solutions')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>Solutions</span>
+                    <span>Fleet Solutions</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
+                </button>
+                <button onclick="setCategoryAndNavigate('Accessories')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
+                    <span>Parts &amp; Accessories</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <button onclick="navigateTo('service')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
-                    <span>Service & Support</span>
+                    <span>Service &amp; Support</span>
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
+                </button>
+                <button onclick="navigateTo('products')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
+                    <span>All Carts</span>
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <button onclick="navigateTo('blogs')" class="mobile-nav-link flex items-center justify-between px-4 py-3 rounded-xl text-left font-medium text-slate-600 hover:bg-slate-200/80 text-sm">
@@ -135,9 +130,12 @@
                     <i data-lucide="chevron-right" class="w-4 h-4 text-brand-slate"></i>
                 </button>
                 <div class="pt-4 border-t border-brand-border/60">
-                    <button onclick="toggleMobileMenu(); openQuoteModal();" class="w-full flex items-center justify-center gap-2 bg-brand-olive text-slate-900 font-bold py-3 rounded-xl shadow-lg text-center text-sm">
-                        <i data-lucide="file-text" class="w-4 h-4"></i>
-                        <span>Request Custom Quote</span>
+                    <button onclick="toggleMobileMenu(); buildYourCart();" class="w-full flex items-center justify-center gap-2 bg-brand-olive text-slate-900 font-bold py-3 rounded-xl shadow-lg text-center text-sm">
+                        <i data-lucide="sliders-horizontal" class="w-4 h-4"></i>
+                        <span>Build Your Cart</span>
+                    </button>
+                    <button onclick="toggleMobileMenu(); navigateTo('solutions');" class="mt-2 w-full flex items-center justify-center gap-2 bg-white border border-brand-border text-slate-900 font-semibold py-3 rounded-xl text-center text-sm">
+                        <span>Request a Fleet Proposal</span>
                     </button>
                 </div>
             </div>
@@ -239,6 +237,14 @@
                             <p class="font-bold text-slate-900 mb-0.5">Cebu Branch:</p>
                             <p class="text-slate-500">Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu</p>
                         </div>
+                        <div>
+                            <p class="font-bold text-slate-900 mb-0.5">Laguna Branch:</p>
+                            <p class="text-slate-500">Nissan Technopark, Purok 5 NMPI Rd, City of Santa Rosa, Laguna</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-slate-900 mb-0.5">Clark Branch:</p>
+                            <p class="text-slate-500">Unit 16E-F, Philexcel Business Park, M.A. Roxas Highway, Clark Freeport Zone, Pampanga</p>
+                        </div>
                     </div>
                     <div class="flex items-center gap-3">
                         <a href="https://tiktok.com" target="_blank" rel="noopener" aria-label="TikTok" class="w-8 h-8 rounded-full border border-slate-300 hover:border-brand-olive flex items-center justify-center text-slate-600 hover:text-brand-olive transition-all"><i class="fa-brands fa-tiktok text-sm"></i></a>
@@ -252,14 +258,14 @@
                 <div class="space-y-4">
                     <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">MODELS</h4>
                     <ul class="space-y-2.5 font-medium">
-                        <li><button onclick="navigateTo('product-details', 'tempo-2-2-family')" class="hover:text-brand-olive transition-colors">Tempo 2+2</button></li>
-                        <li><button onclick="navigateTo('product-details', 'tempo-2-2-golf')" class="hover:text-brand-olive transition-colors">Tempo 2+2 Golf</button></li>
-                        <li><button onclick="navigateTo('product-details', 'club-car-onward')" class="hover:text-brand-olive transition-colors">Club Car Onward</button></li>
+                        <li><button onclick="navigateTo('product-details', 'golfer-tempo-2')" class="hover:text-brand-olive transition-colors">Tempo 2 (Golfer · Scratch · Pro)</button></li>
+                        <li><button onclick="navigateTo('product-details', 'golfer-tempo-2-2')" class="hover:text-brand-olive transition-colors">Tempo 2+2</button></li>
+                        <li><button onclick="navigateTo('product-details', 'golfer-tempo-4')" class="hover:text-brand-olive transition-colors">Tempo 4</button></li>
+                        <li><button onclick="navigateTo('product-details', 'lifestyle-tempo-4-2')" class="hover:text-brand-olive transition-colors">Tempo 4+2</button></li>
                         <li><button onclick="navigateTo('product-details', 'villager-6')" class="hover:text-brand-olive transition-colors">Villager 6</button></li>
                         <li><button onclick="navigateTo('product-details', 'villager-8')" class="hover:text-brand-olive transition-colors">Villager 8</button></li>
-                        <li><button onclick="navigateTo('product-details', 'club-car-minibus')" class="hover:text-brand-olive transition-colors">GC Minibus 14</button></li>
-                        <li><button onclick="navigateTo('product-details', 'carryall-500')" class="hover:text-brand-olive transition-colors">CarryAll 500</button></li>
-                        <li><button onclick="navigateTo('product-details', 'cafe-express')" class="hover:text-brand-olive transition-colors">Café Express</button></li>
+                        <li><button onclick="navigateTo('product-details', 'minibus-14')" class="hover:text-brand-olive transition-colors">Minibus 14</button></li>
+                        <li><button onclick="navigateTo('product-details', 'carryall-500')" class="hover:text-brand-olive transition-colors">Carryall 500</button></li>
                         <li><button onclick="navigateTo('products')" class="font-bold text-slate-900 hover:text-brand-olive transition-colors">All Models &rarr;</button></li>
                     </ul>
                 </div>
@@ -267,18 +273,21 @@
                 <!-- SOLUTIONS & TOOLS -->
                 <div class="space-y-6">
                     <div class="space-y-4">
-                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">SOLUTIONS</h4>
+                        <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">SHOP BY USE</h4>
                         <ul class="space-y-2.5 font-medium">
-                        <li><button onclick="setCategoryAndNavigate('Personal Golfcart')" class="hover:text-brand-olive transition-colors">Personal Golfcart</button></li>
-                        <li><button onclick="openSegment('resort')" class="hover:text-brand-olive transition-colors">Resort</button></li>
-                        <li><button onclick="openSegment('industrial')" class="hover:text-brand-olive transition-colors">Industrial and Township</button></li>
-                        <li><button onclick="openSegment('golf')" class="hover:text-brand-olive transition-colors">Golf Solution</button></li>
-                        <li><button onclick="setCategoryAndNavigate('Accessories')" class="hover:text-brand-olive transition-colors">Accessories</button></li>
+                        <li><button onclick="openSegment('golfer')" class="hover:text-brand-olive transition-colors">The Golfer</button></li>
+                        <li><button onclick="openSegment('lifestyle')" class="hover:text-brand-olive transition-colors">Lifestyle &amp; Private Use</button></li>
+                        <li><button onclick="openSegment('resort')" class="hover:text-brand-olive transition-colors">Resort &amp; Hospitality</button></li>
+                        <li><button onclick="openSegment('remanufactured')" class="hover:text-brand-olive transition-colors">Remanufactured</button></li>
+                        <li><button onclick="setCategoryAndNavigate('Accessories')" class="hover:text-brand-olive transition-colors">Parts &amp; Accessories</button></li>
                         </ul>
                     </div>
                     <div class="space-y-4">
                         <h4 class="font-extrabold text-brand-olive uppercase tracking-wider text-xs">TOOLS</h4>
                         <ul class="space-y-2.5 font-medium">
+                        <li><button onclick="buildYourCart()" class="hover:text-brand-olive transition-colors">Build Your Cart</button></li>
+                        <li><button onclick="navigateTo('solutions')" class="hover:text-brand-olive transition-colors">Request a Fleet Proposal</button></li>
+                        <li><button onclick="navigateTo('service')" class="hover:text-brand-olive transition-colors">Book Service</button></li>
                         <li><button onclick="openQuoteModal()" class="hover:text-brand-olive transition-colors">Request a Quote</button></li>
                         <li><button onclick="goToHomeSection('home-branches')" class="hover:text-brand-olive transition-colors">Find a Branch</button></li>
                         </ul>
@@ -317,6 +326,9 @@
             </div>
         </div>
     </footer>
+
+    <!-- Cart color preview engine (repaints cart photos for the color picker) -->
+    <script src="recolor.js"></script>
 
     <!-- Main JavaScript Logic Engine -->
     <script src="app.js"></script>

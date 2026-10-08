@@ -10,20 +10,47 @@ const CLIENT_LOGOS = Array.from({ length: 27 }, (_, i) => `image/clientlogo/Logo
 // Complete Product & Accessory Store
 const PRODUCTS_DATA = [
     // ==========================================
-    // 1. GOLF VEHICLES
+    // 1. THE GOLFER — Tempo 2 / 2+2 / 4, each with Golfer → Scratch → Pro builds (blueprint 02)
     // ==========================================
     {
-        id: 'tempo-2-2-golf',
-        slug: 'tempo-2-2-golf',
-        name: 'Tempo 2+2 Golf',
-        category: 'Golf Solution',
+        id: 'golfer-tempo-2',
+        slug: 'golfer-tempo-2',
+        name: 'Tempo 2',
+        category: 'The Golfer',
+        heroProduct: true,
+        buildSet: 'golfer-2',
+        packages: ['lithium', 'caddy', 'lifted', 'rims'],
+        accessoryTags: ['tempo', 'tempo-2', 'golf'],
+        colorFamily: 'tempo',
+        canopyKey: 'tempo-2',
+        tagline: "The serious golfer's personal cart.",
+        description: 'Two forward-facing seats, built around the way you play. Our bestseller, made to be customized with golf accessories, comfort upgrades and premium finishes.',
+        priceLabel: 'Inquire for Price',
+        seating: '2 Seats (Forward Facing)',
+        range: '85 km per charge',
+        speed: '30 km/h max',
+        battery: '72V Lithium Power Cell',
+        chargingTime: '3.5 Hours',
+        powertrain: '5.0 kW AC Motor',
+        image: 'image/Products/Premium.png',
+        gallery: ['image/Products/Premium.png', 'image/Products/Base.png', 'image/Products/Premium+.png'],
+        features: ['Two Forward-Facing Seats', 'Golf Bag Provision with Rear Bag Cover', 'Shatter-Resistant Foldable Windshield', 'Corrosion-Resistant Aluminum Frame'],
+        specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Enpower 350A Controller', 'Chassis': 'Aircraft Grade Aluminum Chassis', 'Brakes': '4-Wheel Hydraulic Brake System' }
+    },
+    {
+        id: 'golfer-tempo-2-2',
+        slug: 'golfer-tempo-2-2',
+        name: 'Tempo 2+2',
+        category: 'The Golfer',
+        buildSet: 'golfer-2-2',
+        packages: ['lithium', 'lifted', 'rims'],
         accessoryTags: ['tempo', 'tempo-2+2', 'golf'],
         colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Four (4) Seater Back to Back',
-        description: 'Engineered for golf course operations and group play, combining classic reliability with back-to-back seating capacity.',
+        canopyKey: 'tempo-2+2',
+        tagline: 'Golf and family practicality.',
+        description: 'Two forward-facing seats plus two rear-facing seats, for village-based golfers who also drive the family around.',
         priceLabel: 'Inquire for Price',
-        seating: '4 Seats (Back-to-Back)',
+        seating: '4 Seats (2 Forward + 2 Rear)',
         range: '80 km per charge',
         speed: '30 km/h max',
         battery: '72V Lithium-Ion Pack',
@@ -32,203 +59,150 @@ const PRODUCTS_DATA = [
         image: 'image/Products/Tempo 2+2 - Golf.png',
         gallery: ['image/Products/Tempo 2+2 - Golf.png', 'image/Products/Tempo 2+2 - Golf - Red.png', 'image/Products/Tempo 2+2 - Golf - Red 1.png'],
         colorPhotos: { 'White': 'image/Products/Tempo 2+2 - Golf.png', 'Sangria': 'image/Products/Tempo 2+2 - Golf - Red.png' },
-        features: ['Four Seater Back-to-Back Seating Layout', 'Dual Integrated Golf Bag Attachment Racks', 'High-Impact Foldable Windshield Assembly', 'Corrosion-Resistant Aluminum Spaceframe'],
+        features: ['Two Forward + Two Rear-Facing Seats', 'Compatible Rear Golf Bag Attachment', 'High-Impact Foldable Windshield', 'Corrosion-Resistant Aluminum Spaceframe'],
         specs: { 'Motor Type': '5.0 kW AC Direct Drive Motor', 'Controller': 'Curtis 350A Programmable AC Controller', 'Chassis': 'Rust-Proof Lightweight Aluminum', 'Brakes': 'Rear Mechanical Drum & Auto Park Brake' }
     },
     {
-        id: 'tempo-premium-plus',
-        slug: 'tempo-premium-plus',
-        name: 'Tempo Premium+',
-        category: 'Golf Solution',
-        accessoryTags: ['tempo', 'tempo-2', 'golf'],
+        id: 'golfer-tempo-4',
+        slug: 'golfer-tempo-4',
+        name: 'Tempo 4',
+        category: 'The Golfer',
+        buildSet: 'golfer-4',
+        packages: ['lithium', 'lifted', 'rims'],
+        accessoryTags: ['tempo', 'tempo-4', 'golf'],
         colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Luxurious Comfort & Added Accessories',
-        description: 'Tempo Premium+ takes the Tempo Premium to a more luxurious experience with its additional custom accessories and premium interior trim.',
+        canopyKey: 'tempo-4',
+        tagline: 'Golf with room for two more.',
+        description: 'Four seats in two forward-facing rows, for golf with extra passenger comfort and an all-forward seating layout.',
         priceLabel: 'Inquire for Price',
-        seating: '2 Seats (Forward Facing)',
-        range: '90 km per charge',
-        speed: '32 km/h max',
-        battery: '72V High-Output Lithium',
-        chargingTime: '3.0 Hours',
-        powertrain: '5.0 kW AC High-Torque Motor',
-        image: 'image/Products/Premium+.png',
-        gallery: ['image/Products/Premium+.png', 'image/Products/Premium+ black.png'],
-        colorPhotos: { 'Cashmere': 'image/Products/Premium+.png', 'Black': 'image/Products/Premium+ black.png' },
-        features: ['Custom Diamond Stitch Premium Leather Cushioning', 'Underbody Ambient LED Accent Lighting', 'Integrated Beverage Cooler & Ball Cleaner Units', 'Machined Gloss Black Alloy Wheels'],
-        specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Curtis 350A Controller', 'Chassis': 'Powder Coated Aluminum Frame', 'Brakes': 'Hydraulic 4-Wheel Disc Brakes' }
-    },
-    {
-        id: 'tempo-premium',
-        slug: 'tempo-premium',
-        name: 'Tempo Premium',
-        category: 'Golf Solution',
-        accessoryTags: ['tempo', 'tempo-2', 'golf'],
-        colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Industry Leading Durability & Reliable Comfort',
-        description: 'Tempo Premium is built with proven engineering, industry leading durability, and reliable comfort for everyday course management.',
-        priceLabel: 'Inquire for Price',
-        seating: '2 Seats',
+        seating: '4 Seats (Two Forward Rows)',
         range: '85 km per charge',
         speed: '30 km/h max',
-        battery: '72V Lithium Power Cell',
+        battery: '72V Lithium-Ion Pack',
         chargingTime: '3.5 Hours',
         powertrain: '5.0 kW AC Motor',
-        image: 'image/Products/Premium.png',
-        gallery: ['image/Products/Premium.png'],
-        features: ['Ergonomic Contour Bench Seating', 'Shatter-Resistant Foldable Polycarbonate Windshield', 'Automotive Style Front Bumper Protection', 'Dual Golf Bag Racks with Quick-Release Straps'],
-        specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Enpower 350A Controller', 'Chassis': 'Aircraft Grade Aluminum Chassis', 'Brakes': '4-Wheel Hydraulic Brake System' }
+        image: 'image/Products/Club Car 4.png',
+        gallery: ['image/Products/Club Car 4.png'],
+        features: ['Four Seats in Two Forward-Facing Rows', 'Golf Bag Provision with Rear Bag Cover', 'Extended Roof Canopy', 'Corrosion-Resistant Aluminum Frame'],
+        specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Curtis 350A Controller', 'Chassis': 'Aluminum Spaceframe', 'Brakes': '4-Wheel Hydraulic Brake System' }
     },
+
+    // ==========================================
+    // 2. LIFESTYLE & PRIVATE USE — Tempo 2 / 2+2 / 4 / 4+2, Essential → Signature → Elite builds (blueprint 04)
+    // ==========================================
     {
-        id: 'tempo-base-plus',
-        slug: 'tempo-base-plus',
-        name: 'Tempo Base+',
-        category: 'Golf Solution',
-        accessoryTags: ['tempo', 'tempo-2', 'golf'],
+        id: 'lifestyle-tempo-2',
+        slug: 'lifestyle-tempo-2',
+        name: 'Tempo 2',
+        category: 'Lifestyle & Private Use',
+        buildSet: 'lifestyle',
+        packages: ['lithium', 'lifted', 'rims'],
+        accessoryTags: ['tempo', 'tempo-2'],
         colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Modern Design Elevated',
-        description: 'Tempo Base+ takes the sleek and modern design of the Tempo Base to new heights with upgraded trim and enhanced battery output.',
+        canopyKey: 'tempo-2',
+        tagline: 'Compact personal transport.',
+        description: 'Two seats for getting around homes, villages, estates and farms, with practical, comfort and premium builds to choose from.',
         priceLabel: 'Inquire for Price',
-        seating: '2 Seats',
+        seating: '2 Seats (Forward Facing)',
         range: '80 km per charge',
         speed: '28 km/h max',
         battery: '72V Standard Lithium Pack',
         chargingTime: '4.0 Hours',
         powertrain: '4.0 kW AC Motor',
         image: 'image/Products/Base +.png',
-        gallery: ['image/Products/Base +.png'],
-        features: ['Sleek Aerodynamic Body Styling', 'Clear Panoramic Windshield', 'Weatherproof Molded Vinyl Seats', 'Standard Turf-Friendly Tread Tires'],
+        gallery: ['image/Products/Base +.png', 'image/Products/Premium+ black.png'],
+        features: ['Two Forward-Facing Seats', 'Windshield and Mirror Package', 'Defined Lighting Kit', 'Weatherproof Molded Vinyl Seats'],
         specs: { 'Motor Type': '4.0 kW AC Brushless', 'Controller': 'Curtis Controller', 'Chassis': 'Aluminum Box Frame', 'Brakes': 'Dual Rear Drum Brakes' }
     },
     {
-        id: 'tempo-base',
-        slug: 'tempo-base',
-        name: 'Tempo Base',
-        category: 'Golf Solution',
-        accessoryTags: ['tempo', 'tempo-2', 'golf'],
-        colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Reliable & Efficient Course Transport',
-        description: 'The core fleet standard for golf courses worldwide, offering uncompromised reliability and low total cost of ownership.',
-        priceLabel: 'Inquire for Price',
-        seating: '2 Seats',
-        range: '75 km per charge',
-        speed: '25 km/h max',
-        battery: '48V / 72V Lead-Acid or Lithium Option',
-        chargingTime: '4.5 Hours',
-        powertrain: '3.7 kW AC Motor',
-        image: 'image/Products/Base.png',
-        gallery: ['image/Products/Base.png'],
-        features: ['Heavy-Duty Molded Canopy Roof', 'Integrated Cup Holders & Scorecard Holder', 'Self-Adjusting Rack and Pinion Steering'],
-        specs: { 'Motor Type': '3.7 kW AC Motor', 'Controller': 'Curtis 250A Controller', 'Chassis': 'Aluminum Frame', 'Brakes': 'Rear Mechanical Drum Brakes' }
-    },
-
-    // ==========================================
-    // 2. PERSONAL VEHICLES
-    // ==========================================
-    {
-        id: 'tempo-2-2-lifted',
-        slug: 'tempo-2-2-lifted',
-        name: 'Tempo 2+2 Lifted',
-        category: 'Personal Golfcart',
-        accessoryTags: ['tempo', 'tempo-2+2', 'lifted'],
-        colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Conquer Tougher Terrains in Style',
-        description: 'A Club Car Tempo that can conquer tougher terrains with its elevated suspension lift kit and rugged all-terrain tire package.',
-        priceLabel: 'Inquire for Price',
-        seating: '4 Seats (2+2 Layout)',
-        range: '85 km per charge',
-        speed: '35 km/h max',
-        battery: '72V Industrial Lithium-Ion',
-        chargingTime: '3.5 Hours',
-        powertrain: '6.3 kW AC Heavy Torque Motor',
-        image: 'image/Products/Tempo 2+2 - Lifted.png',
-        gallery: ['image/Products/Tempo 2+2 - Lifted.png'],
-        features: ['4-Inch Heavy-Duty Lift Kit Installed', '23" All-Terrain Tread Tires on Beadlock Style Rims', 'Rear Convertible Flip-Seat with Cargo Flatbed', 'High-Intensity Front LED Headlight Bar'],
-        specs: { 'Motor Type': '6.3 kW AC Heavy-Torque Motor', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Reinforced Aluminum Chassis', 'Brakes': 'Hydraulic 4-Wheel Disc Brakes' }
-    },
-    {
-        id: 'tempo-2-2-explorer',
-        slug: 'tempo-2-2-explorer',
-        name: 'Tempo 2+2 Explorer',
-        category: 'Personal Golfcart',
+        id: 'lifestyle-tempo-2-2',
+        slug: 'lifestyle-tempo-2-2',
+        name: 'Tempo 2+2',
+        category: 'Lifestyle & Private Use',
+        buildSet: 'lifestyle',
+        packages: ['lithium', 'flip', 'lifted', 'rims'],
         accessoryTags: ['tempo', 'tempo-2+2'],
         colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Upgrade Your Subdivision Mobility',
-        description: 'Upgrade your subdivision and neighborhood transportation with the Club Car Tempo 2+2 Explorer, built for everyday lifestyle cruising.',
+        canopyKey: 'tempo-2+2',
+        tagline: 'Family transport, made practical.',
+        description: 'Two forward-facing seats plus two rear-facing seats, with an optional rear flip seat that turns passenger space into cargo space.',
         priceLabel: 'Inquire for Price',
-        seating: '4 Seats',
-        range: '90 km per charge',
-        speed: '32 km/h max',
-        battery: '72V Lithium-Ion Pack',
-        chargingTime: '3.0 Hours',
-        powertrain: '5.0 kW AC Direct Drive',
-        image: 'image/Products/Tempo 2+2 - Explorer.png',
-        gallery: ['image/Products/Tempo 2+2 - Explorer.png'],
-        features: ['Deluxe Padded Seating in Dual-Tone Finish', 'Foldable Rear Passenger Footrest', 'USB Fast-Charging Smartphone Ports', 'Tinted Foldable Polycarbonate Windshield'],
-        specs: { 'Motor Type': '5.0 kW AC Direct Drive Motor', 'Controller': 'Curtis 350A Controller', 'Chassis': 'Lightweight Aluminum Spaceframe', 'Brakes': 'Hydraulic Disc Brakes' }
-    },
-    {
-        id: 'tempo-2-2-family',
-        slug: 'tempo-2-2-family',
-        name: 'Tempo 2+2 Family',
-        category: 'Personal Golfcart',
-        accessoryTags: ['tempo', 'tempo-2+2'],
-        colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Neighborhood Transport Built for Family',
-        description: 'Places safety, comfort, and fun at the forefront of your residential living experience.',
-        priceLabel: 'Inquire for Price',
-        seating: '4 Seats',
+        seating: '4 Seats (2 Forward + 2 Rear)',
         range: '88 km per charge',
         speed: '32 km/h max',
         battery: '72V High Capacity Lithium',
         chargingTime: '3.5 Hours',
         powertrain: '5.0 kW AC Motor',
         image: 'image/Products/Tempo 2+2 - Family.png',
-        gallery: ['image/Products/Tempo 2+2 - Family.png', 'image/Products/Tempo 2+2 - Family - Sangria Red.png'],
+        gallery: ['image/Products/Tempo 2+2 - Family.png', 'image/Products/Tempo 2+2 - Family - Sangria Red.png', 'image/Products/Tempo 2+2 - Explorer.png', 'image/Products/Tempo 2+2 - Lifted.png'],
         colorPhotos: { 'Green': 'image/Products/Tempo 2+2 - Family.png', 'Sangria': 'image/Products/Tempo 2+2 - Family - Sangria Red.png' },
-        features: ['Full 3-Point Passenger Safety Seatbelts', 'Rear Armrest Console with Integrated Cup Holders', 'Soundstream Bluetooth Sound Bar Mounted on Roof', 'Automotive Grade LED Lighting Package'],
+        features: ['Two Forward + Two Rear-Facing Seats', 'Optional Rear Flip Seat for Cargo', 'Compatible Seat Belts and Grab Handles', 'Defined Lighting and Mirror Package'],
         specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Enpower 350A Controller', 'Chassis': 'Aluminum Frame Chassis', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
     },
     {
-        id: 'club-car-onward',
-        slug: 'club-car-onward',
-        name: 'Club Car Onward',
-        category: 'Personal Golfcart',
-        accessoryTags: ['onward'],
-        tagline: 'Premium Safety, Comfort, and Customization',
-        description: 'Crafted for personal luxury and subdivision cruising with maximum styling options and smooth automotive handling.',
+        id: 'lifestyle-tempo-4',
+        slug: 'lifestyle-tempo-4',
+        name: 'Tempo 4',
+        category: 'Lifestyle & Private Use',
+        buildSet: 'lifestyle',
+        packages: ['lithium', 'lifted', 'rims'],
+        accessoryTags: ['tempo', 'tempo-4'],
+        colorFamily: 'tempo',
+        canopyKey: 'tempo-4',
+        tagline: 'Four passengers, all facing forward.',
+        description: 'Four seats in two forward-facing rows, for families and guests moving around a village, estate or farm.',
         priceLabel: 'Inquire for Price',
-        seating: '4 Seats',
+        seating: '4 Seats (Two Forward Rows)',
         range: '95 km per charge',
-        speed: '35 km/h max',
-        battery: '72V Ultra Lithium-Ion',
+        speed: '32 km/h max',
+        battery: '72V Lithium-Ion Pack',
         chargingTime: '3.0 Hours',
         powertrain: '5.0 kW AC High-Output Motor',
         image: 'image/Products/Club Car 4.png',
         gallery: ['image/Products/Club Car 4.png'],
-        features: ['Custom Metallic Exterior Paint Options', 'Premium Custom Ergonomic Cushion Seats', 'Subdivision Legal Street Light Package', 'Integrated Onboard Fast Charging Unit'],
+        features: ['Four Seats in Two Forward-Facing Rows', 'Compatible Seat Belts and Grab Handles', 'Defined Lighting and Mirror Package', 'Extended Roof Canopy'],
         specs: { 'Motor Type': '5.0 kW High Output AC Motor', 'Controller': 'Curtis 350A Controller', 'Chassis': 'Aluminum Spaceframe', 'Brakes': '4-Wheel Hydraulic Brake System' }
+    },
+    {
+        id: 'lifestyle-tempo-4-2',
+        slug: 'lifestyle-tempo-4-2',
+        name: 'Tempo 4+2',
+        category: 'Lifestyle & Private Use',
+        buildSet: 'lifestyle',
+        packages: ['lithium', 'flip', 'lifted', 'rims'],
+        accessoryTags: ['tempo', 'tempo-4+2'],
+        colorFamily: 'tempo',
+        canopyKey: 'tempo-4+2',
+        tagline: 'Room for the whole group.',
+        description: 'Four forward-facing seats plus a rear row, with an optional rear flip-seat arrangement for extra passengers or cargo.',
+        priceLabel: 'Inquire for Price',
+        seating: '6 Seats (4 Forward + 2 Rear)',
+        range: '85 km per charge',
+        speed: '32 km/h max',
+        battery: '72V Lithium Pack',
+        chargingTime: '4.0 Hours',
+        powertrain: '6.3 kW Heavy Torque Motor',
+        image: 'image/Products/4 plus2 Lifted.png',
+        gallery: ['image/Products/4 plus2 Lifted.png'],
+        features: ['Four Forward + Two Rear-Facing Seats', 'Optional Rear Flip-Seat Arrangement', 'Compatible Seat Belts and Grab Handles', 'Lifted Package Available'],
+        specs: { 'Motor Type': '6.3 kW AC Heavy Duty', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Heavy Duty Tubular Frame', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
     },
 
     // ==========================================
-    // 3. COMMERCIAL VEHICLES
+    // 3. RESORT & HOSPITALITY — Guest Transportation, Utility & Operations, Fit-to-Task (blueprint 05–06)
     // ==========================================
     {
         id: 'villager-6',
         slug: 'villager-6',
         name: 'Villager 6',
-        category: 'Resort',
+        category: 'Resort & Hospitality',
+        subgroup: 'Guest Transportation',
+        buildSet: 'villager',
         accessoryTags: ['villager', 'villager-6'],
         colorFamily: 'villager',
-        canopyColors: ['White', 'Beige'],
-        tagline: '4 Seats Facing Forward, 2 Seats Facing Back',
-        description: 'Ideal for luxury resort transfers, tour groups, and VIP hotel guest shuttle operations.',
+        canopyKey: 'villager-6',
+        tagline: 'Guest transportation.',
+        description: 'Six seats for resort transfers and property shuttles, chosen around passenger demand, comfort and presentation.',
         priceLabel: 'Inquire for Price',
         seating: '6 Seats (4 Forward + 2 Rear)',
         range: '90 km per charge',
@@ -242,37 +216,17 @@ const PRODUCTS_DATA = [
         specs: { 'Motor Type': '6.3 kW AC Motor', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Galvanized Steel Frame', 'Brakes': 'Hydraulic Disc Brakes + Regenerative' }
     },
     {
-        id: 'club-car-4-plus-2-lifted',
-        slug: 'club-car-4-plus-2-lifted',
-        name: 'Tempo 4+2 Lifted',
-        category: 'Resort',
-        accessoryTags: ['tempo', 'tempo-4+2', 'lifted'],
-        colorFamily: 'tempo',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Four (4) Forward & Two (2) Back Lifted Shuttle',
-        description: 'Elevated guest transportation built to handle resort trails, gravel roads, and unpaved terrain effortlessly.',
-        priceLabel: 'Inquire for Price',
-        seating: '6 Seats (4+2 Layout)',
-        range: '85 km per charge',
-        speed: '32 km/h max',
-        battery: '72V Commercial Lithium Pack',
-        chargingTime: '4.0 Hours',
-        powertrain: '6.3 kW Heavy Torque Motor',
-        image: 'image/Products/4 plus2 Lifted.png',
-        gallery: ['image/Products/4 plus2 Lifted.png'],
-        features: ['Factory Long-Travel Lift Kit Assembly', 'Over-Sized Off-Road All-Terrain Tires', 'Heavy Bumper Guard & Skid Plate', 'Full Weather Clear Enclosure Curtain'],
-        specs: { 'Motor Type': '6.3 kW AC Heavy Duty', 'Controller': 'Curtis 400A Controller', 'Chassis': 'Heavy Duty Tubular Frame', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
-    },
-    {
         id: 'villager-8',
         slug: 'villager-8',
         name: 'Villager 8',
-        category: 'Resort',
+        category: 'Resort & Hospitality',
+        subgroup: 'Guest Transportation',
+        buildSet: 'villager',
         accessoryTags: ['villager', 'villager-8'],
         colorFamily: 'villager',
-        canopyColors: ['White', 'Beige'],
-        tagline: 'Six (6) Seats Facing Forward, Two (2) Back',
-        description: 'High-capacity resort shuttle engineered to carry 8 passengers in quiet, eco-friendly luxury.',
+        canopyKey: 'villager-8',
+        tagline: 'Higher-capacity guest transportation.',
+        description: 'Eight seats for group movement and frequent shuttle runs, in quiet, eco-friendly comfort.',
         priceLabel: 'Inquire for Price',
         seating: '8 Seats (6 Forward + 2 Rear)',
         range: '100 km per charge',
@@ -286,14 +240,38 @@ const PRODUCTS_DATA = [
         specs: { 'Motor Type': '7.5 kW AC Motor', 'Controller': 'Curtis 450A Controller', 'Chassis': 'Reinforced Steel Frame', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
     },
     {
-        id: 'club-car-minibus',
-        slug: 'club-car-minibus',
-        name: 'GC Minibus 14',
-        category: 'Resort',
+        id: 'transporter-400',
+        slug: 'transporter-400',
+        name: 'Transporter 4',
+        category: 'Resort & Hospitality',
+        subgroup: 'Guest Transportation',
+        accessoryTags: ['utility', 'transporter-4'],
+        colorFamily: 'carryall',
+        canopyKey: 'transporter-4',
+        tagline: 'Guests plus luggage.',
+        description: 'Forward-facing passenger seating with rear cargo space for luggage transfers and property logistics.',
+        priceLabel: 'Inquire for Price',
+        seating: '4 Seats + Cargo Box',
+        range: '80 km per charge',
+        speed: '30 km/h max',
+        battery: '72V Industrial Lithium',
+        chargingTime: '4.0 Hours',
+        powertrain: '6.3 kW AC Motor',
+        image: 'image/Products/Transporter 4.png',
+        gallery: ['image/Products/Transporter 4.png'],
+        features: ['Forward-Facing Passenger Seating', 'Rear Cargo Space for Luggage', 'Heavy Duty Tow Hitch Receiver Included', 'Waterproof Heavy Rubberized Cabin Floor'],
+        specs: { 'Motor Type': '6.3 kW AC Heavy Torque Brushless', 'Controller': 'Curtis High-Output Industrial Controller', 'Chassis': 'Hot-Dip Galvanized Reinforced Steel Frame', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
+    },
+    {
+        id: 'minibus-14',
+        slug: 'minibus-14',
+        name: 'Minibus 14',
+        category: 'Resort & Hospitality',
+        subgroup: 'Guest Transportation',
         accessoryTags: ['minibus'],
-        canopyColors: ['Black'],
-        tagline: 'Fourteen (14) Seater Mass Shuttle Solution',
-        description: 'When you need to move groups efficiently, nothing gets the job done better than the GC Minibus from Golfcarts.ph.',
+        canopyKey: 'minibus-14',
+        tagline: 'Larger-group transport.',
+        description: 'A 14-seater for moving larger groups, chosen around your route, gradients, passenger volume and charging plan.',
         priceLabel: 'Inquire for Price',
         seating: '14 Seats',
         range: '110 km per charge',
@@ -306,83 +284,17 @@ const PRODUCTS_DATA = [
         features: ['14 Forward-Facing Captain Seats with Lap Belts', 'Passenger Roof Ventilation System', 'Motorized Retractable Boarding Step', 'Built-in PA Public Address Speaker System'],
         specs: { 'Motor Type': '7.5 kW AC Heavy Torque Motor', 'Controller': 'Curtis 450A Industrial Controller', 'Chassis': 'Reinforced Box Tubular Steel Frame', 'Brakes': 'Dual Circuit Vacuum Servo Brakes' }
     },
-
-    // ==========================================
-    // 4. INDUSTRIAL VEHICLES
-    // ==========================================
-    {
-        id: 'cafe-express',
-        slug: 'cafe-express',
-        name: 'Café Express',
-        category: 'Golf Solution',
-        tagline: 'On-the-go refreshments, Instant revenue',
-        description: 'Fully equipped mobile refreshment and catering cart for golf courses, resorts, and outdoor venues.',
-        priceLabel: 'Inquire for Price',
-        seating: '2 Seats + Beverage Counter',
-        range: '75 km per charge',
-        speed: '25 km/h max',
-        battery: '72V Commercial Grade Lithium',
-        chargingTime: '4.0 Hours',
-        powertrain: '5.0 kW AC Motor',
-        image: 'image/Products/Cafe Express.png',
-        gallery: ['image/Products/Cafe Express.png'],
-        features: ['Insulated Stainless Steel Beverage Compartment', 'Display Shelving with Overhead Illumination', 'Slide-Out Trash and Recycling Receptacles', 'Retractable Awning Canopy Shade Bar'],
-        specs: { 'Motor Type': '5.0 kW AC Direct Drive Motor', 'Controller': 'Curtis 350A Commercial Controller', 'Chassis': 'Galvanized Steel Frame', 'Brakes': 'Front Disc & Rear Drum Brakes' }
-    },
-    {
-        id: 'transporter-400',
-        slug: 'transporter-400',
-        name: 'Transporter 4',
-        category: 'Industrial and Township',
-        accessoryTags: ['utility', 'transporter-4'],
-        colorFamily: 'carryall',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Four (4) Seater with Rear Cargo Box',
-        description: 'Combines passenger seating with an expanded rear utility box for facility maintenance and cargo transport.',
-        priceLabel: 'Inquire for Price',
-        seating: '4 Seats + Cargo Box',
-        range: '80 km per charge',
-        speed: '30 km/h max',
-        battery: '72V Industrial Lithium',
-        chargingTime: '4.0 Hours',
-        powertrain: '6.3 kW AC Motor',
-        image: 'image/Products/Transporter 4.png',
-        gallery: ['image/Products/Transporter 4.png'],
-        features: ['Aluminum Drop-Side Flatbed Utility Cargo Deck', 'Reinforced Front Steel Brush Guard', 'Heavy Duty Tow Hitch Receiver Included', 'Waterproof Heavy Rubberized Cabin Floor'],
-        specs: { 'Motor Type': '6.3 kW AC Heavy Torque Brushless', 'Controller': 'Curtis High-Output Industrial Controller', 'Chassis': 'Hot-Dip Galvanized Reinforced Steel Frame', 'Brakes': '4-Wheel Hydraulic Disc Brakes' }
-    },
-    {
-        id: 'carryall-500',
-        slug: 'carryall-500',
-        name: 'CarryAll 500',
-        category: 'Industrial and Township',
-        accessoryTags: ['utility', 'carryall'],
-        colorFamily: 'carryall',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Two (2) Seater, Carries up to 1200 lbs',
-        description: 'The premier workhorse for groundskeeping, estate management, and heavy industrial cargo hauling.',
-        priceLabel: 'Inquire for Price',
-        seating: '2 Seats + Cargo Box',
-        range: '75 km per charge',
-        speed: '30 km/h max',
-        battery: '72V Heavy-Duty Lithium',
-        chargingTime: '4.0 Hours',
-        powertrain: '6.3 kW Heavy Torque Motor',
-        image: 'image/Products/CA500.png',
-        gallery: ['image/Products/CA500.png'],
-        features: ['Heavy Duty Aluminum Dump Cargo Box', '1,200 lbs Total Payload Carrying Capacity', 'All-Terrain Heavy Ply Industrial Tires', 'High-Visibility Yellow Strobe Safety Light'],
-        specs: { 'Motor Type': '6.3 kW Heavy Duty AC Motor', 'Controller': 'Curtis 400A Industrial Controller', 'Chassis': 'Rust-Proof Armor-Plex Aluminum Frame', 'Brakes': '4-Wheel Mechanical Disc Brakes' }
-    },
     {
         id: 'carryall-300',
         slug: 'carryall-300',
-        name: 'CarryAll 300',
-        category: 'Industrial and Township',
+        name: 'Carryall 300',
+        category: 'Resort & Hospitality',
+        subgroup: 'Utility & Operations',
         accessoryTags: ['utility', 'carryall'],
         colorFamily: 'carryall',
-        canopyColors: ['White', 'Beige', 'Black'],
-        tagline: 'Two (2) Seater, Carries up to 800 lbs',
-        description: 'Compact utility cart engineered to navigate tight indoor or outdoor corridors with zero emissions.',
+        canopyKey: 'carryall-300',
+        tagline: 'Compact utility work.',
+        description: 'For compact utility work and light maintenance tasks, with a tight turning radius for narrow paths and service areas.',
         priceLabel: 'Inquire for Price',
         seating: '2 Seats + Cargo Box',
         range: '70 km per charge',
@@ -394,6 +306,49 @@ const PRODUCTS_DATA = [
         gallery: ['image/Products/CA300.png'],
         features: ['800 lbs Total Carrying Capacity', 'Compact Turning Radius for Narrow Aisles', 'Scuff-Resistant Utility Molded Body Panels'],
         specs: { 'Motor Type': '5.0 kW AC Motor', 'Controller': 'Curtis 350A Controller', 'Chassis': 'Aluminum Box Frame Chassis', 'Brakes': 'Dual Rear Mechanical Brakes' }
+    },
+    {
+        id: 'carryall-500',
+        slug: 'carryall-500',
+        name: 'Carryall 500',
+        category: 'Resort & Hospitality',
+        subgroup: 'Utility & Operations',
+        accessoryTags: ['utility', 'carryall'],
+        colorFamily: 'carryall',
+        canopyKey: 'carryall-500',
+        tagline: 'Daily property operations.',
+        description: 'The base for daily property operations and customized service bodies, from amenities and linen to engineering carts.',
+        priceLabel: 'Inquire for Price',
+        seating: '2 Seats + Cargo Box',
+        range: '75 km per charge',
+        speed: '30 km/h max',
+        battery: '72V Heavy-Duty Lithium',
+        chargingTime: '4.0 Hours',
+        powertrain: '6.3 kW Heavy Torque Motor',
+        image: 'image/Products/CA500.png',
+        gallery: ['image/Products/CA500.png'],
+        features: ['Heavy Duty Aluminum Cargo Box', '1,200 lbs Total Payload Carrying Capacity', 'Base for Fit-to-Task Service Bodies', 'All-Terrain Heavy Ply Tires'],
+        specs: { 'Motor Type': '6.3 kW Heavy Duty AC Motor', 'Controller': 'Curtis 400A Industrial Controller', 'Chassis': 'Rust-Proof Armor-Plex Aluminum Frame', 'Brakes': '4-Wheel Mechanical Disc Brakes' }
+    },
+    {
+        id: 'cafe-express',
+        slug: 'cafe-express',
+        name: 'Café Express',
+        category: 'Resort & Hospitality',
+        subgroup: 'Fit-to-Task',
+        tagline: 'Food and beverage service, on the move.',
+        description: 'A fully equipped mobile refreshment and catering cart for resorts, golf courses and outdoor venues.',
+        priceLabel: 'Inquire for Price',
+        seating: '2 Seats + Beverage Counter',
+        range: '75 km per charge',
+        speed: '25 km/h max',
+        battery: '72V Commercial Grade Lithium',
+        chargingTime: '4.0 Hours',
+        powertrain: '5.0 kW AC Motor',
+        image: 'image/Products/Cafe Express.png',
+        gallery: ['image/Products/Cafe Express.png'],
+        features: ['Insulated Stainless Steel Beverage Compartment', 'Display Shelving with Overhead Illumination', 'Slide-Out Trash and Recycling Receptacles', 'Retractable Awning Canopy Shade Bar'],
+        specs: { 'Motor Type': '5.0 kW AC Direct Drive Motor', 'Controller': 'Curtis 350A Commercial Controller', 'Chassis': 'Galvanized Steel Frame', 'Brakes': 'Front Disc & Rear Drum Brakes' }
     },
 
     // ==========================================
@@ -781,157 +736,232 @@ const PRODUCTS_DATA = [
     }
 ];
 
-// Category Headers Data Map. `photo` is a lifestyle banner shown full-bleed behind the text
-// (`photoFocus` keeps the cart in frame); categories without one show the product cut-out.
+// Category Headers Data Map (one per buying pillar). `photo` is a lifestyle banner shown full-bleed behind the text
+// (`photoFocus` keeps the cart in frame); categories without one show the product cut-out. `label` overrides the tab name.
 const CATEGORY_BANNERS = {
-    'Personal Golfcart': {
-        title: 'Personal & Subdivision',
-        headline: 'Places Safety, Durability, and Fun First',
-        subheadline: 'At the forefront of your residential and gated community living experience.',
+    'The Golfer': {
+        title: 'The Golfer',
+        headline: 'Built around the way you play.',
+        subheadline: 'Tempo 2, Tempo 2+2 and Tempo 4, each in Golfer, Scratch and Pro builds.',
+        image: 'image/Products/Premium.png',
+        photo: 'image/Banners/golf.jpg',
+        photoFocus: '60% 60%'
+    },
+    'Lifestyle & Private Use': {
+        title: 'Lifestyle & Private Use',
+        headline: 'Mobility for homes, villages, estates and farms.',
+        subheadline: 'Practical, comfort and premium builds, with optional packages.',
         image: 'image/Products/Tempo 2+2 - Family - Sangria Red.png',
         photo: 'image/Banners/personal.jpg',
         photoFocus: '50% 45%'
     },
-    'Resort': {
+    'Resort & Hospitality': {
         title: 'Resort & Hospitality',
-        headline: 'First-Class Hospitality Shuttle Mobility',
-        subheadline: 'Quiet, comfortable guest transfers across resorts, hotels, and leisure destinations.',
-        image: 'image/Products/Club Car 6+2.png',
+        headline: 'Guest transport and daily property operations.',
+        subheadline: 'Guest transportation, utility and fit-to-task solutions, matched to passenger flow, luggage and operating conditions.',
+        image: 'image/Products/Villager 8.png',
         photo: 'image/Banners/resort.jpg',
         photoFocus: '60% 65%'
     },
-    'Industrial and Township': {
-        title: 'Industrial and Township',
-        headline: 'Fleet Tracker + Unmatched Towing Performance',
-        subheadline: 'People movers and heavy-payload utility vehicles for plants, campuses, and townships.',
-        image: 'image/Products/Transporter 4.png',
-        photo: 'image/Banners/industrial.jpg',
-        photoFocus: '55% 60%'
-    },
-    'Golf Solution': {
-        title: 'Golf Solution',
-        headline: 'Control Costs. Simplify Operations. Win-Win.',
-        subheadline: 'Precision engineered for championship courses, player satisfaction, and country club fairways.',
-        image: 'image/Products/Tempo 2+2 - Golf.png',
-        photo: 'image/Banners/golf.jpg',
-        photoFocus: '60% 60%'
-    },
     'Accessories': {
-        title: 'Original Accessories',
-        headline: 'Elevate Your Ride with Genuine Upgrades',
-        subheadline: 'Hand-crafted leather seats, Bluetooth audio bars, sand bottles, and weather enclosures.',
+        label: 'Parts & Accessories',
+        title: 'Parts & Accessories',
+        headline: 'Genuine upgrades for your cart.',
+        subheadline: 'Golf equipment, wheels and tires, seats, lighting, storage, audio, batteries and other compatible accessories.',
         image: 'image/Accessories/Lux Seat - Brown.jpg'
     }
 };
 
-// Vehicle models referenced by the header mega-menus and segment pages.
-// `slug` links to a PRODUCTS_DATA detail page when one exists; `image: null` shows a placeholder.
-const VEHICLE_MODELS = {
-    'seat-2':       { name: 'Tempo 2',             image: 'image/Products/Base.png',                   slug: 'tempo-base' },
-    'seat-2-2':     { name: 'Tempo 2+2',           image: 'image/Products/Tempo 2+2 - Family.png',     slug: 'tempo-2-2-family' },
-    'seat-4':       { name: 'Tempo 4',             image: 'image/Products/Club Car 4.png',             slug: null },
-    'seat-4-2':     { name: 'Tempo 4+2',           image: 'image/Products/4 plus2 Lifted.png',         slug: 'club-car-4-plus-2-lifted' },
-    'seat-6-2':     { name: 'Tempo 6+2',           image: 'image/Products/Club Car 6+2.png',           slug: null },
-    'villager-6':   { name: 'Villager 6',          image: 'image/Products/Villager 6.png',             slug: 'villager-6' },
-    'villager-8':   { name: 'Villager 8',          image: 'image/Products/Villager 8.png',             slug: 'villager-8' },
-    'transporter-4':{ name: 'Transporter 4',       image: 'image/Products/Transporter 4.png',          slug: 'transporter-400' },
-    'transporter-6':{ name: 'Transporter 6',       image: null,                                        slug: null },
-    'minibus':      { name: 'Minibus',             image: 'image/Products/Minibus 14.png',             slug: 'club-car-minibus' },
-    'ca300':        { name: 'CarryAll 300',        image: 'image/Products/CA300.png',                  slug: 'carryall-300' },
-    'ca500':        { name: 'CarryAll 500',        image: 'image/Products/CA500.png',                  slug: 'carryall-500' },
-    'ca700':        { name: 'CarryAll 700',        image: 'image/Products/CA700.png',                  slug: null },
-    'fnb':          { name: 'F&B Cart',            image: 'image/Products/F&B.png',                    slug: null },
-    'laundry':      { name: 'Laundry Cart',        image: 'image/Products/House keeping.png',          slug: null },
-    'custom':       { name: 'Custom Solution',     image: null,                                        slug: null },
-    'cafe-express': { name: 'Café Express',        image: 'image/Products/Cafe Express.png',           slug: 'cafe-express' }
+// Display name for a category (e.g. the 'Accessories' key shows as "Parts & Accessories")
+function categoryLabel(cat) {
+    return (CATEGORY_BANNERS[cat] && CATEGORY_BANNERS[cat].label) || cat;
+}
+
+// Build levels per range (blueprint 02–05). Golf build names are confirmed; package contents and the
+// lifestyle names are proposed in the brief, so the page labels them "proposed" until sales finalizes them.
+const BUILD_SETS = {
+    'golfer-2': {
+        title: 'Golfer, Scratch or Pro.',
+        confirmed: true,
+        builds: [
+            { id: 'golfer', name: 'Golfer', tagline: 'Golf essentials', includes: ['Standard cart', 'Golf bag provision', 'Basic rear bag cover'] },
+            { id: 'scratch', name: 'Scratch', tagline: 'Golf accessories & comfort', includes: ['Everything in Golfer', 'Cooler', 'Ball washer', 'Premium magnetic bag cover'], note: 'Upgraded steering wheel can be selected separately.' },
+            { id: 'pro', name: 'Pro', tagline: 'Premium personal build', includes: ['Scratch golf accessories', 'Premium seats', 'Premium steering wheel', 'Bluetooth audio', '10-inch rims'], note: '12-inch rims available as an option.' }
+        ]
+    },
+    'golfer-2-2': {
+        title: 'Golfer, Scratch or Pro.',
+        confirmed: true,
+        builds: [
+            { id: 'golfer', name: 'Golfer', tagline: 'Golf essentials', includes: ['Standard 2+2 cart', 'Compatible rear golf bag attachment'] },
+            { id: 'scratch', name: 'Scratch', tagline: 'Golf accessories & comfort', includes: ['10-inch rims', 'Premium seats', 'Mirror package', 'Compatible golf accessory options'], proposed: true },
+            { id: 'pro', name: 'Pro', tagline: 'Premium personal build', includes: ['12-inch rims', 'Premium seats', 'Bluetooth audio', 'Upper / rear storage', 'Upgraded steering wheel', 'Compatible golf accessories'], proposed: true }
+        ]
+    },
+    'golfer-4': {
+        title: 'Golfer, Scratch or Pro.',
+        confirmed: true,
+        note: 'Tempo 4 follows the Tempo 2 build concept, adapted to its extra seating row.',
+        builds: [
+            { id: 'golfer', name: 'Golfer', tagline: 'Golf essentials', includes: ['Standard cart', 'Golf bag provision', 'Basic rear bag cover'] },
+            { id: 'scratch', name: 'Scratch', tagline: 'Golf accessories & comfort', includes: ['Everything in Golfer', 'Cooler', 'Ball washer', 'Premium magnetic bag cover'], note: 'Upgraded steering wheel can be selected separately.' },
+            { id: 'pro', name: 'Pro', tagline: 'Premium personal build', includes: ['Scratch golf accessories', 'Premium seats', 'Premium steering wheel', 'Bluetooth audio', '10-inch rims'], note: '12-inch rims available as an option.' }
+        ]
+    },
+    lifestyle: {
+        title: 'Essential, Signature or Elite.',
+        confirmed: false,
+        builds: [
+            { id: 'essential', name: 'Essential', tagline: 'Daily practicality', includes: ['Standard seats', 'Windshield', 'Defined lighting kit', 'Mirror package'], note: 'Upgrades: flip seat where compatible; battery, wheel and task-related options.' },
+            { id: 'signature', name: 'Signature', tagline: 'Comfort & style', includes: ['Essential equipment', 'Premium seats', '10-inch rims', 'Upgraded steering wheel', 'Upgraded lighting selection'], note: 'Upgrades: upgraded windshield, storage, audio, lifted package.' },
+            { id: 'elite', name: 'Elite', tagline: 'Premium personal cart', includes: ['Signature comfort', '12-inch rims', 'Bluetooth audio', 'Premium steering wheel', 'Upgraded lighting', 'Suitable storage'], note: 'Upgrades: custom finishes, battery upgrade, lifted package, compatible wheel alternatives.' }
+        ]
+    },
+    villager: {
+        title: 'Choose your package.',
+        confirmed: false,
+        builds: [
+            { id: 'standard', name: 'Standard Guest Transport', tagline: 'Base transport configuration', includes: ['Lighting, mirrors and passenger equipment defined in your quotation'] },
+            { id: 'comfort', name: 'Guest Comfort & Weather', tagline: 'Added comfort and protection', includes: ['Rain enclosure', 'Grab handles', 'Compatible seat belts'], note: 'Extra storage or lighting specified separately.' }
+        ]
+    }
 };
 
-// Header menu hierarchy: segment -> subcategory -> group -> model keys.
-// Drives the desktop category bar, the mobile drawer, and the segment landing pages.
+// Optional packages shown under the builds (blueprint 03). `choices` makes a pick-one row (rims).
+const BUILD_PACKAGES = {
+    lithium: { name: 'Lithium', detail: 'Battery upgrade where offered.' },
+    caddy: { name: 'Caddy Package', detail: 'Rear caddy stand.' },
+    lifted: { name: 'Lifted Package', detail: 'Lift kit; optional bull bar, nerf bars / side steps. Approved combinations only.' },
+    flip: { name: 'Rear Flip Seat', detail: 'Switch between passenger and cargo mode.' },
+    rims: { name: 'Rims', detail: 'Larger wheels may require a lift. Tire size confirmed separately.', choices: ['Standard', '10-inch', '12-inch', '14-inch'] }
+};
+
+// Vehicle models referenced by the header menus and pillar pages.
+// `slug` links to a PRODUCTS_DATA page when one exists; `image: null` shows a placeholder.
+const VEHICLE_MODELS = {
+    'g-tempo-2':     { name: 'Tempo 2',             image: 'image/Products/Premium.png',                slug: 'golfer-tempo-2', badge: 'Bestseller' },
+    'g-tempo-2-2':   { name: 'Tempo 2+2',           image: 'image/Products/Tempo 2+2 - Golf.png',       slug: 'golfer-tempo-2-2' },
+    'g-tempo-4':     { name: 'Tempo 4',             image: 'image/Products/Club Car 4.png',             slug: 'golfer-tempo-4' },
+    'l-tempo-2':     { name: 'Tempo 2',             image: 'image/Products/Base +.png',                 slug: 'lifestyle-tempo-2' },
+    'l-tempo-2-2':   { name: 'Tempo 2+2',           image: 'image/Products/Tempo 2+2 - Family.png',     slug: 'lifestyle-tempo-2-2' },
+    'l-tempo-4':     { name: 'Tempo 4',             image: 'image/Products/Club Car 4.png',             slug: 'lifestyle-tempo-4' },
+    'l-tempo-4-2':   { name: 'Tempo 4+2',           image: 'image/Products/4 plus2 Lifted.png',         slug: 'lifestyle-tempo-4-2' },
+    'villager-6':    { name: 'Villager 6',          image: 'image/Products/Villager 6.png',             slug: 'villager-6' },
+    'villager-8':    { name: 'Villager 8',          image: 'image/Products/Villager 8.png',             slug: 'villager-8' },
+    'transporter-4': { name: 'Transporter 4',       image: 'image/Products/Transporter 4.png',          slug: 'transporter-400' },
+    'transporter-6': { name: 'Transporter 6',       image: null,                                        slug: null },
+    'minibus-14':    { name: 'Minibus 14',          image: 'image/Products/Minibus 14.png',             slug: 'minibus-14' },
+    'minibus-21':    { name: 'Minibus 21',          image: null,                                        slug: null },
+    'ca300':         { name: 'Carryall 300',        image: 'image/Products/CA300.png',                  slug: 'carryall-300' },
+    'ca500':         { name: 'Carryall 500',        image: 'image/Products/CA500.png',                  slug: 'carryall-500' },
+    'ca700':         { name: 'Carryall 700',        image: 'image/Products/CA700.png',                  slug: null },
+    'amenities':     { name: 'Amenities Cart',      image: 'image/Products/House keeping.png',          slug: null },
+    'linen':         { name: 'Linen Cart',          image: null,                                        slug: null },
+    'food-delivery': { name: 'Food Delivery Cart',  image: 'image/Products/F&B.png',                    slug: null },
+    'engineering':   { name: 'Engineering Cart',    image: null,                                        slug: null },
+    'handyman':      { name: 'Tempo Handyman',      image: null,                                        slug: null },
+    'landscaping':   { name: 'Landscaping Cart',    image: null,                                        slug: null },
+    'cafe-express':  { name: 'Café Express',        image: 'image/Products/Cafe Express.png',           slug: 'cafe-express' },
+    'custom':        { name: 'Custom Build',        image: null,                                        slug: null },
+    'r-tempo-2':     { name: 'Remanufactured 2-Seater',        image: 'image/Products/reman 2.png',     slug: null },
+    'r-tempo-2-custom': { name: 'Remanufactured 2-Seater (Custom Color)', image: 'image/Products/reman 3.png', slug: null },
+    'r-tempo-2-2':   { name: 'Remanufactured 2+2',             image: 'image/Products/reman 4.png',     slug: null },
+    'r-tempo-2-2-lifted': { name: 'Remanufactured 2+2 Lifted', image: 'image/Products/reman 5.png',     slug: null },
+    'r-tempo-4':     { name: 'Remanufactured 4-Seater',        image: 'image/Products/reman 1.png',     slug: null }
+};
+
+// Menu hierarchy: pillar -> subcategory -> group -> model keys. Drives the header dropdowns, the mobile
+// drawer, the Cart page tab sub-menus and the pillar landing pages. `links` add extra menu entries that
+// jump to a section of the pillar page; `enquiry` adds a business enquiry prompt to a subcategory.
 const NAV_SEGMENTS = [
     {
+        id: 'golfer',
+        label: 'The Golfer',
+        category: 'The Golfer',
+        tagline: 'Built around the way you play.',
+        description: 'A personal cart for regular golf. Tempo 2, Tempo 2+2 and Tempo 4, each in Golfer, Scratch and Pro builds.',
+        image: 'image/Products/Premium.png',
+        buildSet: 'golfer-2',
+        links: [{ label: 'Compare Golfer / Scratch / Pro', anchor: 'compare' }],
+        subcategories: [
+            { id: 'models', label: 'Models', groups: [{ label: 'Models', items: ['g-tempo-2', 'g-tempo-2-2', 'g-tempo-4'] }] }
+        ]
+    },
+    {
+        id: 'lifestyle',
+        label: 'Lifestyle & Private Use',
+        category: 'Lifestyle & Private Use',
+        tagline: 'Mobility for homes, villages, estates and farms.',
+        description: 'Practical, comfort and premium builds with optional packages, for family transport and life around a private property.',
+        image: 'image/Products/Tempo 2+2 - Family.png',
+        buildSet: 'lifestyle',
+        links: [{ label: 'Compare builds', anchor: 'compare' }, { label: 'Explore lifted packages', anchor: 'lifted' }],
+        subcategories: [
+            { id: 'models', label: 'Models', groups: [{ label: 'Models', items: ['l-tempo-2', 'l-tempo-2-2', 'l-tempo-4', 'l-tempo-4-2'] }] }
+        ]
+    },
+    {
         id: 'resort',
-        label: 'Resort',
-        category: 'Resort',
-        tagline: 'Resort & Hospitality',
-        description: 'Quiet, comfortable guest transfers and fit-to-task utility vehicles for resorts, hotels, and leisure destinations.',
+        label: 'Resort & Hospitality',
+        category: 'Resort & Hospitality',
+        tagline: 'Guest transport and daily property operations.',
+        description: 'Match the vehicle to passenger flow, luggage and daily operating conditions, then add utility and fit-to-task builds for the jobs behind the scenes.',
         image: 'image/Products/Villager 8.png',
         subcategories: [
             {
-                id: 'guest-transport',
-                label: 'Guest Transport',
-                groups: [
-                    { label: 'Standard', items: ['seat-2-2', 'seat-4', 'seat-4-2'] },
-                    { label: 'People Transport', items: ['villager-6', 'villager-8', 'transporter-4', 'transporter-6'] },
-                    { label: 'People Hauler', items: ['minibus'] }
-                ]
+                id: 'guest-transportation',
+                label: 'Guest Transportation',
+                enquiry: 'Tell us your passenger demand, route, terrain, luggage needs and operating hours. We will recommend a suitable transport setup.',
+                groups: [{ label: 'Guest Transportation', items: ['villager-6', 'villager-8', 'transporter-4', 'transporter-6', 'minibus-14', 'minibus-21'] }]
             },
             {
-                id: 'resort-utility',
-                label: 'Resort Utility',
-                groups: [
-                    { label: 'Fit To Task', items: ['fnb', 'laundry', 'custom'] },
-                    { label: 'Utility', items: ['ca300', 'ca500', 'ca700'] }
-                ]
+                id: 'utility-operations',
+                label: 'Utility & Operations',
+                intro: 'Start with the job. Select the vehicle and equipment around it.',
+                groups: [{ label: 'Utility & Operations', items: ['ca300', 'ca500', 'ca700'] }]
+            },
+            {
+                id: 'fit-to-task',
+                label: 'Fit-to-Task',
+                enquiry: 'Need a cart for a specific job? Tell us what it needs to carry and where it will operate.',
+                groups: [{ label: 'Fit-to-Task', items: ['amenities', 'linen', 'food-delivery', 'engineering', 'handyman', 'landscaping', 'cafe-express', 'custom'] }]
             }
         ]
     },
     {
-        id: 'industrial',
-        label: 'Industrial and Township',
-        category: 'Industrial and Township',
-        tagline: 'Industrial & Township Mobility',
-        description: 'People movers and heavy-payload utility vehicles for plants, business parks, campuses, and townships.',
-        image: 'image/Products/Transporter 4.png',
+        id: 'remanufactured',
+        label: 'Remanufactured',
+        category: null,
+        tagline: 'A clear value offering.',
+        description: 'Remanufactured golf and lifestyle builds, with utility where available. Each unit is quoted with its seating layout, rebuild scope, battery type and condition, included equipment, warranty terms and available upgrades.',
+        image: 'image/Products/reman 4.png',
         subcategories: [
             {
-                id: 'people-transport',
-                label: 'People Transport',
-                groups: [
-                    { label: 'People Transport', items: ['seat-2', 'seat-2-2', 'seat-4', 'seat-4-2', 'seat-6-2', 'villager-6', 'villager-8', 'minibus'] }
-                ]
-            },
-            {
-                id: 'utility',
-                label: 'Utility',
-                groups: [
-                    { label: 'Utility', items: ['ca300', 'ca500', 'ca700', 'transporter-4', 'transporter-6'] }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'golf',
-        label: 'Golf Solution',
-        category: 'Golf Solution',
-        tagline: 'Golf Course Fleets',
-        description: 'Fleet golf carts, course-maintenance utility vehicles, and mobile merchandising for championship courses and country clubs.',
-        image: 'image/Products/Tempo 2+2 - Golf.png',
-        subcategories: [
-            {
-                id: 'golfcart',
-                label: 'Golfcart',
-                groups: [
-                    { label: 'Golfcart', items: ['seat-2', 'seat-4', 'seat-2-2', 'seat-4-2', 'villager-6'] }
-                ]
-            },
-            {
-                id: 'golf-utility',
-                label: 'Utility',
-                groups: [
-                    { label: 'Utility', items: ['ca300', 'ca500', 'ca700'] }
-                ]
-            },
-            {
-                id: 'mobile-merchandising',
-                label: 'Mobile Merchandising',
-                groups: [
-                    { label: 'Mobile Merchandising', items: ['cafe-express'] }
-                ]
+                id: 'available-units',
+                label: 'Available Builds',
+                intro: 'Availability changes as units are rebuilt. Ask for the current units, photos and rebuild details.',
+                groups: [{ label: 'Available Builds', items: ['r-tempo-2', 'r-tempo-2-custom', 'r-tempo-2-2', 'r-tempo-2-2-lifted', 'r-tempo-4'] }]
             }
         ]
     }
 ];
+
+// Header navigation order from the blueprint: three buying pillars, then value, fleet and aftersales routes
+const MAIN_NAV = [
+    { segment: 'golfer' },
+    { segment: 'lifestyle' },
+    { segment: 'resort' },
+    { segment: 'remanufactured' },
+    { label: 'Fleet Solutions', action: "navigateTo('solutions')", page: 'solutions' },
+    { label: 'Parts & Accessories', action: "setCategoryAndNavigate('Accessories')" },
+    { label: 'Service & Support', action: "navigateTo('service')", page: 'service' }
+];
+
+// Primary action for individual buyers: start on the hero product's build selector
+function buildYourCart() {
+    navigateTo('product-details', 'golfer-tempo-2');
+    setTimeout(() => scrollToDetailSection('build'), 350);
+}
 
 // Main Hero Carousel Variables
 let currentSlideIndex = 0;
@@ -941,8 +971,8 @@ const CAROUSEL_SLIDES = [
     {
         image: "image/Hero/hero-1.jpg",
         alt: "Fairway? Covered. Club Car golf cart on the course",
-        ctaLabel: "Explore Products",
-        ctaAction: "navigateTo('products')"
+        ctaLabel: "Explore The Golfer",
+        ctaAction: "openSegment('golfer')"
     },
     {
         image: "image/Hero/hero-2.webp",
@@ -953,13 +983,13 @@ const CAROUSEL_SLIDES = [
     {
         image: "image/Hero/hero-3.webp",
         alt: "More than just golf carts. We keep you rolling.",
-        ctaLabel: "Service & Support",
+        ctaLabel: "Book Service",
         ctaAction: "navigateTo('service')"
     },
     {
         image: "image/Hero/hero-5.png",
         alt: "One cart is great. A whole fleet? Even better.",
-        ctaLabel: "Fleet Solutions",
+        ctaLabel: "Request a Fleet Proposal",
         ctaAction: "navigateTo('solutions')"
     }
 ];
@@ -968,33 +998,33 @@ const CAROUSEL_SLIDES = [
 // HOMEPAGE CONTENT (layout modelled on a model-led automotive homepage)
 // ==========================================
 
-// Three side-by-side solution panels under the hero (video, photo, crossfading fleet photos)
+// The three buying pillars, side by side under the hero (blueprint: "lead with the three buying pillars")
 const HOME_SOLUTION_PANELS = [
     {
-        eyebrow: 'Resort',
-        title: 'Experience Silent, Unmatched Luxury',
-        text: 'Quiet, eco-friendly guest transport across premier resorts, hotels, and leisure destinations.',
-        ctaLabel: 'Explore Resort', ctaAction: "openSegment('resort')", ctaIcon: 'play-circle',
-        media: `<video autoplay loop muted playsinline class="home-panel-media"><source src="video/resort_video.mp4" type="video/mp4"></video>`
-    },
-    {
-        eyebrow: 'Industrial and Township',
-        title: 'Heavy Payload & Unmatched Performance',
-        text: 'Built for groundskeeping, cargo hauling, estate management, and zero-emission facility logistics.',
-        ctaLabel: 'Explore Industrial and Township', ctaAction: "openSegment('industrial')", ctaIcon: 'arrow-right-circle',
-        media: `<img src="image/industrial.png" alt="Utility vehicle at work" loading="lazy" class="home-panel-media">`
-    },
-    {
-        eyebrow: 'Golf Solution',
-        title: 'Championship Fairway Mobility & Fleet Care',
-        text: 'Fleet carts for tournament play, course management, and high-efficiency golfer transport.',
-        ctaLabel: 'Explore Golf Solution', ctaAction: "openSegment('golf')", ctaIcon: 'flag',
+        eyebrow: 'The Golfer',
+        title: 'Built around the way you play.',
+        text: 'A personal cart for regular golf. Tempo 2, 2+2 and 4 in Golfer, Scratch and Pro builds.',
+        ctaLabel: 'Explore The Golfer', ctaAction: "openSegment('golfer')", ctaIcon: 'flag',
         golfSlides: true
+    },
+    {
+        eyebrow: 'Lifestyle & Private Use',
+        title: 'Mobility for homes, villages, estates and farms.',
+        text: 'Practical, comfort and premium builds for family transport and life around a private property.',
+        ctaLabel: 'Explore Lifestyle', ctaAction: "openSegment('lifestyle')", ctaIcon: 'home',
+        media: `<img src="image/Banners/personal.jpg" alt="Golfers sharing a Club Car" loading="lazy" class="home-panel-media" style="object-position:50% 45%">`
+    },
+    {
+        eyebrow: 'Resort & Hospitality',
+        title: 'Guest transport and daily property operations.',
+        text: 'Guest transportation, utility and fit-to-task solutions for resorts, hotels and properties.',
+        ctaLabel: 'Explore Resort & Hospitality', ctaAction: "openSegment('resort')", ctaIcon: 'play-circle',
+        media: `<video autoplay loop muted playsinline class="home-panel-media"><source src="video/resort_video.mp4" type="video/mp4"></video>`
     }
 ];
 
-// Lineup filter tabs on the homepage (product categories, accessories excluded)
-const HOME_LINEUP_TABS = ['All', 'Personal Golfcart', 'Resort', 'Industrial and Township', 'Golf Solution'];
+// Lineup filter tabs on the homepage (the three buying pillars)
+const HOME_LINEUP_TABS = ['All', 'The Golfer', 'Lifestyle & Private Use', 'Resort & Hospitality'];
 let homeLineupFilter = 'All';
 
 const BRANCHES = [
@@ -1007,6 +1037,16 @@ const BRANCHES = [
         name: 'Cebu Branch',
         address: 'Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu',
         phones: ['(+63) 917 310 5239']
+    },
+    {
+        name: 'Laguna Branch',
+        address: 'Nissan Technopark, Purok 5 NMPI Rd, City of Santa Rosa, Laguna',
+        phones: []
+    },
+    {
+        name: 'Clark Branch',
+        address: 'Unit 16E-F, Philexcel Business Park, M.A. Roxas Highway, Clark Freeport Zone, Pampanga',
+        phones: []
     }
 ];
 
@@ -1017,7 +1057,7 @@ const HOME_FAQS = [
     { q: 'How do I charge an electric golf cart?', a: 'Our carts charge from a standard 110V/220V outlet. For best battery life, charge after every use instead of waiting for the battery to run low.' },
     { q: 'Can I customize colors, seats, and accessories?', a: 'Yes. Choose from body colors, premium seats, lighting, enclosures, audio, and more from our genuine accessory range. Mention your preferences when you request a quote.' },
     { q: 'Do you offer after-sales service and parts?', a: 'Yes. Our service team handles inspections, battery and electrical checks, and repairs, and we stock spare parts and accessories. Visit our Service page or contact a branch to book.' },
-    { q: 'Where can I see the carts in person?', a: 'Visit our Manila or Cebu branch. You can also request a quote and our team will arrange a viewing for you.' }
+    { q: 'Where can I see the carts in person?', a: 'Visit any of our branches in Manila, Cebu, Laguna (Santa Rosa) or Pampanga (Clark). You can also request a quote and our team will arrange a viewing for you.' }
 ];
 
 function setHomeLineupFilter(cat) {
@@ -1361,8 +1401,12 @@ function navigateTo(page, slug = null) {
     const activePage = page === 'blog-details' ? 'blogs' : (page === 'product-details' || page === 'segment') ? 'products' : page;
     
     // Toggle active state classes dynamically across desktop navigation items
+    // Pillar pages and cart pages highlight their pillar in the header
+    const pillarProduct = page === 'product-details' && PRODUCTS_DATA.find(p => p.slug === slug);
+    const pillarSeg = page === 'segment' ? slug
+        : pillarProduct ? (NAV_SEGMENTS.find(s => s.category === pillarProduct.category) || {}).id : null;
     document.querySelectorAll('.nav-link').forEach(btn => {
-        if (btn.dataset.page === activePage) {
+        if (btn.dataset.page === activePage || (pillarSeg && btn.dataset.segment === pillarSeg)) {
             btn.classList.add('bg-slate-100/80', 'font-bold', 'text-slate-900');
             btn.classList.remove('text-slate-600');
         } else {
@@ -1379,7 +1423,7 @@ function setCategoryFilter(cat) {
     renderApp();
 }
 
-// --- SEGMENT MENUS (Resort / Industrial and Township / Golf Solution) ---
+// --- PILLAR MENUS (The Golfer / Lifestyle & Private Use / Resort & Hospitality / Remanufactured) ---
 
 function modelAnchorId(segmentId, subId, modelKey) {
     return `${segmentId}-${subId}-${modelKey}`;
@@ -1400,11 +1444,19 @@ function openSegment(segmentId, anchorId = null) {
     }
 }
 
-// Hover/focus sub-menu attached to a category tab on the Cart page
+// Menu click for a model: its own page when it has one, otherwise its card on the pillar page
+function modelMenuAction(seg, sub, key) {
+    const model = VEHICLE_MODELS[key];
+    return model.slug
+        ? `navigateTo('product-details', '${model.slug}')`
+        : `openSegment('${seg.id}', '${modelAnchorId(seg.id, sub.id, key)}')`;
+}
+
+// Hover/focus sub-menu for a pillar (header nav and Cart page tabs)
 function renderSegmentDropdown(seg) {
     return `
         <div class="segment-dropdown" role="menu">
-            <div class="segment-dropdown-inner grid gap-6" style="grid-template-columns: repeat(${seg.subcategories.length}, minmax(180px, 1fr));">
+            <div class="segment-dropdown-inner grid gap-6" style="grid-template-columns: repeat(${seg.subcategories.length}, minmax(190px, 1fr));">
                 ${seg.subcategories.map(sub => `
                     <div class="space-y-3">
                         <button onclick="openSegment('${seg.id}', '${seg.id}-${sub.id}')" class="block text-left text-xs font-extrabold uppercase tracking-wider text-brand-olive hover:text-brand-oliveHover">${sub.label}</button>
@@ -1412,10 +1464,15 @@ function renderSegmentDropdown(seg) {
                             <div class="space-y-1">
                                 ${group.label !== sub.label ? `<p class="text-[11px] font-bold text-slate-900">${group.label}</p>` : ''}
                                 ${group.items.map(key => `
-                                    <button onclick="openSegment('${seg.id}', '${modelAnchorId(seg.id, sub.id, key)}')" class="segment-dropdown-item" role="menuitem">${VEHICLE_MODELS[key].name}</button>
+                                    <button onclick="${modelMenuAction(seg, sub, key)}" class="segment-dropdown-item" role="menuitem">${VEHICLE_MODELS[key].name}${VEHICLE_MODELS[key].badge ? ` <span class="ml-1 px-1.5 py-0.5 rounded bg-brand-olive/15 text-brand-oliveHover text-[10px] font-bold">${VEHICLE_MODELS[key].badge}</span>` : ''}</button>
                                 `).join('')}
                             </div>
                         `).join('')}
+                        ${sub === seg.subcategories[0] && seg.links ? `
+                            <div class="pt-2 mt-1 border-t border-brand-border space-y-1">
+                                ${seg.links.map(l => `<button onclick="openSegment('${seg.id}', '${seg.id}-${l.anchor}')" class="segment-dropdown-item font-semibold text-brand-oliveHover" role="menuitem">${l.label} &rarr;</button>`).join('')}
+                            </div>
+                        ` : ''}
                     </div>
                 `).join('')}
             </div>
@@ -1423,7 +1480,27 @@ function renderSegmentDropdown(seg) {
     `;
 }
 
+// Desktop header navigation, in the blueprint's order
+function renderMainNav() {
+    const nav = document.getElementById('main-nav');
+    if (!nav) return;
+    nav.innerHTML = MAIN_NAV.map(item => {
+        const seg = item.segment && NAV_SEGMENTS.find(s => s.id === item.segment);
+        if (seg) {
+            return `
+                <div class="segment-menu header-menu relative">
+                    <button onclick="openSegment('${seg.id}')" class="nav-link header-nav-link" data-segment="${seg.id}" aria-haspopup="true">
+                        ${seg.label}<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+                    </button>
+                    ${renderSegmentDropdown(seg)}
+                </div>`;
+        }
+        return `<button onclick="${item.action}" class="nav-link header-nav-link" ${item.page ? `data-page="${item.page}"` : ''}>${item.label}</button>`;
+    }).join('');
+}
+
 function renderSegmentMenus() {
+    renderMainNav();
     const mobile = document.getElementById('mobile-segment-menus');
     if (mobile) {
         mobile.innerHTML = NAV_SEGMENTS.map(seg => `
@@ -1441,12 +1518,13 @@ function renderSegmentMenus() {
                                 ${group.label !== sub.label ? `<p class="text-[11px] font-semibold text-brand-slate pt-1">${group.label}</p>` : ''}
                                 <div class="flex flex-wrap gap-1.5">
                                     ${group.items.map(key => `
-                                        <button onclick="openSegment('${seg.id}', '${modelAnchorId(seg.id, sub.id, key)}')" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-brand-olive/15 text-slate-700 text-xs">${VEHICLE_MODELS[key].name}</button>
+                                        <button onclick="${modelMenuAction(seg, sub, key)}" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-brand-olive/15 text-slate-700 text-xs">${VEHICLE_MODELS[key].name}</button>
                                     `).join('')}
                                 </div>
                             `).join('')}
                         </div>
                     `).join('')}
+                    ${seg.links ? `<div class="flex flex-wrap gap-x-4 gap-y-1">${seg.links.map(l => `<button onclick="openSegment('${seg.id}', '${seg.id}-${l.anchor}')" class="text-xs font-semibold text-brand-oliveHover">${l.label} &rarr;</button>`).join('')}</div>` : ''}
                 </div>
             </details>
         `).join('');
@@ -1456,12 +1534,18 @@ function renderSegmentMenus() {
 function populateModalProductDropdown() {
     const select = document.getElementById('modal-product-select');
     if (select) {
-        // Menu models without a product page still need to be selectable in the quote form
-        const productNames = new Set(PRODUCTS_DATA.map(p => p.name));
-        const extraModels = Object.values(VEHICLE_MODELS).filter(m => !m.slug && !productNames.has(m.name));
-        select.innerHTML = PRODUCTS_DATA.map(p => `<option value="${p.name}">${p.name} (${p.category})</option>`).join('')
+        // Values are product slugs (two carts share the name "Tempo 2"); menu models without a page use their name
+        const extraModels = Object.values(VEHICLE_MODELS).filter(m => !m.slug);
+        select.innerHTML = PRODUCTS_DATA.map(p => `<option value="${p.slug}">${p.name} (${categoryLabel(p.category)})</option>`).join('')
             + extraModels.map(m => `<option value="${m.name}">${m.name}</option>`).join('');
     }
+}
+
+// Finds a product by slug or by name (quote buttons pass either)
+function findProductRef(ref) {
+    if (!ref) return null;
+    const lower = String(ref).toLowerCase();
+    return PRODUCTS_DATA.find(p => p.slug === ref) || PRODUCTS_DATA.find(p => p.name.toLowerCase() === lower) || null;
 }
 
 function openQuoteModal(productName = '', notes = '') {
@@ -1471,8 +1555,9 @@ function openQuoteModal(productName = '', notes = '') {
     if (notesField) notesField.value = notes;
     if (modal) {
         if (productName && select) {
-            const match = PRODUCTS_DATA.find(p => p.name.toLowerCase() === productName.toLowerCase());
-            if (match) select.value = match.name;
+            const match = findProductRef(productName);
+            if (match) select.value = match.slug;
+            else if ([...select.options].some(o => o.value === productName)) select.value = productName;
         }
         // Each quote starts with a fresh accessory selection for the chosen model
         quoteAccessories = new Set();
@@ -1593,8 +1678,8 @@ function renderApp() {
 function renderHomeSectionHeading(eyebrow, title, align = 'center') {
     return `
         <div class="${align === 'center' ? 'text-center max-w-3xl mx-auto' : ''} space-y-2">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">${eyebrow}</span>
-            <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${title}</h2>
+            <span class="text-brand-olive text-sm sm:text-base font-semibold">${eyebrow}</span>
+            <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">${title}</h2>
         </div>
     `;
 }
@@ -1604,7 +1689,7 @@ function renderHomeSectionHeading(eyebrow, title, align = 'center') {
 function renderHomeSolutionPanels() {
     return `
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 space-y-6 sm:space-y-8">
-            <div class="reveal">${renderHomeSectionHeading('Solutions', 'Built for Every Setting')}</div>
+            <div class="reveal">${renderHomeSectionHeading('Solutions', 'Built for every setting.')}</div>
             <div class="home-panels">
                 ${HOME_SOLUTION_PANELS.map((panel, i) => `
                     <article class="home-panel reveal group" style="--reveal-delay:${i * 120}ms" ${panel.golfSlides ? 'onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()"' : ''} onclick="${panel.ctaAction}">
@@ -1618,9 +1703,9 @@ function renderHomeSolutionPanels() {
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent z-10 pointer-events-none"></div>
                         <div class="absolute inset-x-0 bottom-0 z-20 p-6 sm:p-8 space-y-3">
                             <span class="inline-block px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-[11px] font-bold uppercase tracking-widest shadow-lg">${panel.eyebrow}</span>
-                            <h3 class="text-xl sm:text-2xl lg:text-3xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md">${panel.title}</h3>
+                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tighter leading-[1.05] drop-shadow-md">${panel.title}</h3>
                             <div class="home-panel-details space-y-4">
-                                <p class="text-slate-200 text-xs sm:text-sm leading-relaxed max-w-md">${panel.text}</p>
+                                <p class="text-slate-200 text-sm sm:text-base leading-relaxed max-w-md">${panel.text}</p>
                                 <button onclick="event.stopPropagation(); ${panel.ctaAction}" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-xl transition-all shadow-xl text-xs sm:text-sm btn-shimmer">
                                     <i data-lucide="${panel.ctaIcon}" class="w-4 h-4"></i>
                                     <span>${panel.ctaLabel}</span>
@@ -1676,9 +1761,9 @@ function renderHomeBatteryCompare() {
     return `
         <section id="home-battery" class="reveal max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
             <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Choose Your Power</span>
-                <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Lead-Acid or Lithium?</h2>
-                <p class="text-slate-500 text-sm sm:text-base">It comes down to a lower price today or lower costs and less upkeep over the life of your cart.</p>
+                <span class="text-brand-olive text-sm sm:text-base font-semibold">Choose Your Power</span>
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Lead-acid or lithium?</h2>
+                <p class="text-slate-500 text-lg sm:text-xl">It comes down to a lower price today or lower costs and less upkeep over the life of your cart.</p>
             </div>
 
             <!-- Scorecard -->
@@ -1721,7 +1806,7 @@ function renderHomeBatteryCompare() {
             <!-- Best for -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 <div class="rounded-3xl border border-brand-border bg-brand-card p-6 sm:p-7 flex flex-col gap-4">
-                    <h3 class="font-extrabold text-slate-900 text-lg">Lead-Acid is best if you…</h3>
+                    <h3 class="font-extrabold text-slate-900 text-2xl tracking-tight">Lead-acid is best if you…</h3>
                     <ul class="space-y-2 text-sm text-slate-600">
                         <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>Are working with a tight upfront budget</li>
                         <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>Plan to keep the cart for 2 years or less</li>
@@ -1732,7 +1817,7 @@ function renderHomeBatteryCompare() {
                     </button>
                 </div>
                 <div class="rounded-3xl border border-brand-olive/40 bg-brand-olive/10 p-6 sm:p-7 flex flex-col gap-4">
-                    <h3 class="font-extrabold text-slate-900 text-lg">Lithium is best if you…</h3>
+                    <h3 class="font-extrabold text-slate-900 text-2xl tracking-tight">Lithium is best if you…</h3>
                     <ul class="space-y-2 text-sm text-slate-700">
                         <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>Keep your cart long-term, or run a resort, golf or township fleet</li>
                         <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>Drive on hills or rough terrain</li>
@@ -1757,7 +1842,7 @@ function renderHomeLineup() {
 
     return `
         <section id="home-lineup" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            ${renderHomeSectionHeading('Vehicle Lineup', 'More Golfcarts.ph Vehicles')}
+            ${renderHomeSectionHeading('Vehicle Lineup', 'Explore the lineup.')}
             <div class="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none pb-1">
                 ${HOME_LINEUP_TABS.map(cat => `
                     <button onclick="setHomeLineupFilter('${cat}')" class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
@@ -1786,11 +1871,13 @@ function renderHomePage() {
     const latestPosts = [...BLOGS_DATA].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
     const vehicleOptions = PRODUCTS_DATA.filter(p => p.category !== 'Accessories');
     const quickLinks = [
-        { icon: 'car', title: 'Browse Vehicles', text: 'See the full lineup of carts, shuttles, and utility vehicles.', action: "navigateTo('products')" },
-        { icon: 'map-pin', title: 'Find a Branch', text: 'Visit our showrooms in Manila and Cebu.', action: "goToHomeSection('home-branches')" },
-        { icon: 'file-text', title: 'Request a Quote', text: 'Tell us what you need and get pricing fast.', action: "goToHomeSection('home-quote')" },
-        { icon: 'wrench', title: 'Service & Support', text: 'Maintenance, repairs, parts, and accessories.', action: "navigateTo('service')" }
+        { icon: 'sliders-horizontal', title: 'Build Your Cart', text: 'Choose your model, build and packages, then get a quote.', action: 'buildYourCart()' },
+        { icon: 'building-2', title: 'Request a Fleet Proposal', text: 'For golf courses, resorts and commercial fleets.', action: "navigateTo('solutions')" },
+        { icon: 'wrench', title: 'Book Service', text: 'Repairs, preventive maintenance and parts.', action: "navigateTo('service')" },
+        { icon: 'map-pin', title: 'Find a Branch', text: 'Visit our showrooms in Manila, Cebu, Laguna and Clark.', action: "goToHomeSection('home-branches')" }
     ];
+    const tempo2 = PRODUCTS_DATA.find(p => p.slug === 'golfer-tempo-2');
+    const tempo2Builds = BUILD_SETS['golfer-2'].builds;
 
     return `
     <div class="pb-16">
@@ -1838,7 +1925,89 @@ function renderHomePage() {
         ${renderHomeSolutionPanels()}
 
         <div class="space-y-20 sm:space-y-28 pt-16 sm:pt-20">
-            <!-- 3. VEHICLE LINEUP: filterable grid -->
+            <!-- 3. TEMPO 2 HERO RANGE: the bestseller in Golfer / Scratch / Pro -->
+            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+                <div class="text-center max-w-3xl mx-auto space-y-3">
+                    <span class="text-brand-olive text-sm sm:text-base font-semibold">Tempo 2 · Our bestseller</span>
+                    <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Golfer. Scratch. Pro.</h2>
+                    <p class="text-slate-500 text-lg sm:text-xl">${tempo2.description}</p>
+                </div>
+                <div class="h-64 sm:h-[420px] flex items-center justify-center">
+                    <img src="${tempo2.image}" alt="Tempo 2" loading="lazy" class="max-h-full object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.18)]">
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    ${tempo2Builds.map(b => `
+                        <div class="rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-7 space-y-3">
+                            <p class="text-2xl font-extrabold text-slate-900 tracking-tight">Tempo 2 ${b.name}</p>
+                            <p class="text-sm font-semibold text-brand-olive">${b.tagline}</p>
+                            <ul class="space-y-1.5 text-sm text-slate-600">${b.includes.map(x => `<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${x}</li>`).join('')}</ul>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+                    <button onclick="buildYourCart()" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Build Your Cart</button>
+                    <button onclick="openSegment('golfer', 'golfer-compare')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base">Compare Tempo 2, 2+2 and 4 <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                </div>
+            </section>
+
+            <!-- 4. REMANUFACTURED: value route -->
+            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-[2rem] bg-brand-card border border-brand-border p-6 sm:p-12">
+                    <div class="lg:col-span-6 space-y-4">
+                        <span class="text-brand-olive text-sm sm:text-base font-semibold">Remanufactured</span>
+                        <h2 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Rebuilt carts. Clear value.</h2>
+                        <p class="text-slate-500 text-lg leading-relaxed">Golf and lifestyle builds, quoted with the actual unit, rebuild scope, battery condition, included equipment and warranty terms.</p>
+                        <button onclick="openSegment('remanufactured')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">See Remanufactured Builds</button>
+                    </div>
+                    <div class="lg:col-span-6 grid grid-cols-2 gap-4">
+                        <img src="image/Products/reman 4.png" alt="Remanufactured 2+2" loading="lazy" class="w-full h-48 sm:h-64 object-contain">
+                        <img src="image/Products/reman 5.png" alt="Remanufactured 2+2 Lifted" loading="lazy" class="w-full h-48 sm:h-64 object-contain">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. RESORT SOLUTIONS -->
+            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+                ${renderHomeSectionHeading('Resort & Hospitality', 'Solutions for every property.')}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+                    ${NAV_SEGMENTS.find(s => s.id === 'resort').subcategories.map(sub => {
+                        const firstImage = sub.groups[0].items.map(k => VEHICLE_MODELS[k].image).find(Boolean);
+                        const names = sub.groups.flatMap(g => g.items).map(k => VEHICLE_MODELS[k].name);
+                        return `
+                            <button onclick="openSegment('resort', 'resort-${sub.id}')" class="group text-left rounded-3xl bg-white border border-brand-border hover:border-brand-olive/60 hover:shadow-xl transition-all overflow-hidden flex flex-col">
+                                <div class="h-52 bg-brand-card flex items-center justify-center p-4"><img src="${firstImage}" alt="${sub.label}" loading="lazy" class="max-h-full object-contain transition-transform duration-500 group-hover:scale-105"></div>
+                                <div class="p-6 space-y-2">
+                                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">${sub.label}</h3>
+                                    <p class="text-sm text-slate-500">${names.slice(0, 5).join(' · ')}${names.length > 5 ? ' · and more' : ''}</p>
+                                    <span class="inline-flex items-center gap-1 text-brand-oliveHover font-semibold text-sm">Explore <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                                </div>
+                            </button>`;
+                    }).join('')}
+                </div>
+                <div class="text-center">
+                    <button onclick="navigateTo('solutions')" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-6 py-3 rounded-full border border-brand-border text-sm">Request a Fleet Proposal <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                </div>
+            </section>
+
+            <!-- 6. SERVICE SUPPORT -->
+            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="rounded-[2rem] bg-slate-900 text-white overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
+                    <div class="lg:col-span-6 p-8 sm:p-12 space-y-4">
+                        <span class="text-brand-olive text-sm sm:text-base font-semibold">Service &amp; Support</span>
+                        <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tighter leading-[1.05]">We keep you rolling.</h2>
+                        <p class="text-slate-300 text-lg">Book service, request parts, and get maintenance and charging guidance from our team.</p>
+                        <div class="flex flex-wrap gap-3 pt-1">
+                            <button onclick="navigateTo('service')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Book Service</button>
+                            <button onclick="setCategoryAndNavigate('Accessories')" class="bg-white/10 hover:bg-white/20 border border-white/20 font-semibold px-6 py-3 rounded-full text-sm transition-all">Parts &amp; Accessories</button>
+                        </div>
+                    </div>
+                    <div class="lg:col-span-6 h-64 lg:h-full min-h-[18rem]">
+                        <img src="image/Hero/hero-3.webp" alt="Golfcarts.ph service technician" loading="lazy" class="w-full h-full object-cover">
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. VEHICLE LINEUP: filterable grid -->
             ${renderHomeLineup()}
 
             <!-- 4. BRAND STORY: split media (left) / text (right) -->
@@ -1850,8 +2019,8 @@ function renderHomePage() {
                 </div>
                 <div class="lg:col-span-5 space-y-5">
                     <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">Who is Golfcarts.ph?</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Pioneering Electric Mobility in the Philippines</h2>
-                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Pioneering electric mobility in the Philippines.</h2>
+                    <p class="text-slate-500 text-lg sm:text-xl leading-relaxed">
                         Operating under SJK Guahan Inc., Golfcarts.ph is the premier distributor and customizer of luxury, resort, golf, and commercial utility electric vehicles across the country.
                     </p>
                     <div class="grid grid-cols-2 gap-3">
@@ -1860,8 +2029,8 @@ function renderHomePage() {
                             <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">Partner Clients</div>
                         </div>
                         <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
-                            <div class="text-2xl font-black text-slate-900">2</div>
-                            <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">Branches: Manila & Cebu</div>
+                            <div class="text-2xl font-black text-slate-900">${BRANCHES.length}</div>
+                            <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">Branches nationwide</div>
                         </div>
                     </div>
                     <button onclick="navigateTo('about')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:scale-105 text-sm btn-shimmer">
@@ -1874,7 +2043,7 @@ function renderHomePage() {
             <!-- 5. PARTNERS: client logo marquee -->
             <section class="py-12 sm:py-16 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
-                    ${renderHomeSectionHeading('Trusted Partnership Network', 'Trusted by Industry Leaders & Premier Resorts')}
+                    ${renderHomeSectionHeading('Trusted Partnership Network', 'Trusted by industry leaders.')}
                 </div>
                 <div class="relative w-full overflow-hidden marquee-container">
                     <div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-brand-dark to-transparent z-10 pointer-events-none"></div>
@@ -1899,8 +2068,8 @@ function renderHomePage() {
                 <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                     <div class="lg:col-span-5 space-y-4 text-white">
                         <span class="px-3 py-1 rounded-full bg-brand-olive/90 text-slate-900 text-xs font-bold uppercase tracking-widest">Request a Quote</span>
-                        <h2 class="text-3xl sm:text-5xl font-extrabold tracking-tight">Get pricing for your next cart</h2>
-                        <p class="text-slate-300 text-sm sm:text-base leading-relaxed">Pick a model and your nearest branch, and our team will send you a quote.</p>
+                        <h2 class="text-4xl sm:text-6xl font-extrabold tracking-tighter leading-[1.05]">Get pricing for your next cart.</h2>
+                        <p class="text-slate-300 text-lg sm:text-xl leading-relaxed">Pick a model and your nearest branch, and our team will send you a quote.</p>
                     </div>
                     <form onsubmit="handleHomeQuoteSubmit(event)" class="lg:col-span-7 rounded-3xl bg-white p-6 sm:p-8 shadow-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                         <div>
@@ -1946,16 +2115,16 @@ function renderHomePage() {
 
             <!-- 7. BRANCH LOCATOR -->
             <section id="home-branches" class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-28">
-                ${renderHomeSectionHeading('Find a Branch', 'Visit Our Showrooms')}
+                ${renderHomeSectionHeading('Find a Branch', 'Visit our showrooms.')}
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     ${BRANCHES.map(b => `
                         <div class="container-light-beam rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-8 flex flex-col gap-4">
                             <div class="flex items-center gap-3">
                                 <div class="p-3 rounded-xl bg-brand-olive/10 text-brand-olive"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                                <h3 class="text-lg sm:text-xl font-bold text-slate-900">${b.name}</h3>
+                                <h3 class="text-2xl font-bold text-slate-900 tracking-tight">${b.name}</h3>
                             </div>
                             <p class="text-slate-600 text-sm leading-relaxed">${b.address}</p>
-                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-700">
+                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-700 empty:hidden">
                                 ${b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="inline-flex items-center gap-1.5 hover:text-brand-olive"><i data-lucide="phone" class="w-3.5 h-3.5"></i>${ph}</a>`).join('')}
                             </div>
                             <div class="flex flex-wrap gap-3 pt-2 mt-auto relative z-30">
@@ -1974,7 +2143,7 @@ function renderHomePage() {
             <!-- 8. BLOG -->
             <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
                 <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                    ${renderHomeSectionHeading('The Golfcarts.ph Blog', 'Guides, Tips & Stories', 'left')}
+                    ${renderHomeSectionHeading('The Golfcarts.ph Blog', 'Guides, tips & stories.', 'left')}
                     <button onclick="navigateTo('blogs')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-oliveHover font-semibold text-sm">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1988,7 +2157,7 @@ function renderHomePage() {
                                     <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
                                     <span class="text-slate-500">${formatBlogDate(post.date)}</span>
                                 </div>
-                                <h3 class="text-lg font-extrabold text-slate-900 group-hover:text-brand-olive transition-colors">${post.title}</h3>
+                                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-brand-olive transition-colors">${post.title}</h3>
                                 <p class="text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3 flex-1">${post.excerpt}</p>
                                 <span class="inline-flex items-center gap-1 text-brand-olive text-xs font-semibold">Continue reading <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
                             </div>
@@ -1999,7 +2168,7 @@ function renderHomePage() {
 
             <!-- 9. FAQ ACCORDION -->
             <section class="reveal max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                ${renderHomeSectionHeading('Need Help?', 'Frequently Asked Questions')}
+                ${renderHomeSectionHeading('Need Help?', 'Questions? Answers.')}
                 <div class="space-y-3">
                     ${HOME_FAQS.map(faq => `
                         <details class="home-faq group rounded-2xl bg-brand-card border border-brand-border">
@@ -2022,7 +2191,7 @@ function renderHomePage() {
                     ${quickLinks.map(link => `
                         <button onclick="${link.action}" class="container-light-beam group text-left rounded-2xl bg-brand-card border border-brand-border p-5 hover:border-brand-olive/50 transition-all flex flex-col gap-3">
                             <div class="p-2.5 rounded-xl bg-brand-olive/10 text-brand-olive w-fit"><i data-lucide="${link.icon}" class="w-5 h-5"></i></div>
-                            <h3 class="font-bold text-slate-900 text-sm sm:text-base group-hover:text-brand-olive transition-colors">${link.title}</h3>
+                            <h3 class="font-bold text-slate-900 text-lg tracking-tight group-hover:text-brand-olive transition-colors">${link.title}</h3>
                             <p class="text-slate-500 text-xs leading-relaxed">${link.text}</p>
                         </button>
                     `).join('')}
@@ -2050,7 +2219,7 @@ function renderProductsPage() {
         
         <!-- 1. CATEGORY SUB-MENU BAR (DIRECTLY BELOW MAIN NAVIGATION HEADER) -->
         <div class="container-light-beam relative z-30 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-2xl bg-brand-card border border-brand-border shadow-md" style="overflow: visible;">
-            <!-- Category Filter Buttons (Resort / Industrial and Township / Golf Solution open a sub-menu on hover) -->
+            <!-- Category Filter Buttons (pillar tabs open a sub-menu on hover) -->
             <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto md:overflow-visible w-full md:w-auto pb-2 md:pb-0 scrollbar-none z-10">
                 ${categories.map(cat => {
                     const segment = NAV_SEGMENTS.find(s => s.category === cat);
@@ -2058,7 +2227,7 @@ function renderProductsPage() {
                         <button onclick="setCategoryFilter('${cat}')" class="inline-flex items-center gap-1 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
                             productFilterCategory === cat ? 'bg-brand-olive text-slate-900 shadow-md font-bold' : 'bg-white/70 text-slate-600 hover:bg-slate-200/80'
                         }">
-                            ${cat}
+                            ${categoryLabel(cat)}
                             ${segment ? '<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>' : ''}
                         </button>`;
                     return segment ? `<div class="segment-menu relative">${tab}${renderSegmentDropdown(segment)}</div>` : tab;
@@ -2165,44 +2334,41 @@ function bindProductsFilterEvents() {
     }
 }
 
+// Apple-style lineup tile: big photo, color dots, name, one-line tagline, key specs, price, two actions
 function renderProductCardHTML(product) {
+    const isVehicle = product.category !== 'Accessories';
+    const safeName = product.slug; // quote buttons pass the slug (names repeat across pillars)
+    const colors = getProductBodyColors(product);
+    const shownColors = colors.slice(0, 7);
+    const specLine = isVehicle
+        ? [product.seating && product.seating.split(' (')[0], isMeaningful(product.range) && product.range].filter(Boolean).join(' · ')
+        : '';
+
     return `
-    <div class="container-light-beam product-card group rounded-2xl bg-brand-card border border-brand-border overflow-hidden flex flex-col justify-between shadow-lg">
-        <div>
-            <div class="relative h-60 sm:h-72 overflow-hidden bg-white/60 pt-9 pb-1 flex items-center justify-center">
-                <img src="${product.image}" alt="${product.name}" class="product-card-img cart-img-fill">
-                <div class="absolute top-3 left-3 flex items-center gap-1.5 z-20">
-                    <span class="px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-md text-brand-olive text-[10px] sm:text-[11px] font-semibold tracking-wider uppercase border border-brand-border">
-                        ${product.category}
-                    </span>
-                </div>
-                <div class="absolute bottom-3 right-3 z-20">
-                    <span class="px-2 py-1 rounded-lg bg-white/90 text-slate-900 text-[11px] font-bold border border-brand-border">
-                        ${product.priceLabel}
-                    </span>
-                </div>
-            </div>
+    <div class="product-tile group rounded-3xl bg-white border border-brand-border overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10 hover:-translate-y-1">
+        <button onclick="navigateTo('product-details', '${product.slug}')" aria-label="View ${product.name}" class="relative h-60 sm:h-72 overflow-hidden bg-brand-card/70 pt-6 flex items-center justify-center">
+            <img src="${product.image}" alt="${product.name}" loading="lazy" class="cart-img-fill transition-transform duration-500 group-hover:scale-105">
+        </button>
 
-            <div class="p-4 sm:p-5 space-y-2.5 sm:space-y-3 z-10 relative">
-                <h3 class="text-base sm:text-lg font-bold text-slate-900 group-hover:text-brand-olive transition-colors">${product.name}</h3>
-                <p class="text-xs text-slate-500 line-clamp-2">${product.description}</p>
-                
-                <div class="grid grid-cols-2 gap-2 pt-2 text-[11px] sm:text-xs border-t border-brand-border text-slate-600">
-                    <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="users" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.seating}</span></div>
-                    <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="battery" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.range}</span></div>
-                    <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="gauge" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.speed}</span></div>
-                    <div class="card-spec-badge p-1.5 rounded-lg flex items-center gap-1.5 border border-transparent"><i data-lucide="zap" class="w-3.5 h-3.5 text-brand-olive flex-shrink-0"></i><span class="truncate">${product.powertrain.split(' ')[0]}</span></div>
+        <div class="px-6 pt-5 pb-6 flex flex-col items-center text-center flex-1 gap-2">
+            ${shownColors.length ? `
+                <div class="flex items-center gap-1.5 h-4" aria-label="${colors.length} colors available">
+                    ${shownColors.map(c => `<span class="w-3 h-3 rounded-full border border-slate-300" style="background:${c.hex}" title="${c.name}"></span>`).join('')}
+                    ${colors.length > shownColors.length ? `<span class="text-[11px] text-slate-500 font-medium ml-0.5">+${colors.length - shownColors.length}</span>` : ''}
                 </div>
-            </div>
-        </div>
+            ` : '<div class="h-4"></div>'}
+            <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-olive pt-1">${categoryLabel(product.category)}</p>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">${product.name}</h3>
+            <p class="text-sm text-slate-500 leading-snug line-clamp-2 min-h-[2.5rem]">${product.tagline}</p>
+            ${specLine ? `<p class="text-xs text-slate-500">${specLine}</p>` : ''}
+            <p class="text-sm font-semibold text-slate-900">${product.priceLabel || 'Inquire for Price'}</p>
 
-        <div class="p-4 sm:p-5 pt-0 grid grid-cols-2 gap-2 z-10 relative">
-            <button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold text-center transition-colors">
-                View Details
-            </button>
-            <button onclick="openQuoteModal('${product.name}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold text-center transition-colors btn-shimmer">
-                Request Quote
-            </button>
+            <div class="mt-auto pt-4 flex flex-wrap items-center justify-center gap-4">
+                <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2 rounded-full text-sm transition-all btn-shimmer">Request a Quote</button>
+                <button onclick="navigateTo('product-details', '${product.slug}')" class="inline-flex items-center gap-0.5 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm transition-colors">
+                    Learn more <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                </button>
+            </div>
         </div>
     </div>
     `;
@@ -2213,6 +2379,26 @@ function renderProductCardHTML(product) {
 // Available colors per model family, from the "Versions" cart-builder sheet (STEP 2 COLORS tab).
 // Products opt in with `colorFamily`; hex values are approximate screen swatches.
 const CHAMELEON_SWATCH = 'linear-gradient(135deg, #5B2C83, #1F6FB2, #2E9E6B)';
+
+// Seat options for Tempo, Tempo Premium and Reman (sheet: "SELECT YOUR SEAT COLOR").
+// The sheet's premium "Light Beige", "Black" and "Grey" are its Modern Premium seats, named in full here
+// so they don't clash with the standard White / Beige / Black / Grey.
+const CLUB_CAR_SEAT_GROUPS = [
+    { tier: 'Standard Club Car Seats', options: ['White', 'Beige', 'Black', 'Grey'] },
+    { tier: 'Premium Club Car Seats', options: [
+        'Modern Premium Light Beige', 'Premium Camello', 'Modern Premium Black', 'Premium Black and Grey',
+        'Modern Premium Grey', 'Elite Bright White', 'Premium Light Beige', 'Premium Off White', 'Premium Black',
+        'Premium Grey', 'Premium Camello & Light Beige', 'Premium Camello & Off White', 'Premium Light Beige & Off White',
+        'Premium Camello (Special Promo)', 'Premium Black and Grey (Special Promo)',
+        'High-Back Sport Black Carbon Fiber with Silver Inlay', 'High-Back Luxury Honey Beige with Black Inlay',
+        'High-Back Luxury Briar Brown'
+    ] },
+    { tier: 'Premium GC Seats', options: [
+        'Tsunami Silver Red & Black', 'Tsunami Silver Grey & Black', 'Tsunami Silver Blue & Black',
+        'GC White with Arm Rest', 'GC Beige with Arm Rest', 'GC Dark Brown with Arm Rest',
+        'Coffee Brown Ventilated Premium Seats'
+    ] }
+];
 const COLOR_FAMILIES = {
     tempo: {
         body: [
@@ -2233,8 +2419,21 @@ const COLOR_FAMILIES = {
                 { name: 'Chameleon (3 colors)', hex: CHAMELEON_SWATCH }
             ] }
         ],
-        seats: ['White', 'Beige', 'Black', 'Grey'],
-        seatNote: 'Premium Club Car, high-back, and GC custom seat designs are also available.'
+        seatGroups: CLUB_CAR_SEAT_GROUPS
+    },
+    // Remanufactured Tempo carts; uses the same seat options as Tempo (per the sheet)
+    reman: {
+        body: [
+            { tier: 'Remanufactured Colors', colors: [
+                { name: 'Cashmere', hex: '#CDBA96' }, { name: 'Black', hex: '#1C1D1F' }, { name: 'Cayenne', hex: '#A4402A' }
+            ] },
+            { tier: 'Premium GC Custom Paint', colors: [
+                { name: '3D Paint', hex: 'linear-gradient(135deg, #C9CCD1, #5E6670, #E8EAEC)' },
+                { name: 'Chameleon (7 colors)', hex: CHAMELEON_SWATCH },
+                { name: 'Chameleon (3 colors)', hex: CHAMELEON_SWATCH }
+            ] }
+        ],
+        seatGroups: CLUB_CAR_SEAT_GROUPS
     },
     villager: {
         body: [{ tier: 'Villager Colors', colors: [
@@ -2242,11 +2441,32 @@ const COLOR_FAMILIES = {
         ] }]
     },
     carryall: {
-        body: [{ tier: 'Transporter & CarryAll Colors', colors: [
+        body: [{ tier: 'Transporter & Carryall Colors', colors: [
             { name: 'White', hex: '#F5F5F2' }, { name: 'Green', hex: '#0F5A45' }, { name: 'Grey', hex: '#8C8F92' }
         ] }],
-        seats: ['Gray', 'White', 'Black', 'Beige']
+        seatGroups: [{ tier: 'Carryall Seats', options: ['Gray', 'White', 'Black', 'Beige'] }]
     }
+};
+
+// Canopy options per model, from the sheet's "SELECT YOUR CANOPY COLOR" step. Products point here with `canopyKey`.
+// CC = Club Car canopy, CN = the non-Club Car 80" / 120" canopy listed in the sheet.
+const CANOPY_OPTIONS = {
+    'tempo-2': ['White', 'Beige', 'Black'],
+    // 2+2 Club Car seat kit: White/Beige/Black; Genesis and Metal flip-seat builds add Black CN
+    'tempo-2+2': ['White', 'Beige', 'Black', 'Black CN'],
+    'tempo-4': ['Black'],
+    'tempo-4+2': ['White CC', 'Beige CC', 'Black CC', 'Black CN'],
+    'tempo-6': ['White CC', 'Beige CC', 'Black CC', 'Black CN'],
+    'tempo-6+2': ['White', 'Black'],
+    'transporter-4': ['White', 'Beige', 'Black'],
+    'transporter-6': ['White', 'Beige', 'Black'],
+    'villager-6': ['White', 'Beige'],
+    'villager-8': ['White', 'Beige'],
+    'carryall-300': ['White', 'Beige', 'Black'],
+    'carryall-500': ['White', 'Beige', 'Black'],
+    'carryall-700': ['White', 'Beige', 'Black', 'White Long Canopy', 'Beige Long Canopy', 'Black Long Canopy'],
+    'minibus-14': ['Black'],
+    'minibus-23': ['Black']
 };
 
 // Flat list of a product's body colors, each with a photo when one exists for that color
@@ -2304,6 +2524,8 @@ const ACCESSORY_CATALOG = [
         { id: 'enc-22-black', name: '2+2 Three-Sided Rain Enclosure (Black)', sku: 'SJK-0467', fits: ['tempo-2+2'] },
         { id: 'enc-22-beige', name: '2+2 Three-Sided Rain Enclosure (Beige)', fits: ['tempo-2+2'] },
         { id: 'enc-22-white', name: '2+2 Three-Sided Rain Enclosure (White)', sku: 'SJK-1905', fits: ['tempo-2+2'] },
+        { id: 'enc-4-black', name: 'Tempo 4 Rain Enclosure (Black)', fits: ['tempo-4'] },
+        { id: 'enc-4-beige', name: 'Tempo 4 Rain Enclosure (Beige)', fits: ['tempo-4'] },
         { id: 'enc-42-black', name: 'Tempo 4+2 Rain Enclosure (Black)', fits: ['tempo-4+2'] },
         { id: 'enc-42-beige', name: 'Tempo 4+2 Rain Enclosure (Beige)', fits: ['tempo-4+2'] },
         { id: 'enc-v6-white', name: 'Villager 6 Rain Enclosure (White)', sku: 'SJK-1814', fits: ['villager-6'] },
@@ -2317,9 +2539,9 @@ const ACCESSORY_CATALOG = [
         { id: 'enc-t4-white', name: 'Transporter 4 Long Rain Enclosure (White)', fits: ['transporter-4'] },
         { id: 'enc-t4-black', name: 'Transporter 4 Long Rain Enclosure (Black)', fits: ['transporter-4'] },
         { id: 'enc-t4-beige', name: 'Transporter 4 Long Rain Enclosure (Beige)', fits: ['transporter-4'] },
-        { id: 'enc-ca-white', name: 'CarryAll Rain Enclosure (White)', sku: 'SJK-1248', fits: ['carryall'] },
-        { id: 'enc-ca-black', name: 'CarryAll Rain Enclosure (Black)', fits: ['carryall'] },
-        { id: 'enc-ca-beige', name: 'CarryAll Rain Enclosure (Beige)', fits: ['carryall'] },
+        { id: 'enc-ca-white', name: 'Carryall Rain Enclosure (White)', sku: 'SJK-1248', fits: ['carryall'] },
+        { id: 'enc-ca-black', name: 'Carryall Rain Enclosure (Black)', fits: ['carryall'] },
+        { id: 'enc-ca-beige', name: 'Carryall Rain Enclosure (Beige)', fits: ['carryall'] },
         { id: 'enc-mb14-black', name: 'Minibus 14 Rain Enclosure (Black)', fits: ['minibus'] },
         { id: 'enc-mb14-beige', name: 'Minibus 14 Rain Enclosure (Beige)', fits: ['minibus'] }
     ] },
@@ -2359,7 +2581,7 @@ function findAccessory(id) {
 
 // Accessory groups that fit a model, looked up by the product name shown in the quote form
 function getCompatibleAccessoryGroups(productName) {
-    const product = PRODUCTS_DATA.find(p => p.name === productName);
+    const product = findProductRef(productName);
     const tags = (product && product.accessoryTags) || [];
     return ACCESSORY_CATALOG
         .map(g => ({ group: g.group, items: g.items.filter(i => i.fits.some(t => tags.includes(t))) }))
@@ -2447,11 +2669,38 @@ function openQuoteWithAccessories(productName, notes = '') {
 // Vehicle page: opens the quote with the accessory list, carrying over the selected colors
 function addAccessoriesFromDetail() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
-    if (product) openQuoteWithAccessories(product.name, getDetailBuildNote());
+    if (product) openQuoteWithAccessories(product.slug, getDetailBuildNote());
 }
 
 // Swatch colors for the seat and canopy options (sheet names: White, Beige, Black, Grey/Gray)
-const TRIM_COLOR_HEX = { White: '#F5F5F2', Beige: '#D8C8A6', Black: '#1C1D1F', Grey: '#8F9396', Gray: '#8F9396' };
+// Swatch colors for every seat and canopy option (approximate; two-tone seats use a split swatch).
+// The preview engine repaints with the first color of a split swatch.
+const TRIM_COLOR_HEX = {
+    // Standard seats and canopies
+    'White': '#F5F5F2', 'Beige': '#D8C8A6', 'Black': '#1C1D1F', 'Grey': '#8F9396', 'Gray': '#8F9396',
+    // Premium Club Car seats
+    'Modern Premium Light Beige': '#E3D5B8', 'Premium Camello': '#A86B3C', 'Modern Premium Black': '#1F1F21',
+    'Premium Black and Grey': 'linear-gradient(135deg, #1F1F21 50%, #8F9396 50%)',
+    'Modern Premium Grey': '#8A8D90', 'Elite Bright White': '#FBFBF9', 'Premium Light Beige': '#E3D5B8',
+    'Premium Off White': '#EFEBE0', 'Premium Black': '#1F1F21', 'Premium Grey': '#8A8D90',
+    'Premium Camello & Light Beige': 'linear-gradient(135deg, #A86B3C 50%, #E3D5B8 50%)',
+    'Premium Camello & Off White': 'linear-gradient(135deg, #A86B3C 50%, #EFEBE0 50%)',
+    'Premium Light Beige & Off White': 'linear-gradient(135deg, #E3D5B8 50%, #EFEBE0 50%)',
+    'Premium Camello (Special Promo)': '#A86B3C',
+    'Premium Black and Grey (Special Promo)': 'linear-gradient(135deg, #1F1F21 50%, #8F9396 50%)',
+    'High-Back Sport Black Carbon Fiber with Silver Inlay': 'linear-gradient(135deg, #1F1F21 60%, #B7BABD 60%)',
+    'High-Back Luxury Honey Beige with Black Inlay': 'linear-gradient(135deg, #C9A36A 60%, #1F1F21 60%)',
+    'High-Back Luxury Briar Brown': '#5C3A24',
+    // Premium GC seats
+    'Tsunami Silver Red & Black': 'linear-gradient(135deg, #B7BABD 33%, #B3121B 33% 66%, #1F1F21 66%)',
+    'Tsunami Silver Grey & Black': 'linear-gradient(135deg, #B7BABD 33%, #6B6E72 33% 66%, #1F1F21 66%)',
+    'Tsunami Silver Blue & Black': 'linear-gradient(135deg, #B7BABD 33%, #1F4FBF 33% 66%, #1F1F21 66%)',
+    'GC White with Arm Rest': '#F5F5F2', 'GC Beige with Arm Rest': '#D8C8A6', 'GC Dark Brown with Arm Rest': '#4A2E1E',
+    'Coffee Brown Ventilated Premium Seats': '#5A3A28',
+    // Canopies (CC = Club Car, CN = non-Club Car canopy)
+    'White CC': '#F5F5F2', 'Beige CC': '#D8C8A6', 'Black CC': '#1C1D1F', 'Black CN': '#2A2B2E',
+    'White Long Canopy': '#F5F5F2', 'Beige Long Canopy': '#D8C8A6', 'Black Long Canopy': '#1C1D1F'
+};
 
 // Current color choices on the vehicle page; reset each time a vehicle page renders
 let detailBuild = { body: null, seat: null, canopy: null };
@@ -2462,7 +2711,11 @@ function getDetailBuildNote() {
         detailBuild.seat && `Seat ${detailBuild.seat}`,
         detailBuild.canopy && `Canopy ${detailBuild.canopy}`
     ].filter(Boolean);
-    return parts.length ? `Preferred colors: ${parts.join(', ')}` : '';
+    const lines = [];
+    const build = getBuildSummaryText();
+    if (build) lines.push(`Build: ${build}`);
+    if (parts.length) lines.push(`Preferred colors: ${parts.join(', ')}`);
+    return lines.join('\n');
 }
 
 // Refreshes the "your build" pills shown on top of the color preview
@@ -2481,6 +2734,36 @@ function updateDetailBuildSummary() {
     summary.innerHTML = pill('Body', detailBuild.body, bodyHex)
         + pill('Seat', detailBuild.seat, TRIM_COLOR_HEX[detailBuild.seat])
         + pill('Canopy', detailBuild.canopy, TRIM_COLOR_HEX[detailBuild.canopy]);
+    updateDetailPreview();
+}
+
+function hasLiveColorPreview(slug) {
+    return typeof COLOR_PREVIEW !== 'undefined' && !!COLOR_PREVIEW[slug];
+}
+
+let detailPreviewToken = 0;
+
+// Repaints the color preview photo for the current body / seat / canopy choices (see recolor.js)
+function updateDetailPreview() {
+    const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    if (!product || !hasLiveColorPreview(product.slug)) return;
+    const body = getProductBodyColors(product).find(c => c.name === detailBuild.body);
+    const token = ++detailPreviewToken;
+    renderCartPreview(product.slug, {
+        body: body ? body.hex : null,
+        seat: detailBuild.seat ? TRIM_COLOR_HEX[detailBuild.seat] : null,
+        canopy: detailBuild.canopy ? TRIM_COLOR_HEX[detailBuild.canopy] : null
+    }).then(url => {
+        // Ignore results from an older click that finished after a newer one
+        if (!url || token !== detailPreviewToken) return;
+        const img = document.getElementById('detail-color-img');
+        if (img) img.src = url;
+        const note = document.getElementById('detail-color-photo-note');
+        if (note) {
+            note.textContent = 'Color preview · final finish may vary';
+            note.classList.remove('hidden');
+        }
+    }).catch(() => { /* keep the original photo if the preview can't be drawn */ });
 }
 
 // Seat / canopy color buttons: same active-state behaviour as the body swatches
@@ -2532,17 +2815,20 @@ function selectDetailColor(index) {
     if (label) label.textContent = color.name;
     const quoteBtn = document.getElementById('detail-color-quote');
     if (quoteBtn) quoteBtn.dataset.color = color.name;
-    const img = document.getElementById('detail-color-img');
-    if (img) img.src = color.image || product.image;
-    const note = document.getElementById('detail-color-photo-note');
-    if (note) note.classList.toggle('hidden', !!color.image);
+    // Carts with a live preview are repainted by updateDetailPreview(); others swap to a real photo if we have one
+    if (!hasLiveColorPreview(product.slug)) {
+        const img = document.getElementById('detail-color-img');
+        if (img) img.src = color.image || product.image;
+        const note = document.getElementById('detail-color-photo-note');
+        if (note) note.classList.toggle('hidden', !!color.image);
+    }
     detailBuild.body = color.name;
     updateDetailBuildSummary();
 }
 
 function requestQuoteInColor() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
-    if (product) openQuoteModal(product.name, getDetailBuildNote());
+    if (product) openQuoteModal(product.slug, getDetailBuildNote());
 }
 
 function scrollToDetailSection(id) {
@@ -2568,161 +2854,333 @@ function initDetailTabs() {
     sections.forEach(section => detailTabObserver.observe(section));
 }
 
+// --- BUILD SELECTOR (blueprint 03: choose build level, then battery and approved packages) ---
+
+function renderBuildCompareTable(buildSet) {
+    const rowsMax = Math.max(...buildSet.builds.map(b => b.includes.length));
+    return `
+        <div class="overflow-x-auto rounded-3xl border border-brand-border bg-white">
+            <table class="w-full min-w-[560px] text-left text-sm">
+                <thead>
+                    <tr class="border-b border-brand-border">
+                        ${buildSet.builds.map(b => `
+                            <th class="p-5 align-top">
+                                <p class="text-xl font-extrabold text-slate-900 tracking-tight">${b.name}</p>
+                                <p class="text-xs font-medium text-brand-olive">${b.tagline}</p>
+                            </th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Array.from({ length: rowsMax }, (_, r) => `
+                        <tr class="border-b border-brand-border/60 last:border-0">
+                            ${buildSet.builds.map(b => `<td class="px-5 py-3 text-slate-700">${b.includes[r] ? `<span class="inline-flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${b.includes[r]}</span>` : ''}</td>`).join('')}
+                        </tr>`).join('')}
+                    <tr>
+                        ${buildSet.builds.map(b => `<td class="px-5 pb-5 text-xs text-slate-500">${b.note || ''}</td>`).join('')}
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+}
+
+function renderBuildSection(product, buildSet, packageKeys) {
+    return `
+        <!-- BUILD: three clear builds, then compatible packages underneath -->
+        <section id="build" class="detail-section reveal scroll-mt-44 space-y-10">
+            <div class="text-center space-y-3">
+                <p class="text-brand-olive text-sm sm:text-base font-semibold">Build your ${product.name}</p>
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">${buildSet.title}</h2>
+                ${buildSet.note ? `<p class="text-slate-500 text-base sm:text-lg max-w-2xl mx-auto">${buildSet.note}</p>` : ''}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-${buildSet.builds.length} gap-4 sm:gap-6" role="radiogroup" aria-label="Build level">
+                ${buildSet.builds.map((b, i) => `
+                    <button type="button" role="radio" aria-checked="${i === 0}" onclick="selectBuildLevel('${b.id}')" data-build="${b.id}" class="build-card ${i === 0 ? 'build-card-active' : ''} text-left rounded-3xl border-2 bg-white p-6 sm:p-7 flex flex-col gap-4 transition-all">
+                        <div class="flex items-start justify-between gap-3">
+                            <div>
+                                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">${product.name} ${b.name}</p>
+                                <p class="text-sm font-semibold text-brand-olive mt-1">${b.tagline}</p>
+                            </div>
+                            <span class="build-card-check w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>
+                        </div>
+                        <ul class="space-y-1.5 text-sm text-slate-600">
+                            ${b.includes.map(x => `<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${x}</li>`).join('')}
+                        </ul>
+                        ${b.note ? `<p class="text-xs text-slate-500 mt-auto">${b.note}</p>` : ''}
+                        ${b.proposed ? '<p class="text-[11px] font-semibold text-amber-700">Proposed package, confirmed in your quote</p>' : ''}
+                    </button>
+                `).join('')}
+            </div>
+
+            ${packageKeys.length ? `
+                <div class="space-y-4">
+                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Add packages</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(packageKeys.length, 4)} gap-3">
+                        ${packageKeys.map(key => {
+                            const pkg = BUILD_PACKAGES[key];
+                            if (pkg.choices) {
+                                return `
+                                    <div class="rounded-2xl border border-brand-border bg-white p-4 space-y-2">
+                                        <p class="font-bold text-slate-900">${pkg.name}</p>
+                                        <div class="flex flex-wrap gap-1.5" role="group" aria-label="${pkg.name}">
+                                            ${pkg.choices.map((c, i) => `<button type="button" onclick="selectBuildRims('${c}')" data-rims="${c}" class="detail-trim ${i === 0 ? 'detail-trim-active' : ''}">${c}</button>`).join('')}
+                                        </div>
+                                        <p class="text-[11px] text-slate-500">${pkg.detail}</p>
+                                    </div>`;
+                            }
+                            return `
+                                <button type="button" onclick="toggleBuildPackage('${key}')" data-package="${key}" aria-pressed="false" class="build-package text-left rounded-2xl border border-brand-border bg-white p-4 space-y-1 transition-all">
+                                    <span class="flex items-center justify-between gap-2">
+                                        <span class="font-bold text-slate-900">${pkg.name}</span>
+                                        <span class="build-package-toggle text-xs font-bold text-brand-oliveHover">+ Add</span>
+                                    </span>
+                                    <span class="block text-[11px] text-slate-500">${pkg.detail}</span>
+                                </button>`;
+                        }).join('')}
+                    </div>
+                    <p class="text-[11px] text-slate-400">Packages and upgrades are paid add-ons, available only for approved model and component combinations.</p>
+                </div>
+            ` : ''}
+
+            <!-- Review: the build in the brief's configuration language -->
+            <div class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
+                <div>
+                    <p class="text-xs uppercase tracking-widest text-brand-olive font-semibold">Your build</p>
+                    <p id="build-summary-line" class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1"></p>
+                    <p class="text-slate-400 text-sm mt-1">Pick your colors below, then request a quote. Inclusions, pricing and availability are confirmed by our team.</p>
+                </div>
+                <div class="flex flex-wrap gap-3 flex-shrink-0">
+                    <button onclick="requestQuoteInColor()" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Request a Quote</button>
+                    <button onclick="scrollToDetailSection('colors')" class="bg-white/10 hover:bg-white/20 border border-white/20 font-semibold px-6 py-3 rounded-full text-sm transition-all">Choose colors</button>
+                </div>
+            </div>
+            ${buildSet.confirmed ? '' : '<p class="text-[11px] text-slate-400 text-center">Build names and package contents are proposed and may change.</p>'}
+        </section>
+    `;
+}
+
+// "Tempo 2 Scratch + Caddy Package + Lithium" (the brief's configuration language)
+function getBuildSummaryText() {
+    const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    const buildSet = product && BUILD_SETS[product.buildSet];
+    if (!buildSet) return '';
+    const level = buildSet.builds.find(b => b.id === detailBuild.level) || buildSet.builds[0];
+    const parts = [`${product.name} ${level.name}`];
+    (detailBuild.packages || []).forEach(k => parts.push(BUILD_PACKAGES[k].name));
+    if (detailBuild.rims && detailBuild.rims !== 'Standard') parts.push(`${detailBuild.rims} rims`);
+    return parts.join(' + ');
+}
+
+function updateBuildSummaryLine() {
+    const line = document.getElementById('build-summary-line');
+    if (line) line.textContent = getBuildSummaryText();
+}
+
+function selectBuildLevel(id) {
+    detailBuild.level = id;
+    document.querySelectorAll('.build-card').forEach(card => {
+        const active = card.dataset.build === id;
+        card.classList.toggle('build-card-active', active);
+        card.setAttribute('aria-checked', active ? 'true' : 'false');
+    });
+    updateBuildSummaryLine();
+}
+
+function toggleBuildPackage(key) {
+    const list = detailBuild.packages || (detailBuild.packages = []);
+    const i = list.indexOf(key);
+    if (i >= 0) list.splice(i, 1); else list.push(key);
+    const on = list.includes(key);
+    const btn = document.querySelector(`.build-package[data-package="${key}"]`);
+    if (btn) {
+        btn.classList.toggle('build-package-active', on);
+        btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        const label = btn.querySelector('.build-package-toggle');
+        if (label) label.textContent = on ? '✓ Added' : '+ Add';
+    }
+    updateBuildSummaryLine();
+}
+
+function selectBuildRims(choice) {
+    detailBuild.rims = choice;
+    document.querySelectorAll('[data-rims]').forEach(b => b.classList.toggle('detail-trim-active', b.dataset.rims === choice));
+    updateBuildSummaryLine();
+}
+
+// Splits a spec like "100 km per charge" into a big number, a unit, and a small trailing note
+// for the Apple-style stat strip. Values that don't start with a number are shown whole.
+function splitStatValue(value) {
+    const match = String(value).match(/^([\d.]+(?:\s*[–-]\s*[\d.]+)?)\s*([A-Za-z\/]+)?\s*(.*)$/);
+    if (!match) return { number: value, unit: '', note: '' };
+    return { number: match[1], unit: (match[2] || '').toLowerCase(), note: match[3] || '' };
+}
+
 function renderProductDetailsPage() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug) || PRODUCTS_DATA[0];
     const isVehicle = product.category !== 'Accessories';
-    const safeName = product.name.replace(/'/g, "\\'");
+    const safeName = product.slug; // quote buttons pass the slug (names repeat across pillars)
     const colorFamily = COLOR_FAMILIES[product.colorFamily];
     const bodyColors = getProductBodyColors(product);
     // Start on a color we have a photo for, so the preview matches the selected swatch
     const startColorIdx = Math.max(0, bodyColors.findIndex(c => c.image));
     const startColor = bodyColors[startColorIdx];
-    const seatOptions = (colorFamily && colorFamily.seats) || [];
-    const canopyOptions = product.canopyColors || [];
-    detailBuild = { body: startColor ? startColor.name : null, seat: seatOptions[0] || null, canopy: canopyOptions[0] || null };
+    const seatGroups = (colorFamily && colorFamily.seatGroups) || [];
+    const seatOptions = seatGroups.flatMap(g => g.options);
+    const canopyOptions = CANOPY_OPTIONS[product.canopyKey] || [];
+    // Seat and canopy start as "Standard" (as photographed) until the visitor picks a color
+    const buildSet = BUILD_SETS[product.buildSet];
+    const packageKeys = product.packages || [];
+    detailBuild = {
+        body: startColor ? startColor.name : null, seat: null, canopy: null,
+        level: buildSet ? buildSet.builds[0].id : null, packages: [], rims: null
+    };
     setTimeout(updateDetailBuildSummary, 0);
+    setTimeout(updateBuildSummaryLine, 0);
     const specGroups = getDetailSpecGroups(product);
     const related = PRODUCTS_DATA.filter(p => p.category === product.category && p.slug !== product.slug).slice(0, 3);
-    const accessoryCount = getCompatibleAccessoryGroups(product.name).reduce((n, g) => n + g.items.length, 0);
+    const accessoryCount = getCompatibleAccessoryGroups(product.slug).reduce((n, g) => n + g.items.length, 0);
 
-    const keyMetrics = [
-        { icon: 'users', label: 'Seating', value: product.seating },
-        { icon: 'battery-charging', label: 'Range', value: product.range },
-        { icon: 'gauge', label: 'Top Speed', value: product.speed },
-        { icon: 'plug-zap', label: 'Charging Time', value: product.chargingTime }
-    ].filter(m => isVehicle && isMeaningful(m.value));
+    // Big-number strip: the four figures buyers compare first
+    const stats = [
+        { label: 'Seating', value: product.seating },
+        { label: 'Range', value: product.range },
+        { label: 'Top speed', value: product.speed },
+        { label: 'Charging time', value: product.chargingTime }
+    ].filter(s => isVehicle && isMeaningful(s.value)).map(s => ({ ...s, ...splitStatValue(s.value) }));
 
     const tabs = [
         { id: 'overview', label: 'Overview' },
+        ...(buildSet ? [{ id: 'build', label: 'Build' }] : []),
         ...(isVehicle ? [{ id: 'colors', label: 'Colors' }] : []),
-        { id: 'features', label: 'Features' },
-        { id: 'specifications', label: 'Specifications' }
+        { id: 'features', label: 'Highlights' },
+        { id: 'specifications', label: 'Tech Specs' }
     ];
 
     setTimeout(initDetailTabs, 50);
 
     return `
     <div class="pb-8">
-        <!-- HERO: stage + key metrics + CTAs -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-0 sm:pt-2 pb-10 space-y-5">
-            <button onclick="navigateTo('products')" class="inline-flex items-center gap-2 text-brand-slate hover:text-slate-900 text-xs sm:text-sm font-medium transition-colors">
-                <i data-lucide="arrow-left" class="w-4 h-4"></i>
-                <span>Back to Vehicles</span>
-            </button>
-
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div class="lg:col-span-7 space-y-4">
-                    <div class="relative rounded-3xl overflow-hidden bg-gradient-to-b from-brand-card to-white border border-brand-border h-[340px] sm:h-[480px] lg:h-[580px] flex items-center justify-center p-2 sm:p-4">
-                        <div class="absolute inset-0 hero-cart-glow pointer-events-none"></div>
-                        <img id="detail-main-img" src="${product.image}" alt="${product.name}" class="relative w-full h-full object-contain drop-shadow-[0_25px_30px_rgba(0,0,0,0.2)]">
-                    </div>
-                    ${product.gallery.length > 1 ? `
-                        <div class="flex items-center gap-3 overflow-x-auto pb-1">
-                            ${product.gallery.map(img => `
-                                <button onclick="document.getElementById('detail-main-img').src='${img}'" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl overflow-hidden border-2 border-brand-border hover:border-brand-olive transition-all bg-white p-2 flex items-center justify-center flex-shrink-0">
-                                    <img src="${img}" alt="" class="max-h-full object-contain">
-                                </button>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-                </div>
-
-                <div class="lg:col-span-5 space-y-6">
-                    <div class="space-y-2">
-                        <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">${product.category}</span>
-                        <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight pt-2">${product.name}</h1>
-                        <p class="text-brand-slate font-semibold text-sm sm:text-base">${product.tagline}</p>
-                        <p class="text-slate-900 font-bold text-lg pt-1">${product.priceLabel || 'Inquire for Price'}</p>
-                    </div>
-
-                    ${keyMetrics.length ? `
-                        <div class="grid grid-cols-2 gap-3">
-                            ${keyMetrics.map(m => `
-                                <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
-                                    <i data-lucide="${m.icon}" class="w-4 h-4 text-brand-olive"></i>
-                                    <div class="mt-2 text-sm sm:text-base font-extrabold text-slate-900 leading-tight">${m.value}</div>
-                                    <div class="text-[10px] uppercase tracking-wider text-brand-slate font-medium mt-0.5">${m.label}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    ` : ''}
-
-                    <div class="flex flex-col sm:flex-row gap-3">
-                        <button onclick="openQuoteModal('${safeName}')" class="flex-1 flex items-center justify-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl shadow-lg text-sm transition-all btn-shimmer">
-                            <i data-lucide="file-text" class="w-4 h-4"></i>
-                            <span>Request a Quote</span>
-                        </button>
-                        <button onclick="goToHomeSection('home-branches')" class="flex-1 flex items-center justify-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold py-3.5 rounded-xl border border-brand-border text-sm transition-all">
-                            <i data-lucide="map-pin" class="w-4 h-4"></i>
-                            <span>Find a Branch</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- STICKY IN-PAGE TABS -->
-        <nav class="sticky top-[63px] sm:top-[65px] z-30 border-y border-brand-border bg-white/90 backdrop-blur-md">
+        <!-- LOCAL NAV: product name, section links, quote button (Apple-style sticky bar) -->
+        <nav class="sticky top-[63px] sm:top-[65px] z-30 border-b border-brand-border bg-white/85 backdrop-blur-xl">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-                <div class="flex items-center gap-1 sm:gap-2 overflow-x-auto scrollbar-none">
+                <span class="hidden sm:block text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">${product.name}</span>
+                <div class="flex items-center gap-1 sm:gap-3 overflow-x-auto scrollbar-none">
                     ${tabs.map((t, i) => `
                         <button onclick="scrollToDetailSection('${t.id}')" data-target="${t.id}" class="detail-tab ${i === 0 ? 'detail-tab-active' : ''}">${t.label}</button>
                     `).join('')}
-                </div>
-                <div class="hidden md:flex items-center gap-3 flex-shrink-0">
-                    <span class="text-sm font-bold text-slate-900">${product.name}</span>
-                    <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-4 py-2 rounded-full text-xs transition-all">Request a Quote</button>
+                    <button onclick="openQuoteModal('${safeName}')" class="ml-1 flex-shrink-0 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-4 py-1.5 rounded-full text-xs transition-all">Request a Quote</button>
                 </div>
             </div>
         </nav>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20 sm:space-y-28 pt-14 sm:pt-20">
-            <!-- OVERVIEW -->
-            <section id="overview" class="detail-section scroll-mt-44 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div class="lg:col-span-6 space-y-4">
-                    <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Overview</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${product.tagline}</h2>
-                    <p class="text-slate-600 text-sm sm:text-base leading-relaxed">${product.description}</p>
+        <!-- HERO: oversized name, one-line tagline, two actions, and a large product photo -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 text-center">
+            <div class="text-left">
+                <button onclick="navigateTo('products')" class="inline-flex items-center gap-1 text-brand-slate hover:text-slate-900 text-xs sm:text-sm font-medium transition-colors">
+                    <i data-lucide="chevron-left" class="w-4 h-4"></i> All vehicles
+                </button>
+            </div>
+            <div class="detail-hero-copy space-y-3 sm:space-y-4 pt-6 sm:pt-10">
+                <p class="text-brand-olive text-sm sm:text-base font-semibold">${categoryLabel(product.category)}</p>
+                <h1 class="text-5xl sm:text-7xl lg:text-8xl font-extrabold text-slate-900 tracking-tighter leading-[0.95]">${product.name}</h1>
+                <p class="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-500 tracking-tight">${product.tagline}</p>
+                <p class="text-sm text-slate-500">${product.priceLabel || 'Inquire for Price'}</p>
+                ${product.heroProduct ? '<p class="inline-block px-3 py-1 rounded-full bg-brand-olive/15 text-brand-oliveHover text-xs font-bold">Our bestseller</p>' : ''}
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-3">
+                    ${buildSet ? `
+                        <button onclick="scrollToDetailSection('build')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Build Your Cart</button>
+                        <button onclick="openQuoteModal('${safeName}')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
+                            Request a Quote <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    ` : `
+                        <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Request a Quote</button>
+                        <button onclick="scrollToDetailSection('overview')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
+                            Learn more <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    `}
                 </div>
-                ${isVehicle ? `
-                <div class="lg:col-span-6 grid grid-cols-2 gap-4">
-                    ${[
-                        { icon: 'cpu', label: 'Powertrain', value: product.powertrain },
-                        { icon: 'battery-full', label: 'Battery', value: product.battery },
-                        { icon: 'users', label: 'Seating', value: product.seating },
-                        { icon: 'route', label: 'Range', value: product.range }
-                    ].filter(h => isMeaningful(h.value)).map(h => `
-                        <div class="container-light-beam rounded-2xl bg-brand-card border border-brand-border p-5 space-y-2">
-                            <div class="p-2.5 rounded-xl bg-brand-olive/10 text-brand-olive w-fit"><i data-lucide="${h.icon}" class="w-5 h-5"></i></div>
-                            <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">${h.label}</div>
-                            <div class="text-sm sm:text-base font-bold text-slate-900">${h.value}</div>
-                        </div>
+            </div>
+
+            <div class="relative mt-6 sm:mt-10 h-[320px] sm:h-[520px] lg:h-[620px] flex items-center justify-center overflow-hidden">
+                <div class="absolute inset-0 hero-cart-glow pointer-events-none"></div>
+                <img id="detail-main-img" src="${product.image}" alt="${product.name}" class="detail-hero-img relative h-[120%] w-auto max-w-[120%] object-contain pointer-events-none drop-shadow-[0_35px_35px_rgba(0,0,0,0.18)]">
+            </div>
+            ${product.gallery.length > 1 ? `
+                <div class="flex items-center justify-center gap-3 pt-2">
+                    ${product.gallery.map(img => `
+                        <button onclick="document.getElementById('detail-main-img').src='${img}'" aria-label="Show another view" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-brand-border hover:border-brand-olive transition-all bg-white p-1.5 flex items-center justify-center">
+                            <img src="${img}" alt="" class="max-h-full object-contain">
+                        </button>
                     `).join('')}
                 </div>
+            ` : ''}
+        </section>
+
+        ${stats.length ? `
+        <!-- STAT STRIP: big numbers, small labels -->
+        <section class="reveal mt-16 sm:mt-24 border-y border-brand-border bg-brand-card/60">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 grid grid-cols-2 lg:grid-cols-${stats.length} gap-y-10 gap-x-6">
+                ${stats.map(s => `
+                    <div class="text-center space-y-1">
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium">${s.label}</p>
+                        <p class="text-slate-900 font-extrabold tracking-tight leading-none">
+                            <span class="text-5xl sm:text-6xl lg:text-7xl">${s.number}</span>${s.unit ? `<span class="text-xl sm:text-2xl lg:text-3xl ml-1">${s.unit}</span>` : ''}
+                        </p>
+                        ${s.note ? `<p class="text-xs sm:text-sm text-slate-500">${s.note}</p>` : ''}
+                    </div>
+                `).join('')}
+            </div>
+        </section>
+        ` : ''}
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-28 sm:space-y-40 pt-24 sm:pt-32">
+            <!-- OVERVIEW: one large statement, Apple-style gray text with the name in black -->
+            <section id="overview" class="detail-section reveal scroll-mt-44 max-w-4xl mx-auto text-center space-y-10">
+                <p class="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-slate-400">
+                    <span class="text-slate-900">${product.name}.</span> ${product.description}
+                </p>
+                ${isVehicle ? `
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 pt-2 text-left sm:text-center">
+                        ${[
+                            { label: 'Powertrain', value: product.powertrain },
+                            { label: 'Battery', value: product.battery }
+                        ].filter(h => isMeaningful(h.value)).map(h => `
+                            <div class="border-t border-brand-border pt-5">
+                                <p class="text-xs uppercase tracking-widest text-brand-olive font-semibold">${h.label}</p>
+                                <p class="text-lg sm:text-xl font-semibold text-slate-900 mt-1">${h.value}</p>
+                            </div>
+                        `).join('')}
+                    </div>
                 ` : `
-                <div class="lg:col-span-6 h-64 sm:h-80 rounded-3xl bg-white border border-brand-border p-6 flex items-center justify-center">
-                    <img src="${product.gallery[1] || product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain">
-                </div>
+                    <div class="h-64 sm:h-96 flex items-center justify-center">
+                        <img src="${product.gallery[1] || product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain rounded-3xl">
+                    </div>
                 `}
             </section>
 
-            ${isVehicle ? `
-            <!-- COLORS -->
-            <section id="colors" class="detail-section scroll-mt-44 rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-10">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <div class="lg:col-span-6 relative h-72 sm:h-[440px] flex items-center justify-center">
-                        <img id="detail-color-img" src="${startColor && startColor.image ? startColor.image : product.image}" alt="${product.name} color preview" class="w-full h-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.18)]">
-                        <span id="detail-color-photo-note" class="${startColor && !startColor.image ? '' : 'hidden'} absolute bottom-0 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/90 border border-brand-border text-[11px] text-slate-500 whitespace-nowrap">Photo shows a standard finish</span>
-                        <!-- Live summary of the selected body / seat / canopy colors -->
-                        <div id="detail-build-summary" class="absolute top-0 left-0 flex flex-wrap gap-1.5 max-w-full"></div>
-                    </div>
-                    <div class="lg:col-span-6 space-y-5">
-                        <div class="space-y-1">
-                            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Colors</span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">${bodyColors.length ? 'Choose your body color' : 'Colors on request'}</h2>
-                        </div>
+            ${buildSet ? renderBuildSection(product, buildSet, packageKeys) : ''}
 
+            ${isVehicle ? `
+            <!-- COLORS: preview on the left stays pinned while the pickers on the right scroll past it -->
+            <section id="colors" class="detail-section reveal scroll-mt-44 space-y-8 sm:space-y-10">
+                <h2 class="text-center text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">${bodyColors.length ? 'Pick your colors.' : 'Make it yours.'}</h2>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                <div class="lg:col-span-7 lg:sticky lg:top-[140px]">
+                <div class="relative rounded-[2rem] bg-brand-card border border-brand-border px-4 sm:px-8 pt-14 sm:pt-16 pb-8">
+                    <!-- Live summary of the selected body / seat / canopy colors -->
+                    <div id="detail-build-summary" class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-1.5 w-[calc(100%-2rem)]"></div>
+                    <div class="relative h-72 sm:h-[420px] lg:h-[480px] flex items-center justify-center">
+                        <img id="detail-color-img" src="${startColor && startColor.image ? startColor.image : product.image}" alt="${product.name} color preview" class="w-full h-full object-contain drop-shadow-[0_25px_30px_rgba(0,0,0,0.18)]">
+                        <span id="detail-color-photo-note" class="${startColor && !startColor.image ? '' : 'hidden'} absolute bottom-0 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/90 border border-brand-border text-[11px] text-slate-500 whitespace-nowrap">Photo shows a standard finish</span>
+                    </div>
+                </div>
+                </div>
+
+                <div class="lg:col-span-5 space-y-10">
+                    <div class="space-y-5">
                         ${bodyColors.length ? `
+                            <p class="text-lg font-bold text-slate-900">Body color: <span id="detail-color-name" class="font-semibold text-slate-600">${startColor.name}</span></p>
                             ${(() => {
                                 let idx = 0;
                                 return colorFamily.body.map(group => `
@@ -2737,125 +3195,116 @@ function renderProductDetailsPage() {
                                     </div>
                                 `).join('');
                             })()}
-                            <p class="text-sm text-slate-600">Selected: <span id="detail-color-name" class="font-bold text-slate-900">${startColor.name}</span></p>
+                            <p class="text-[11px] text-slate-400">Swatches are approximate screen colors. Our team will confirm the final finish.</p>
                         ` : `
-                            <p class="text-slate-600 text-sm leading-relaxed">Available colors for the ${product.name} are confirmed per order. Request a quote and our team will send the current options.</p>
+                            <p class="text-lg font-bold text-slate-900">Body color</p>
+                            <p class="text-slate-600 text-sm leading-relaxed">Available body colors for the ${product.name} are confirmed per order. Request a quote and our team will send the current options.</p>
                         `}
+                    </div>
 
+                    <div class="space-y-6">
                         ${[
-                            { type: 'seat', title: 'Seat Color', options: seatOptions },
-                            { type: 'canopy', title: 'Canopy Color', options: canopyOptions }
-                        ].filter(t => t.options.length).map(t => `
-                            <div class="space-y-2">
-                                <p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">${t.title}: <span id="detail-${t.type}-name" class="text-slate-900 normal-case tracking-normal">${t.options[0]}</span></p>
-                                <div class="flex flex-wrap gap-2" role="group" aria-label="${t.title}">
-                                    ${t.options.map((opt, i) => `
-                                        <button type="button" onclick="selectDetailTrim('${t.type}', '${opt}')" data-type="${t.type}" data-value="${opt}" aria-pressed="${i === 0}" class="detail-trim ${i === 0 ? 'detail-trim-active' : ''}">
-                                            <span class="detail-trim-dot" style="background:${TRIM_COLOR_HEX[opt] || '#CBD5E1'}"></span>${opt}
-                                        </button>
-                                    `).join('')}
-                                </div>
-                                ${t.type === 'seat' && colorFamily.seatNote ? `<p class="text-[11px] text-slate-500">${colorFamily.seatNote}</p>` : ''}
+                            { type: 'seat', title: 'Seat color', groups: seatGroups },
+                            { type: 'canopy', title: 'Canopy color', groups: canopyOptions.length ? [{ tier: null, options: canopyOptions }] : [] }
+                        ].filter(t => t.groups.length).map(t => `
+                            <div class="space-y-3">
+                                <p class="text-lg font-bold text-slate-900">${t.title}: <span id="detail-${t.type}-name" class="font-semibold text-slate-600">Standard</span></p>
+                                ${t.groups.map(group => `
+                                    <div class="space-y-2">
+                                        ${group.tier && t.groups.length > 1 ? `<p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">${group.tier}</p>` : ''}
+                                        <div class="flex flex-wrap gap-2" role="group" aria-label="${group.tier || t.title}">
+                                            ${group.options.map(opt => `
+                                                <button type="button" onclick="selectDetailTrim('${t.type}', '${opt}')" data-type="${t.type}" data-value="${opt}" aria-pressed="false" class="detail-trim">
+                                                    <span class="detail-trim-dot" style="background:${TRIM_COLOR_HEX[opt] || '#CBD5E1'}"></span>${opt}
+                                                </button>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                `).join('')}
                             </div>
                         `).join('')}
 
                         ${seatOptions.length || canopyOptions.length ? `
-                            <div class="flex gap-2.5 p-3 rounded-xl bg-white border border-brand-olive/30 text-xs text-slate-600 leading-relaxed">
+                            <div class="flex gap-2.5 p-3 rounded-xl bg-brand-card border border-brand-olive/30 text-xs text-slate-600 leading-relaxed">
                                 <i data-lucide="info" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>
                                 <p><span class="font-semibold text-slate-800">Note:</span> Custom seat and canopy color combinations may vary by model. Select your preferred color options for custom quotation.</p>
                             </div>
                         ` : ''}
 
-                        <div class="flex flex-wrap gap-3">
-                            <button id="detail-color-quote" onclick="requestQuoteInColor()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-sm transition-all btn-shimmer">
+                        <div class="flex flex-wrap gap-3 pt-1">
+                            <button id="detail-color-quote" onclick="requestQuoteInColor()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full shadow-lg text-sm transition-all btn-shimmer">
                                 <i data-lucide="${bodyColors.length ? 'palette' : 'file-text'}" class="w-4 h-4"></i>
                                 <span>${bodyColors.length || canopyOptions.length ? 'Request a Quote with These Colors' : 'Request a Quote'}</span>
                             </button>
                             ${accessoryCount ? `
-                                <button onclick="addAccessoriesFromDetail()" class="inline-flex items-center gap-2 bg-white hover:bg-brand-olive/10 border-2 border-dashed border-brand-olive/50 hover:border-brand-olive text-brand-oliveHover font-bold px-5 py-3 rounded-xl text-sm transition-all">
+                                <button onclick="addAccessoriesFromDetail()" class="inline-flex items-center gap-2 bg-white hover:bg-brand-olive/10 border-2 border-dashed border-brand-olive/50 hover:border-brand-olive text-brand-oliveHover font-bold px-5 py-3 rounded-full text-sm transition-all">
                                     <i data-lucide="plus-circle" class="w-4 h-4"></i>
                                     <span>Add Accessories</span>
                                     <span class="text-xs font-semibold text-slate-500">(${accessoryCount} paid add-ons)</span>
                                 </button>
                             ` : ''}
                         </div>
-                        ${bodyColors.length ? '<p class="text-[11px] text-slate-400">Swatches are approximate screen colors. Our team will confirm the final finish.</p>' : ''}
                     </div>
+                </div>
                 </div>
             </section>
             ` : ''}
 
-            <!-- FEATURES -->
-            <section id="features" class="detail-section scroll-mt-44 space-y-8">
-                <div class="space-y-1">
-                    <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Features</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">What comes with the ${product.name}</h2>
-                </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(product.features.length, 4)} gap-4 sm:gap-6">
+            <!-- HIGHLIGHTS: large text callouts, no boxes -->
+            <section id="features" class="detail-section reveal scroll-mt-44 space-y-10 sm:space-y-14">
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Highlights.</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                     ${product.features.map((f, i) => `
-                        <div class="container-light-beam rounded-3xl bg-white border border-brand-border p-6 space-y-4 shadow-sm">
-                            <div class="flex items-center justify-between">
-                                <div class="p-3 rounded-2xl bg-brand-olive/10 text-brand-olive"><i data-lucide="${DETAIL_FEATURE_ICONS[i % DETAIL_FEATURE_ICONS.length]}" class="w-5 h-5"></i></div>
-                                <span class="text-3xl font-black text-slate-200">0${i + 1}</span>
+                        <div class="border-t border-brand-border pt-6 flex gap-5">
+                            <span class="text-brand-olive font-bold text-sm pt-1.5">0${i + 1}</span>
+                            <div class="flex items-start gap-3">
+                                <i data-lucide="${DETAIL_FEATURE_ICONS[i % DETAIL_FEATURE_ICONS.length]}" class="w-6 h-6 text-slate-400 flex-shrink-0 mt-1"></i>
+                                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-snug">${f}</h3>
                             </div>
-                            <h3 class="text-sm sm:text-base font-bold text-slate-900 leading-snug">${f}</h3>
                         </div>
                     `).join('')}
                 </div>
             </section>
 
-            <!-- SPECIFICATIONS -->
-            <section id="specifications" class="detail-section scroll-mt-44 space-y-8">
-                <div class="space-y-1">
-                    <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Specifications</span>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Technical Specifications</h2>
-                </div>
-                <div class="space-y-3">
-                    ${specGroups.map((g, i) => `
-                        <details class="detail-spec-group rounded-2xl border border-brand-border bg-white" ${i < 2 ? 'open' : ''}>
-                            <summary class="flex items-center justify-between p-5 cursor-pointer list-none">
-                                <span class="font-bold text-slate-900 text-sm sm:text-base">${g.title}</span>
-                                <i data-lucide="chevron-down" class="detail-spec-chevron w-5 h-5 text-brand-olive"></i>
-                            </summary>
-                            <dl class="px-5 pb-4">
+            <!-- TECH SPECS: every group visible, label / value rows -->
+            <section id="specifications" class="detail-section reveal scroll-mt-44 space-y-10 sm:space-y-14">
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Tech Specs.</h2>
+                <div class="divide-y divide-brand-border border-y border-brand-border">
+                    ${specGroups.map(g => `
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-8">
+                            <h3 class="md:col-span-3 text-lg font-bold text-slate-900">${g.title}</h3>
+                            <dl class="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5">
                                 ${g.rows.map(([k, v]) => `
-                                    <div class="grid grid-cols-2 gap-4 py-3 border-t border-brand-border text-xs sm:text-sm">
-                                        <dt class="text-brand-slate">${k}</dt>
-                                        <dd class="font-semibold text-slate-900">${v}</dd>
+                                    <div>
+                                        <dt class="text-xs text-slate-500">${k}</dt>
+                                        <dd class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5">${v}</dd>
                                     </div>
                                 `).join('')}
                             </dl>
-                        </details>
+                        </div>
                     `).join('')}
                 </div>
                 <p class="text-[11px] text-slate-400">Specifications may change without prior notice. Actual range varies with load, terrain, and driving habits.</p>
             </section>
 
-            <!-- QUOTE CTA BAND -->
-            <section class="rounded-3xl bg-slate-900 text-white p-8 sm:p-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-                <div class="space-y-2">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold">Interested in the ${product.name}?</h2>
-                    <p class="text-slate-300 text-sm">Get pricing, availability, and customization options from our team.</p>
-                </div>
-                <div class="flex flex-wrap gap-3">
-                    <button onclick="openQuoteModal('${safeName}')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl text-sm transition-all btn-shimmer">
-                        <i data-lucide="file-text" class="w-4 h-4"></i> Request a Quote
-                    </button>
-                    <button onclick="goToHomeSection('home-branches')" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3 rounded-xl border border-white/20 text-sm transition-all">
-                        <i data-lucide="map-pin" class="w-4 h-4"></i> Find a Branch
+            <!-- CLOSING CTA -->
+            <section class="reveal rounded-[2rem] bg-brand-card border border-brand-border px-6 py-16 sm:py-24 text-center space-y-5">
+                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Make it yours.</h2>
+                <p class="text-slate-500 text-base sm:text-xl max-w-xl mx-auto">Get pricing, availability, and customization options for the ${product.name}.</p>
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-3">
+                    <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Request a Quote</button>
+                    <button onclick="goToHomeSection('home-branches')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
+                        Find a branch <i data-lucide="chevron-right" class="w-4 h-4"></i>
                     </button>
                 </div>
             </section>
 
             ${related.length ? `
             <!-- RELATED -->
-            <section class="space-y-8">
+            <section class="space-y-10">
                 <div class="flex items-end justify-between gap-4">
-                    <div class="space-y-1">
-                        <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">${product.category}</span>
-                        <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">You may also like</h2>
-                    </div>
-                    <button onclick="setCategoryAndNavigate('${product.category}')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-oliveHover font-semibold text-sm">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
+                    <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter">Explore more ${categoryLabel(product.category)}.</h2>
+                    <button onclick="setCategoryAndNavigate('${product.category}')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm whitespace-nowrap">View all <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${related.map(p => renderProductCardHTML(p)).join('')}
@@ -2870,39 +3319,56 @@ function renderProductDetailsPage() {
 function renderSegmentModelCard(segmentId, subId, modelKey) {
     const model = VEHICLE_MODELS[modelKey];
     const product = model.slug ? PRODUCTS_DATA.find(p => p.slug === model.slug) : null;
-    const quoteName = (product ? product.name : model.name).replace(/'/g, "\\'");
+    const quoteRef = (product ? product.slug : model.name).replace(/'/g, "\\'");
+    const isReman = segmentId === 'remanufactured';
 
     return `
-        <div id="${modelAnchorId(segmentId, subId, modelKey)}" class="container-light-beam group rounded-2xl bg-brand-card border border-brand-border p-4 sm:p-5 flex flex-col">
+        <div id="${modelAnchorId(segmentId, subId, modelKey)}" class="container-light-beam group relative rounded-2xl bg-brand-card border border-brand-border p-4 sm:p-5 flex flex-col">
+            ${model.badge ? `<span class="absolute top-4 left-4 z-20 px-2.5 py-1 rounded-full bg-brand-olive text-slate-900 text-[10px] font-bold uppercase tracking-wider">${model.badge}</span>` : ''}
             <div class="h-52 sm:h-60 rounded-xl bg-white flex items-center justify-center overflow-hidden">
                 ${model.image
                     ? `<img src="${model.image}" alt="${model.name}" loading="lazy" class="product-card-img cart-img-fill">`
                     : `<div class="flex flex-col items-center gap-2 text-slate-400"><i data-lucide="image" class="w-8 h-8"></i><span class="text-[11px] font-medium">Photo coming soon</span></div>`}
             </div>
-            <h4 class="mt-4 text-sm sm:text-base font-bold text-slate-900 group-hover:text-brand-olive transition-colors">${model.name}</h4>
+            <h4 class="mt-4 text-base sm:text-lg font-bold text-slate-900 tracking-tight group-hover:text-brand-olive transition-colors">${model.name}</h4>
             ${product ? `<p class="text-xs text-slate-500 mt-1 line-clamp-2">${product.tagline}</p>` : ''}
+            ${product && product.buildSet ? `<p class="text-[11px] font-semibold text-brand-oliveHover mt-1">${BUILD_SETS[product.buildSet].builds.map(b => b.name).join(' · ')}</p>` : ''}
+            ${isReman ? '<p class="text-[11px] text-slate-500 mt-1">Ask for current units, rebuild scope and warranty.</p>' : ''}
             <div class="mt-auto pt-4 grid ${product ? 'grid-cols-2' : 'grid-cols-1'} gap-2 relative z-30">
-                ${product ? `<button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold transition-colors">View Details</button>` : ''}
-                <button onclick="openQuoteModal('${quoteName}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold transition-colors btn-shimmer">Request Quote</button>
+                ${product ? `<button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold transition-colors">${product.buildSet ? 'Build & Price' : 'View Details'}</button>` : ''}
+                <button onclick="openQuoteModal('${quoteRef}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold transition-colors btn-shimmer">${isReman ? 'Check Availability' : 'Request a Quote'}</button>
             </div>
         </div>
     `;
 }
 
+// Business enquiry prompt (Guest Transportation, Fit-to-Task): leads to the fleet proposal form
+function renderEnquiryPrompt(text) {
+    return `
+        <div class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <p class="text-lg sm:text-xl font-bold tracking-tight max-w-2xl">${text}</p>
+            <button onclick="navigateTo('solutions')" class="flex-shrink-0 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Request a Fleet Proposal</button>
+        </div>`;
+}
+
 function renderSegmentPage() {
     const segment = NAV_SEGMENTS.find(s => s.id === currentSlug) || NAV_SEGMENTS[0];
+    const buildSet = BUILD_SETS[segment.buildSet];
 
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-        <!-- Segment Header -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 sm:space-y-20">
+        <!-- Pillar header -->
         <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-3xl bg-gradient-to-r from-brand-card via-white to-white border border-brand-border p-6 sm:p-10 overflow-hidden">
             <div class="lg:col-span-7 space-y-4">
-                <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">${segment.tagline}</span>
-                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">${segment.label}</h1>
-                <p class="text-slate-500 text-xs sm:text-base leading-relaxed max-w-xl">${segment.description}</p>
+                <span class="text-brand-olive text-sm sm:text-base font-semibold">${segment.label}</span>
+                <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">${segment.tagline}</h1>
+                <p class="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl">${segment.description}</p>
                 <div class="flex flex-wrap gap-2 pt-2">
-                    ${segment.subcategories.map(sub => `
+                    ${segment.subcategories.length > 1 ? segment.subcategories.map(sub => `
                         <button onclick="openSegment('${segment.id}', '${segment.id}-${sub.id}')" class="px-4 py-2 rounded-full bg-white border border-brand-border hover:border-brand-olive text-slate-700 text-xs font-semibold transition-colors">${sub.label}</button>
+                    `).join('') : ''}
+                    ${(segment.links || []).map(l => `
+                        <button onclick="openSegment('${segment.id}', '${segment.id}-${l.anchor}')" class="px-4 py-2 rounded-full bg-white border border-brand-border hover:border-brand-olive text-slate-700 text-xs font-semibold transition-colors">${l.label}</button>
                     `).join('')}
                 </div>
             </div>
@@ -2914,64 +3380,119 @@ function renderSegmentPage() {
         <!-- Subcategories -->
         ${segment.subcategories.map(sub => `
             <section id="${segment.id}-${sub.id}" class="space-y-8 scroll-mt-40">
-                <div class="flex items-center gap-4">
-                    <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">${sub.label}</h2>
-                    <div class="flex-1 h-px bg-brand-border"></div>
+                <div class="space-y-2">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${sub.label}</h2>
+                        <div class="flex-1 h-px bg-brand-border"></div>
+                    </div>
+                    ${sub.intro ? `<p class="text-slate-500 text-base">${sub.intro}</p>` : ''}
                 </div>
                 ${sub.groups.map(group => `
-                    <div class="space-y-4">
-                        ${group.label !== sub.label ? `<h3 class="text-sm font-bold uppercase tracking-wider text-brand-slate">${group.label}</h3>` : ''}
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-                            ${group.items.map(key => renderSegmentModelCard(segment.id, sub.id, key)).join('')}
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(4, Math.max(3, group.items.length))} gap-4 sm:gap-6">
+                        ${group.items.map(key => renderSegmentModelCard(segment.id, sub.id, key)).join('')}
                     </div>
                 `).join('')}
+                ${sub.enquiry ? renderEnquiryPrompt(sub.enquiry) : ''}
             </section>
         `).join('')}
+
+        ${buildSet ? `
+            <!-- Compare builds -->
+            <section id="${segment.id}-compare" class="space-y-6 scroll-mt-40">
+                <div class="space-y-2">
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Compare ${buildSet.builds.map(b => b.name).join(' / ')}</h2>
+                    <p class="text-slate-500 text-base">${segment.id === 'golfer'
+                        ? 'Golfer → Scratch → Pro applies across Tempo 2, Tempo 2+2 and Tempo 4. Shown here for Tempo 2 and Tempo 4; Tempo 2+2 builds are on its page.'
+                        : 'Shown for every lifestyle model. Exact inclusions per model are confirmed in your quote.'}</p>
+                </div>
+                ${renderBuildCompareTable(buildSet)}
+                ${buildSet.confirmed ? '' : '<p class="text-[11px] text-slate-400">Build names and package contents are proposed and may change.</p>'}
+            </section>
+        ` : ''}
+
+        ${segment.id === 'lifestyle' ? `
+            <!-- Lifted packages -->
+            <section id="lifestyle-lifted" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-10 scroll-mt-40">
+                <div class="lg:col-span-6 space-y-4">
+                    <span class="text-brand-olive text-sm font-semibold">Lifted Package</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Ready for rougher ground.</h2>
+                    <p class="text-slate-600 text-base leading-relaxed">A lift kit with optional bull bar, nerf bars / side steps and larger wheel choices (10-, 12- or 14-inch rims), with tires selected for the surface you drive on.</p>
+                    <p class="text-xs text-slate-500">Available only for approved model and component combinations. Private-use configurations do not imply approval for public-road use.</p>
+                    <button onclick="navigateTo('product-details', 'lifestyle-tempo-2-2')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Build a lifted Tempo 2+2</button>
+                </div>
+                <div class="lg:col-span-6 h-64 sm:h-80 flex items-center justify-center">
+                    <img src="image/Products/Tempo 2+2 - Lifted.png" alt="Tempo 2+2 with Lifted Package" class="max-h-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.18)]">
+                </div>
+            </section>
+        ` : ''}
     </div>
     `;
 }
 
+// FLEET SOLUTIONS: separate enquiry route for golf-course and commercial buyers (blueprint 07)
+function handleFleetProposalSubmit(e) {
+    e.preventDefault();
+    e.target.reset();
+    showToast('Thanks! Our fleet team will contact you to prepare your proposal.');
+}
+
 function renderSolutionsPage() {
+    const services = [
+        { icon: 'clipboard-list', title: 'Fleet selection', text: 'Choose models and quantities around your utilization, routes and operating hours.' },
+        { icon: 'wrench', title: 'Service planning', text: 'Preventive maintenance, parts and charging plans to keep the fleet running.' },
+        { icon: 'refresh-cw', title: 'Replacement planning', text: 'Plan fleet renewals and trade-ins before downtime affects your operation.' }
+    ];
+    const input = 'w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive';
+
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-        <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Fleet Solutions</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Tailored Mobility for Every Industry</h1>
-            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                From championship golf venues to high-end hospitality and heavy commercial operations, we engineer eco-friendly vehicle solutions tailored to your operational workflows.
-            </p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16 sm:space-y-20">
+        <div class="text-center max-w-3xl mx-auto space-y-4 reveal">
+            <span class="text-brand-olive text-sm sm:text-base font-semibold">Fleet Solutions</span>
+            <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Fleets for golf courses and commercial operations.</h1>
+            <p class="text-slate-500 text-lg sm:text-xl leading-relaxed">Tell us about your operation and we'll recommend the right vehicles, service plan and replacement schedule.</p>
         </div>
 
-        <div class="space-y-12 sm:space-y-16">
-            ${SOLUTIONS_DATA.map((sol, idx) => `
-                <div class="container-light-beam grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center p-6 sm:p-12 rounded-3xl bg-brand-card border border-brand-border">
-                    <div class="lg:col-span-6 ${idx % 2 === 1 ? 'lg:order-2' : ''}">
-                        <div class="rounded-2xl overflow-hidden border border-brand-border h-64 sm:h-96 bg-white p-4 flex items-center justify-center">
-                            <img src="${sol.image}" alt="${sol.title}" class="product-card-img max-h-full object-contain">
-                        </div>
-                    </div>
-                    <div class="lg:col-span-6 space-y-4 sm:space-y-6 ${idx % 2 === 1 ? 'lg:order-1' : ''}">
-                        <div>
-                            <span class="text-brand-olive text-xs font-semibold uppercase">${sol.subtitle}</span>
-                            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900 mt-1">${sol.title}</h2>
-                        </div>
-                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed">${sol.description}</p>
-                        <div class="space-y-2">
-                            ${sol.benefits.map(b => `
-                                <div class="flex items-center gap-2 text-xs text-slate-600">
-                                    <i data-lucide="check-circle-2" class="w-4 h-4 text-brand-olive flex-shrink-0"></i>
-                                    <span>${b}</span>
-                                </div>
-                            `).join('')}
-                        </div>
-                        <button onclick="openQuoteModal('${sol.title}')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-xs sm:text-sm btn-shimmer">
-                            <span>Inquire Fleet Pricing</span>
-                        </button>
-                    </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
+            ${services.map(s => `
+                <div class="rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-8 space-y-3">
+                    <div class="p-3 rounded-2xl bg-brand-olive/10 text-brand-olive w-fit"><i data-lucide="${s.icon}" class="w-6 h-6"></i></div>
+                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">${s.title}</h2>
+                    <p class="text-slate-600 leading-relaxed">${s.text}</p>
                 </div>
             `).join('')}
         </div>
+
+        <section id="fleet-proposal" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start reveal scroll-mt-28">
+            <div class="lg:col-span-5 space-y-4">
+                <h2 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Request a Fleet Proposal.</h2>
+                <p class="text-slate-500 text-lg leading-relaxed">Share your unit quantities, utilization and service needs. Our team will prepare a proposal for your property.</p>
+                <p class="text-xs text-slate-400">Financing or payment options are presented only when approved.</p>
+            </div>
+            <form onsubmit="handleFleetProposalSubmit(event)" class="lg:col-span-7 rounded-3xl bg-white border border-brand-border p-6 sm:p-8 shadow-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                <div><label class="block font-medium text-slate-600 mb-1">Company / Property *</label><input required type="text" placeholder="Company or property name" class="${input}"></div>
+                <div><label class="block font-medium text-slate-600 mb-1">Contact Person *</label><input required type="text" placeholder="Full name and position" class="${input}"></div>
+                <div><label class="block font-medium text-slate-600 mb-1">Email Address *</label><input required type="email" placeholder="name@company.com" class="${input}"></div>
+                <div><label class="block font-medium text-slate-600 mb-1">Mobile Number *</label><input required type="tel" placeholder="+63 900 000 0000" class="${input}"></div>
+                <div><label class="block font-medium text-slate-600 mb-1">Operation Type *</label>
+                    <select required class="${input}">
+                        <option value="">Select one</option>
+                        <option>Golf course</option>
+                        <option>Resort / hotel</option>
+                        <option>Commercial / industrial property</option>
+                        <option>Township / estate</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div><label class="block font-medium text-slate-600 mb-1">Estimated Units</label><input type="number" min="1" placeholder="e.g. 20" class="${input}"></div>
+                <div class="sm:col-span-2"><label class="block font-medium text-slate-600 mb-1">I need help with</label>
+                    <div class="flex flex-wrap gap-2 pt-1">
+                        ${['Fleet selection', 'Service planning', 'Replacement planning', 'Fit-to-task builds'].map(o => `<label class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-brand-border text-slate-700 cursor-pointer"><input type="checkbox" class="accent-[#749E35]"> ${o}</label>`).join('')}
+                    </div>
+                </div>
+                <div class="sm:col-span-2"><label class="block font-medium text-slate-600 mb-1">Passenger demand, routes, terrain and operating hours</label><textarea rows="3" placeholder="Tell us how the fleet will be used" class="${input}"></textarea></div>
+                <button type="submit" class="sm:col-span-2 w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">Request a Fleet Proposal</button>
+            </form>
+        </section>
     </div>
     `;
 }
@@ -3032,13 +3553,13 @@ function renderServicePage() {
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 sm:pb-12 space-y-14 sm:space-y-20">
         <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 reveal">
             <span class="text-brand-olive text-xs font-semibold uppercase tracking-widest">After-Sales Excellence</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Service, Spare Parts & Support</h1>
+            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Service &amp; Support</h1>
             <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
                 We provide mobile technician dispatch, original factory spare parts, and remote telemetry battery health monitoring.
             </p>
             <div class="flex flex-wrap justify-center gap-3 pt-2">
                 <button onclick="document.getElementById('service-request').scrollIntoView({ behavior: 'smooth' })" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-sm transition-all btn-shimmer">
-                    <i data-lucide="wrench" class="w-4 h-4"></i> Schedule Service
+                    <i data-lucide="wrench" class="w-4 h-4"></i> Book Service
                 </button>
                 <button onclick="goToHomeSection('home-branches')" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-6 py-3 rounded-xl border border-brand-border text-sm transition-all">
                     <i data-lucide="map-pin" class="w-4 h-4"></i> Find a Branch
@@ -3087,7 +3608,7 @@ function renderServicePage() {
         </div>
 
         <div id="service-request" class="container-light-beam p-6 sm:p-12 rounded-3xl bg-brand-card border border-brand-border max-w-3xl mx-auto shadow-2xl scroll-mt-28">
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 text-center z-10 relative">Schedule Mobile Service Dispatch</h3>
+            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 text-center z-10 relative">Book Service</h3>
             <form onsubmit="event.preventDefault(); showToast('Service Request Submitted! Ref: #SRV-9821');" class="space-y-4 text-xs z-10 relative">
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div><label class="block mb-1 text-slate-600">Name</label><input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
@@ -3097,8 +3618,10 @@ function renderServicePage() {
                     <select class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
                         <option>Comprehensive Preventive Maintenance (7-Point Check)</option>
                         <option>On-Site Technician Repair</option>
-                        <option>Original Spare Parts Order</option>
+                        <option>Request Parts</option>
                         <option>Lithium Battery Health Check</option>
+                        <option>Maintenance &amp; Charging Guidance</option>
+                        <option>Warranty Enquiry</option>
                     </select>
                 </div>
                 <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm btn-shimmer">Submit Request</button>
@@ -3197,7 +3720,7 @@ function renderAboutPage() {
             <div class="lg:col-span-5 flex justify-center">
                 <div class="relative w-full max-w-md h-64 sm:h-80 rounded-2xl bg-gradient-to-br from-brand-olive/20 via-brand-dark to-white border border-brand-border p-6 flex items-center justify-center overflow-hidden group">
                     <div class="absolute inset-0 bg-[radial-gradient(#749E35_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
-                    <img src="image/Products/CA500.png" alt="CarryAll 500 Utility Cart" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
+                    <img src="image/Products/CA500.png" alt="Carryall 500 Utility Cart" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
                 </div>
             </div>
 
