@@ -2742,11 +2742,14 @@ function hasLiveColorPreview(slug) {
 }
 
 let detailPreviewToken = 0;
+// Browsers block reading image pixels on pages opened as local files (file://), so the repaint only works
+// when the site is served from a web address (GitHub Pages or a local server).
+let livePreviewAvailable = location.protocol !== 'file:';
 
 // Repaints the color preview photo for the current body / seat / canopy choices (see recolor.js)
 function updateDetailPreview() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
-    if (!product || !hasLiveColorPreview(product.slug)) return;
+    if (!product || !hasLiveColorPreview(product.slug) || !livePreviewAvailable) return;
     const body = getProductBodyColors(product).find(c => c.name === detailBuild.body);
     const token = ++detailPreviewToken;
     renderCartPreview(product.slug, {
@@ -2763,7 +2766,14 @@ function updateDetailPreview() {
             note.textContent = 'Color preview · final finish may vary';
             note.classList.remove('hidden');
         }
-    }).catch(() => { /* keep the original photo if the preview can't be drawn */ });
+    }).catch(err => {
+        // Preview can't be drawn here: stop trying and fall back to real color photos
+        livePreviewAvailable = false;
+        console.warn('Color preview unavailable; open the site from a web address to enable it.', err);
+        const body = getProductBodyColors(product).find(c => c.name === detailBuild.body);
+        const img = document.getElementById('detail-color-img');
+        if (img) img.src = (body && body.image) || product.image;
+    });
 }
 
 // Seat / canopy color buttons: same active-state behaviour as the body swatches
@@ -2815,12 +2825,16 @@ function selectDetailColor(index) {
     if (label) label.textContent = color.name;
     const quoteBtn = document.getElementById('detail-color-quote');
     if (quoteBtn) quoteBtn.dataset.color = color.name;
-    // Carts with a live preview are repainted by updateDetailPreview(); others swap to a real photo if we have one
-    if (!hasLiveColorPreview(product.slug)) {
+    // Show the real photo for this color when we have one. Carts with a live preview are then repainted by
+    // updateDetailPreview(); if that can't run (e.g. the page was opened from a local file), this photo stays.
+    if (!hasLiveColorPreview(product.slug) || !livePreviewAvailable) {
         const img = document.getElementById('detail-color-img');
         if (img) img.src = color.image || product.image;
         const note = document.getElementById('detail-color-photo-note');
-        if (note) note.classList.toggle('hidden', !!color.image);
+        if (note) {
+            note.textContent = 'Photo shows a standard finish';
+            note.classList.toggle('hidden', !!color.image);
+        }
     }
     detailBuild.body = color.name;
     updateDetailBuildSummary();
