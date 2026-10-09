@@ -1263,7 +1263,7 @@ const SOLUTIONS_DATA = [
     {
         id: 'gated-communities',
         title: 'Residential & Gated Communities',
-        subtitle: 'Modern neighborhood electric mobility for daily life',
+        subtitle: 'Low-speed electric carts for daily life around your property',
         description: 'Replace gasoline cars for short neighborhood trips. Our LSV/DOT compliant electric vehicles provide a safe, stylish, and eco-friendly way to commute to community centers, clubhouses, and local shops.',
         image: 'image/Products/Tempo 2+2 - Family - Sangria Red.png',
         benefits: [
@@ -1749,14 +1749,18 @@ const BATTERY_COMPARISON = [
     { icon: 'piggy-bank', label: '10-Year Cost', lead: 'Higher: 2–3 pack replacements', lithium: 'Lower: one pack lasts the decade', bars: [40, 100] }
 ];
 
-function renderBatteryBar(value, isLithium) {
+// `side` is 'lead' or 'lithium'. Bars grow outward from the middle column: the lead-acid bar is anchored
+// on its right edge, the lithium bar on its left, so each row reads as a head-to-head comparison.
+function renderBatteryBar(value, side) {
+    const isLithium = side === 'lithium';
     return `
-        <div class="h-1.5 w-full rounded-full bg-slate-200/80 overflow-hidden">
+        <div class="h-1.5 w-full rounded-full bg-slate-200/80 overflow-hidden flex ${isLithium ? 'justify-start' : 'justify-end'}">
             <div class="battery-bar h-full rounded-full ${isLithium ? 'bg-brand-olive' : 'bg-slate-400'}" style="--bar:${value}%"></div>
         </div>`;
 }
 
-// Lead-acid vs lithium scorecard with "best for" guidance; sits after the partner logos
+// Lead-acid vs lithium scorecard with "best for" guidance; sits after the partner logos.
+// Lead-acid on the left, the thing being compared in the middle, lithium on the right.
 function renderHomeBatteryCompare() {
     return `
         <section id="home-battery" class="reveal max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
@@ -1767,40 +1771,46 @@ function renderHomeBatteryCompare() {
             </div>
 
             <!-- Scorecard -->
-            <div class="rounded-3xl border border-brand-border bg-white shadow-xl overflow-hidden">
-                <div class="grid grid-cols-2 md:grid-cols-[1.1fr_1fr_1fr] text-sm">
-                    <div class="hidden md:flex items-end p-5 text-[11px] font-bold uppercase tracking-wider text-brand-slate">Compare</div>
-                    <div class="p-4 sm:p-5 border-b md:border-b-0 border-brand-border">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="battery-medium" class="w-5 h-5 text-slate-500"></i>
-                            <span class="font-extrabold text-slate-900">Lead-Acid</span>
+            <div class="max-w-5xl mx-auto rounded-3xl border border-brand-border bg-white shadow-xl p-2 sm:p-3">
+                <!-- Column heads -->
+                <div class="battery-grid">
+                    <div class="battery-cell-lead px-4 sm:px-6 pt-4 pb-3 md:text-right flex flex-col justify-end">
+                        <div class="flex items-center gap-2 sm:gap-3 md:justify-end">
+                            <i data-lucide="battery-medium" class="w-6 h-6 sm:w-8 sm:h-8 text-slate-500 flex-shrink-0"></i>
+                            <span class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight whitespace-nowrap">Lead-Acid</span>
                         </div>
-                        <p class="text-[11px] text-slate-500 mt-0.5">Flooded (FLA)</p>
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Flooded (FLA)</p>
                     </div>
-                    <div class="p-4 sm:p-5 bg-brand-olive/10 border-b md:border-b-0 border-brand-olive/20 relative">
-                        <span class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-brand-olive text-slate-900 text-[10px] font-bold uppercase tracking-wider">Best Value</span>
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="battery-full" class="w-5 h-5 text-brand-olive"></i>
-                            <span class="font-extrabold text-slate-900">Lithium</span>
-                        </div>
-                        <p class="text-[11px] text-slate-500 mt-0.5">LiFePO₄</p>
+                    <div class="battery-cell-label hidden md:flex items-end justify-center pb-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">Compare</span>
                     </div>
-
-                    ${BATTERY_COMPARISON.map(row => `
-                        <div class="col-span-2 md:col-span-1 flex items-center gap-2.5 px-4 sm:px-5 pt-4 md:py-4 md:border-t border-brand-border">
-                            <div class="p-2 rounded-lg bg-brand-card text-brand-olive"><i data-lucide="${row.icon}" class="w-4 h-4"></i></div>
-                            <span class="font-semibold text-slate-800">${row.label}</span>
+                    <div class="battery-cell-lithium px-4 sm:px-6 pt-4 pb-3 rounded-t-2xl bg-brand-olive/10 relative">
+                        <span class="inline-block mb-2 sm:mb-0 sm:absolute sm:top-3 sm:right-3 px-2.5 py-1 rounded-full bg-brand-olive text-slate-900 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Best Value</span>
+                        <div class="flex items-center gap-2 sm:gap-3">
+                            <i data-lucide="battery-full" class="w-6 h-6 sm:w-8 sm:h-8 text-brand-olive flex-shrink-0"></i>
+                            <span class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight whitespace-nowrap">Lithium</span>
                         </div>
-                        <div class="px-4 sm:px-5 py-3 md:py-4 md:border-t border-brand-border space-y-2">
-                            <p class="text-slate-600 text-xs sm:text-sm leading-snug">${row.lead}</p>
-                            ${renderBatteryBar(row.bars[0], false)}
-                        </div>
-                        <div class="px-4 sm:px-5 py-3 md:py-4 md:border-t border-brand-olive/20 bg-brand-olive/10 space-y-2">
-                            <p class="text-slate-900 font-semibold text-xs sm:text-sm leading-snug">${row.lithium}</p>
-                            ${renderBatteryBar(row.bars[1], true)}
-                        </div>
-                    `).join('')}
+                        <p class="text-xs sm:text-sm text-slate-500 mt-1">LiFePO₄</p>
+                    </div>
                 </div>
+
+                <!-- One row per comparison; the whole row lifts on hover -->
+                ${BATTERY_COMPARISON.map(row => `
+                    <div class="battery-row battery-grid">
+                        <div class="battery-cell-label flex items-center justify-center gap-2 px-3 pt-3 md:py-2.5 text-center">
+                            <div class="p-1.5 rounded-lg bg-brand-card text-brand-olive flex-shrink-0"><i data-lucide="${row.icon}" class="w-4 h-4"></i></div>
+                            <span class="font-semibold text-slate-800 text-sm">${row.label}</span>
+                        </div>
+                        <div class="battery-cell-lead px-4 sm:px-6 py-2.5 space-y-1.5 md:text-right md:flex md:flex-col md:justify-center">
+                            <p class="text-slate-600 text-sm leading-snug">${row.lead}</p>
+                            ${renderBatteryBar(row.bars[0], 'lead')}
+                        </div>
+                        <div class="battery-cell-lithium px-4 sm:px-6 py-2.5 space-y-1.5 bg-brand-olive/10 md:flex md:flex-col md:justify-center">
+                            <p class="text-slate-900 font-semibold text-sm leading-snug">${row.lithium}</p>
+                            ${renderBatteryBar(row.bars[1], 'lithium')}
+                        </div>
+                    </div>
+                `).join('')}
             </div>
 
             <!-- Best for -->
@@ -2019,9 +2029,9 @@ function renderHomePage() {
                 </div>
                 <div class="lg:col-span-5 space-y-5">
                     <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">Who is Golfcarts.ph?</span>
-                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Pioneering electric mobility in the Philippines.</h2>
+                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Low-speed electric vehicles for private roads.</h2>
                     <p class="text-slate-500 text-lg sm:text-xl leading-relaxed">
-                        Operating under SJK Guahan Inc., Golfcarts.ph is the premier distributor and customizer of luxury, resort, golf, and commercial utility electric vehicles across the country.
+                        We sell, customize and service low-speed electric vehicles for private roads: golf courses, resorts, gated villages, estates and industrial sites. Run by SJK Guahan Inc., with branches across the Philippines.
                     </p>
                     <div class="grid grid-cols-2 gap-3">
                         <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
@@ -2701,35 +2711,66 @@ function addAccessoriesFromDetail() {
     if (product) openQuoteWithAccessories(product.slug, getDetailBuildNote());
 }
 
-// Swatch colors for the seat and canopy options (sheet names: White, Beige, Black, Grey/Gray)
-// Swatch colors for every seat and canopy option (approximate; two-tone seats use a split swatch).
-// The preview engine repaints with the first color of a split swatch.
+// Swatch colors for every seat option, measured from the seat photos in image/Seats (the vinyl's main
+// mid-tone, ignoring the cart frame and studio background). Two- and three-tone seats use a split swatch;
+// the FIRST color is the seat's signature color, because the live preview repaints the seat with it.
 const TRIM_COLOR_HEX = {
-    // Standard seats and canopies
-    'White': '#F5F5F2', 'Beige': '#D8C8A6', 'Black': '#1C1D1F', 'Grey': '#8F9396', 'Gray': '#8F9396',
-    // Premium Club Car seats
-    'Modern Premium Light Beige': '#E3D5B8', 'Premium Camello': '#A86B3C', 'Modern Premium Black': '#1F1F21',
-    'Premium Black and Grey': 'linear-gradient(135deg, #1F1F21 50%, #8F9396 50%)',
-    'Modern Premium Grey': '#8A8D90', 'Elite Bright White': '#FBFBF9', 'Premium Light Beige': '#E3D5B8',
-    'Premium Off White': '#EFEBE0', 'Premium Black': '#1F1F21', 'Premium Grey': '#8A8D90',
-    'Premium Camello & Light Beige': 'linear-gradient(135deg, #A86B3C 50%, #E3D5B8 50%)',
-    'Premium Camello & Off White': 'linear-gradient(135deg, #A86B3C 50%, #EFEBE0 50%)',
-    'Premium Light Beige & Off White': 'linear-gradient(135deg, #E3D5B8 50%, #EFEBE0 50%)',
-    'Premium Camello (Special Promo)': '#A86B3C',
-    'Premium Black and Grey (Special Promo)': 'linear-gradient(135deg, #1F1F21 50%, #8F9396 50%)',
-    'High-Back Sport Black Carbon Fiber with Silver Inlay': 'linear-gradient(135deg, #1F1F21 60%, #B7BABD 60%)',
-    'High-Back Luxury Honey Beige with Black Inlay': 'linear-gradient(135deg, #C9A36A 60%, #1F1F21 60%)',
-    'High-Back Luxury Briar Brown': '#5C3A24',
-    // Premium GC seats
-    'Tsunami Silver Red & Black': 'linear-gradient(135deg, #B7BABD 33%, #B3121B 33% 66%, #1F1F21 66%)',
-    'Tsunami Silver Grey & Black': 'linear-gradient(135deg, #B7BABD 33%, #6B6E72 33% 66%, #1F1F21 66%)',
-    'Tsunami Silver Blue & Black': 'linear-gradient(135deg, #B7BABD 33%, #1F4FBF 33% 66%, #1F1F21 66%)',
-    'GC White with Arm Rest': '#F5F5F2', 'GC Beige with Arm Rest': '#D8C8A6', 'GC Dark Brown with Arm Rest': '#4A2E1E',
-    'Coffee Brown Ventilated Premium Seats': '#5A3A28',
-    // Canopies (CC = Club Car, CN = non-Club Car canopy)
-    'White CC': '#F5F5F2', 'Beige CC': '#D8C8A6', 'Black CC': '#1C1D1F', 'Black CN': '#2A2B2E',
-    'White Long Canopy': '#F5F5F2', 'Beige Long Canopy': '#D8C8A6', 'Black Long Canopy': '#1C1D1F'
+    // Standard Club Car seats (also used by Carryall seats)
+    'White': '#ECEBE7', 'Beige': '#B99E85', 'Black': '#2B2A2C', 'Grey': '#AEAFAE', 'Gray': '#AEAFAE',
+    // Modern Premium seats
+    'Modern Premium Light Beige': '#D2BFAF', 'Premium Camello': '#B9845F', 'Modern Premium Black': '#2D2E2E',
+    'Premium Black and Grey': 'linear-gradient(135deg, #2D2E2E 50%, #9A9693 50%)',
+    'Modern Premium Grey': '#ABABAB',
+    // Elite and Classic Premium seats
+    'Elite Bright White': 'linear-gradient(135deg, #E4E5E8 60%, #1A1B1D 60%)',
+    'Premium Light Beige': '#D0BEA8', 'Premium Off White': '#E6E2DA', 'Premium Black': '#2E2D2D', 'Premium Grey': '#C1C1C1',
+    'Premium Camello & Light Beige': 'linear-gradient(135deg, #AA7E5A 50%, #D7BBA2 50%)',
+    'Premium Camello & Off White': 'linear-gradient(135deg, #AC7D58 50%, #E3DAD0 50%)',
+    'Premium Light Beige & Off White': 'linear-gradient(135deg, #D0BEA8 50%, #E6E2DA 50%)',
+    'Premium Camello (Special Promo)': '#AD8E6F',
+    'Premium Black and Grey (Special Promo)': 'linear-gradient(135deg, #2A2A2A 50%, #8C8C8C 50%)',
+    // High-back seats
+    'High-Back Sport Black Carbon Fiber with Silver Inlay': 'linear-gradient(135deg, #2A2928 60%, #C1BFBC 60%)',
+    'High-Back Luxury Honey Beige with Black Inlay': 'linear-gradient(135deg, #CF955A 60%, #1C1B1D 60%)',
+    'High-Back Luxury Briar Brown': 'linear-gradient(135deg, #5A2D25 60%, #9A7C6A 60%)',
+    // Premium GC seats. Tsunami: mostly black, a coloured side panel and a silver stripe (see the seat photos).
+    // Bands are roughly in the photo's proportions, colour panel first so the preview shows the option's colour.
+    'Tsunami Silver Red & Black': 'linear-gradient(135deg, #B83F33 40%, #36352F 40% 82%, #B5B3AC 82%)',
+    'Tsunami Silver Grey & Black': 'linear-gradient(135deg, #78766F 40%, #2B2A27 40% 82%, #BDB9B0 82%)',
+    'Tsunami Silver Blue & Black': 'linear-gradient(135deg, #3A3D72 40%, #363533 40% 82%, #B8B4AC 82%)',
+    // GC arm-rest seats. The sheet's "GC Beige" photo is a caramel tan, so its swatch follows the photo.
+    'GC White with Arm Rest': '#E8E9EC', 'GC Beige with Arm Rest': '#D9976C', 'GC Dark Brown with Arm Rest': '#765850',
+    'Coffee Brown Ventilated Premium Seats': '#5A3A28' // no photo yet; approximate
 };
+
+// Canopy swatches are kept separate from seats: a beige canopy is a lighter, greyer beige than a beige seat.
+// Measured from the canopies in the cart photos. CC = Club Car canopy, CN = non-Club Car canopy.
+const CANOPY_COLOR_HEX = {
+    'White': '#E8E8E5', 'Beige': '#C8BBA2', 'Black': '#2E302F',
+    'White CC': '#E8E8E5', 'Beige CC': '#C8BBA2', 'Black CC': '#2E302F', 'Black CN': '#333436',
+    'White Long Canopy': '#E8E8E5', 'Beige Long Canopy': '#C8BBA2', 'Black Long Canopy': '#2E302F'
+};
+
+// Striped seats: the live preview paints these as vertical bands across the seat instead of one colour.
+// Read left to right off the Tsunami seat photos: black bolster, colour panel, silver stripe, black centre,
+// then the same mirrored. `to` is where each band ends, as a fraction of the seat's width.
+function tsunamiBands(panel, silver, black) {
+    return [
+        { hex: black, to: 0.12 }, { hex: panel, to: 0.3 }, { hex: silver, to: 0.38 }, { hex: black, to: 0.62 },
+        { hex: silver, to: 0.7 }, { hex: panel, to: 0.88 }, { hex: black, to: 1 }
+    ];
+}
+const SEAT_PATTERNS = {
+    'Tsunami Silver Red & Black': tsunamiBands('#B83F33', '#B5B3AC', '#36352F'),
+    'Tsunami Silver Grey & Black': tsunamiBands('#78766F', '#BDB9B0', '#2B2A27'),
+    'Tsunami Silver Blue & Black': tsunamiBands('#3A3D72', '#B8B4AC', '#363533')
+};
+
+// Swatch value for a seat or canopy option
+function getTrimHex(type, option) {
+    if (!option) return null;
+    return (type === 'canopy' ? CANOPY_COLOR_HEX[option] : TRIM_COLOR_HEX[option]) || null;
+}
 
 // Current color choices on the vehicle page; reset each time a vehicle page renders
 let detailBuild = { body: null, seat: null, canopy: null };
@@ -2761,8 +2802,8 @@ function updateDetailBuildSummary() {
             <span class="text-slate-400">${label}</span> <span class="font-semibold">${value}</span>
         </span>` : '';
     summary.innerHTML = pill('Body', detailBuild.body, bodyHex)
-        + pill('Seat', detailBuild.seat, TRIM_COLOR_HEX[detailBuild.seat])
-        + pill('Canopy', detailBuild.canopy, TRIM_COLOR_HEX[detailBuild.canopy]);
+        + pill('Seat', detailBuild.seat, getTrimHex('seat', detailBuild.seat))
+        + pill('Canopy', detailBuild.canopy, getTrimHex('canopy', detailBuild.canopy));
     updateDetailPreview();
 }
 
@@ -2783,8 +2824,9 @@ function updateDetailPreview() {
     const token = ++detailPreviewToken;
     renderCartPreview(product.slug, {
         body: body ? body.hex : null,
-        seat: detailBuild.seat ? TRIM_COLOR_HEX[detailBuild.seat] : null,
-        canopy: detailBuild.canopy ? TRIM_COLOR_HEX[detailBuild.canopy] : null
+        seat: getTrimHex('seat', detailBuild.seat),
+        seatBands: SEAT_PATTERNS[detailBuild.seat] || null,
+        canopy: getTrimHex('canopy', detailBuild.canopy)
     }).then(url => {
         // Ignore results from an older click that finished after a newer one
         if (!url || token !== detailPreviewToken) return;
@@ -3278,7 +3320,7 @@ function renderProductDetailsPage() {
                                         <div class="flex flex-wrap gap-2" role="group" aria-label="${group.tier || t.title}">
                                             ${group.options.map(opt => `
                                                 <button type="button" onclick="selectDetailTrim('${t.type}', '${opt}')" data-type="${t.type}" data-value="${opt}" aria-pressed="false" class="detail-trim">
-                                                    <span class="detail-trim-dot" style="background:${TRIM_COLOR_HEX[opt] || '#CBD5E1'}"></span>${opt}
+                                                    <span class="detail-trim-dot" style="background:${getTrimHex(t.type, opt) || '#CBD5E1'}"></span>${opt}
                                                 </button>
                                             `).join('')}
                                         </div>
@@ -3707,7 +3749,7 @@ function renderBlogsPage() {
             <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">News & Insights</span>
             <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Golfcarts.ph Blog</h1>
             <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                Buying guides, maintenance tips, and stories from the world of electric mobility.
+                Buying guides, maintenance tips, and stories about low-speed electric vehicles.
             </p>
         </div>
 
@@ -3777,10 +3819,10 @@ function renderAboutPage() {
         
         <!-- About Page Header Banner -->
         <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Pioneering Mobility</span>
+            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Low-Speed Electric Vehicles</span>
             <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Golfcarts.ph</h1>
             <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                Empowering outdoor lifestyle and electric utility transportation across the Philippines.
+                Low-speed electric vehicles for private roads: golf courses, resorts, gated villages, estates and industrial sites.
             </p>
         </div>
 

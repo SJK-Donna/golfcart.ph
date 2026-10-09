@@ -651,10 +651,62 @@ input:focus, select:focus, textarea:focus {
     width: var(--bar);
 }
 
+/* Battery comparison layout: lead-acid | what's compared | lithium on desktop.
+   On phones the label sits on top and the two values sit side by side underneath. */
+.battery-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+        "label label"
+        "lead  lithium";
+}
+
+.battery-grid .battery-cell-label { grid-area: label; }
+.battery-grid .battery-cell-lead { grid-area: lead; }
+.battery-grid .battery-cell-lithium { grid-area: lithium; }
+
+@media (min-width: 768px) {
+    .battery-grid {
+        grid-template-columns: minmax(0, 1fr) 12rem minmax(0, 1fr);
+        grid-template-areas: "lead label lithium";
+    }
+}
+
+/* Each row lifts slightly toward the reader on hover so that one comparison stands out */
+.battery-row {
+    position: relative;
+    border-top: 1px solid #E1E7DD;
+    overflow: hidden;
+    background: #FFFFFF;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-radius 0.3s ease;
+}
+
+/* Square at rest so the lithium column reads as one continuous band; rounded only while lifted */
+.battery-row:hover {
+    z-index: 2;
+    border-radius: 1rem;
+    transform: scale(1.03);
+    border-top-color: transparent;
+    box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.28);
+}
+
+/* The row after a lifted one hides its divider so the gap looks clean */
+.battery-row:hover + .battery-row {
+    border-top-color: transparent;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .battery-bar {
         width: var(--bar);
         transition: none;
+    }
+
+    .battery-row {
+        transition: none;
+    }
+
+    .battery-row:hover {
+        transform: none;
     }
 }
 

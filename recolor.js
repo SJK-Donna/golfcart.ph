@@ -11,8 +11,11 @@
 //   hue: [from, to] degrees, sat: [min, max], light: [min, max], box: [top, bottom] as fractions of the cart's height.
 // Tempo 2-seaters share the red Base+ photo: its beige seats and canopy separate cleanly from the paint,
 // so all three regions follow the picker (the dark green / black photos can't be repainted reliably).
+// `seatStripes: true` marks photos showing a single bench seat, where patterned seats (Tsunami) can be
+// drawn as stripes; photos with front and rear seats get the seat's solid signature colour instead.
 const TEMPO_TWO_SEAT_PREVIEW = {
     base: 'image/Products/Base +.png',
+    seatStripes: true,
     seat: { hue: [25, 55], sat: [0.12, 0.8], light: [0.3, 0.95], box: [0.3, 0.7] },
     canopy: { hue: [25, 55], sat: [0.08, 0.8], light: [0.3, 0.97], box: [0, 0.22] }
 };
@@ -135,10 +138,11 @@ function analyzeRecolorBase(imageData, w, h) {
     return { imageData, w, h, hue, sat, light, top, bottom, bodyHue: best * 10 + 5 };
 }
 
-// Builds a mask for one region and returns its pixel indexes and average lightness
+// Builds a mask for one region and returns its pixel indexes, average lightness and horizontal extent
 function collectRegion(base, test) {
     const idx = [];
     let sumL = 0;
+    const xs = [];
     const alpha = base.imageData.data;
     const height = Math.max(1, base.bottom - base.top);
     for (let i = 0; i < base.w * base.h; i++) {
@@ -147,9 +151,15 @@ function collectRegion(base, test) {
         if (test(base.hue[i], base.sat[i], base.light[i], yFrac)) {
             idx.push(i);
             sumL += base.light[i];
+            xs.push(i % base.w);
         }
     }
-    return { idx, meanL: idx.length ? sumL / idx.length : 0.5 };
+    // Horizontal extent from the 3rd to 97th percentile, so a few stray matching pixels elsewhere on the
+    // cart (e.g. on the dashboard) don't stretch the seat's measured width
+    xs.sort((a, b) => a - b);
+    const minX = xs.length ? xs[Math.floor(xs.length * 0.03)] : 0;
+    const maxX = xs.length ? xs[Math.floor(xs.length * 0.97)] : base.w;
+    return { idx, meanL: idx.length ? sumL / idx.length : 0.5, minX, maxX };
 }
 
 function regionRule(rule) {
@@ -158,12 +168,20 @@ function regionRule(rule) {
         ll >= rule.light[0] && ll <= rule.light[1] && y >= rule.box[0] && y <= rule.box[1];
 }
 
-// Paints one region toward a target color, keeping the photo's shading
-function paintRegion(out, base, region, target, xGradient) {
+// Paints one region toward a target color, keeping the photo's shading.
+// `bands` (optional) paints hard vertical stripes across the region instead, for patterned seats such as
+// the Tsunami: [{ hsl, to }] where `to` is where the stripe ends, as a fraction of the region's width.
+function paintRegion(out, base, region, target, xGradient, bands) {
     const contrast = 0.85;
+    const span = Math.max(1, region.maxX - region.minX);
     for (const i of region.idx) {
         let th = target[0], ts = target[1], tl = target[2];
-        if (xGradient) {
+        if (bands) {
+            const xf = ((i % base.w) - region.minX) / span;
+            if (xf < 0 || xf > 1) continue; // stray pixel outside the seat: leave the photo as it is
+            const band = bands.find(b => xf <= b.to) || bands[bands.length - 1];
+            [th, ts, tl] = band.hsl;
+        } else if (xGradient) {
             // Multi-tone paints (chameleon, 3D) shift color across the body
             const x = (i % base.w) / base.w;
             const stops = xGradient;
@@ -191,7 +209,8 @@ function parseSwatch(value) {
 
 const recolorRegionCache = {};
 
-// Returns a data URL of the cart repainted with the given body / seat / canopy swatch values
+// Returns a data URL of the cart repainted with the given body / seat / canopy swatch values.
+// `choice.seatBands` (optional) paints the seat as vertical stripes instead of one colour.
 async function renderCartPreview(slug, choice) {
     const cfg = COLOR_PREVIEW[slug];
     if (!cfg) return null;
@@ -223,7 +242,10 @@ async function renderCartPreview(slug, choice) {
     const canopy = parseSwatch(choice.canopy);
     if (canopy && regions.canopy) paintRegion(out, base, regions.canopy, canopy.hsl, null);
     const seat = parseSwatch(choice.seat);
-    if (seat && regions.seat) paintRegion(out, base, regions.seat, seat.hsl, null);
+    const seatBands = choice.seatBands && cfg.seatStripes
+        ? choice.seatBands.map(b => ({ hsl: hexToHsl(b.hex), to: b.to }))
+        : null;
+    if (seat && regions.seat) paintRegion(out, base, regions.seat, seat.hsl, null, seatBands);
     const body = parseSwatch(choice.body);
     if (body) paintRegion(out, base, regions.body, body.hsl, body.gradient && body.gradient.length > 1 ? body.gradient : null);
 
