@@ -35,22 +35,22 @@
             </a>
 
             <!-- Main navigation: the four ways to buy, then fleet, parts and service (built from MAIN_NAV / NAV_SEGMENTS in app.js) -->
-            <nav id="main-nav" aria-label="Main" class="hidden xl:flex items-center"></nav>
+            <nav id="main-nav" aria-label="Main" class="hidden min-[1360px]:flex items-center"></nav>
 
-            <div class="hidden xl:flex items-center gap-6 flex-shrink-0">
-                <a href="carts/" data-route="products" class="nav-link header-nav-link" data-page="products">All carts</a>
+            <div class="hidden min-[1360px]:flex items-center gap-5 flex-shrink-0">
+                <a href="carts/" data-route="products" class="nav-link header-nav-link hidden min-[1600px]:inline-flex" data-page="products">All carts</a>
                 <button type="button" onclick="buildYourCart()" class="btn btn-primary min-h-[2.5rem] px-5 text-sm">Build your cart</button>
-                <img src="image/sjk_logo.png" alt="SJK Guahan" width="80" height="20" class="h-5 w-auto object-contain">
+                <img src="image/sjk_logo.png" alt="SJK Guahan" width="80" height="20" class="hidden min-[1600px]:block h-5 w-auto object-contain">
             </div>
 
-            <button id="mobile-menu-btn" type="button" class="xl:hidden inline-flex items-center gap-2 h-10 px-3 -mr-3 text-ink text-sm font-medium" aria-controls="mobile-drawer" aria-expanded="false">
+            <button id="mobile-menu-btn" type="button" class="min-[1360px]:hidden inline-flex items-center gap-2 h-10 px-3 -mr-3 text-ink text-sm font-medium" aria-controls="mobile-drawer" aria-expanded="false">
                 <span class="mobile-menu-label">Menu</span>
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
             </button>
         </div>
 
         <!-- Mobile menu -->
-        <div id="mobile-drawer" class="xl:hidden hidden fixed inset-x-0 top-16 bottom-0 bg-paper border-t border-line overflow-y-auto">
+        <div id="mobile-drawer" class="min-[1360px]:hidden hidden fixed inset-x-0 top-16 bottom-0 bg-paper border-t border-line overflow-y-auto">
             <nav aria-label="Mobile" class="px-5 sm:px-8 pt-4 pb-10 flex flex-col">
                 <a href="./" data-route="home" class="mobile-nav-link">Home</a>
                 <!-- The Golfer / Lifestyle & Private Use / Resort & Hospitality / Remanufactured (built from NAV_SEGMENTS in app.js) -->

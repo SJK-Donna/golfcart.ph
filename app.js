@@ -947,15 +947,14 @@ const NAV_SEGMENTS = [
 ];
 
 // Header navigation order from the blueprint: three buying pillars, then value, fleet and aftersales routes
-// Short labels keep the header to one line; the pages themselves use the full names.
 const MAIN_NAV = [
-    { segment: 'golfer', label: 'Golfer' },
-    { segment: 'lifestyle', label: 'Lifestyle' },
-    { segment: 'resort', label: 'Resort' },
-    { segment: 'remanufactured', label: 'Remanufactured' },
-    { label: 'Fleet', href: 'fleet/', page: 'solutions' },
-    { label: 'Parts', href: 'carts/?category=Accessories', action: "setCategoryAndNavigate('Accessories')" },
-    { label: 'Service', href: 'service/', page: 'service' }
+    { segment: 'golfer' },
+    { segment: 'lifestyle' },
+    { segment: 'resort' },
+    { segment: 'remanufactured' },
+    { label: 'Fleet Solutions', href: 'fleet/', page: 'solutions' },
+    { label: 'Parts & Accessories', href: 'carts/?category=Accessories', action: "setCategoryAndNavigate('Accessories')" },
+    { label: 'Service & Support', href: 'service/', page: 'service' }
 ];
 
 // Primary action for individual buyers: start on the hero product's build selector
@@ -1374,7 +1373,7 @@ function renderMainNav() {
         if (seg) {
             return `
                 <div class="segment-menu header-menu relative">
-                    <a href="${routeHref('segment', seg.id)}" data-route="segment" data-slug="${seg.id}" class="nav-link header-nav-link" data-segment="${seg.id}" aria-haspopup="true">${item.label || seg.label}</a>
+                    <a href="${routeHref('segment', seg.id)}" data-route="segment" data-slug="${seg.id}" class="nav-link header-nav-link" data-segment="${seg.id}" aria-haspopup="true">${seg.label}<svg class="nav-chevron" viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M3 4.5l3 3 3-3"/></svg></a>
                     ${renderSegmentDropdown(seg)}
                 </div>`;
         }
