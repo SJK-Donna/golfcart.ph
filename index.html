@@ -78,72 +78,54 @@
         <!-- SPA View Templates Render Dynamically Here -->
     </main>
 
-    <!-- Global Quote Request Modal -->
-    <div id="quote-modal" class="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-white/80 backdrop-blur-md hidden overflow-y-auto">
-        <!-- Landscape layout: request form on the left, accessories on the right -->
-        <div class="relative w-full max-w-5xl rounded-2xl sm:rounded-3xl bg-brand-dark border border-brand-border p-6 sm:p-8 shadow-2xl my-auto max-h-[94vh] overflow-y-auto lg:overflow-visible">
-            <button onclick="closeQuoteModal()" aria-label="Close" class="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-xl bg-slate-100/80 text-slate-500 hover:text-slate-900 z-10">
-                <i data-lucide="x" class="w-5 h-5"></i>
-            </button>
+    <!-- Quote dialog: request details on the left, compatible accessories on the right -->
+    <div id="quote-modal" class="fixed inset-0 z-50 hidden overflow-y-auto bg-[rgba(21,23,20,0.6)] p-0 sm:p-6" onclick="if (event.target === this) closeQuoteModal()">
+        <div role="dialog" aria-modal="true" aria-labelledby="quote-modal-title" class="relative w-full max-w-5xl mx-auto sm:my-8 bg-paper border border-line min-h-full sm:min-h-0">
+            <div class="flex items-center justify-between gap-4 px-5 sm:px-8 py-5 border-b border-line">
+                <h2 id="quote-modal-title" class="type-md text-ink">Get a quote</h2>
+                <button type="button" onclick="closeQuoteModal()" aria-label="Close" class="inline-flex items-center justify-center w-10 h-10 -mr-2 text-ink hover:bg-stone rounded-[2px]">
+                    <i data-lucide="x" class="w-5 h-5" aria-hidden="true"></i>
+                </button>
+            </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-                <!-- Left: request details -->
-                <div class="space-y-5">
-                    <div>
-                        <span class="text-brand-olive text-[10px] font-semibold tracking-widest uppercase">Fast Concierge</span>
-                        <h3 class="text-xl sm:text-2xl font-bold text-slate-900">Instant Quote Request</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2">
+                <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="p-5 sm:p-8 space-y-5">
+                    <div class="field">
+                        <label for="modal-product-select">Model</label>
+                        <select id="modal-product-select" name="model" onchange="onQuoteModelChange()">
+                            <!-- Filled by populateModalProductDropdown() in app.js -->
+                        </select>
                     </div>
-
-                    <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="space-y-4 text-xs">
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Selected Vehicle Model</label>
-                            <select id="modal-product-select" onchange="onQuoteModelChange()" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                                <!-- Populated Dynamically -->
-                            </select>
-                        </div>
-
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Full Name *</label>
-                            <input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block font-medium text-slate-600 mb-1">Email Address *</label>
-                                <input required type="email" placeholder="john@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                            </div>
-                            <div>
-                                <label class="block font-medium text-slate-600 mb-1">Phone Number *</label>
-                                <input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Notes (optional)</label>
-                            <textarea id="modal-notes" rows="3" placeholder="Preferred color, quantity, delivery location..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea>
-                        </div>
-
-                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
-                            Send Quote Request
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Right: accessories compatible with the selected model (built by renderAccessoryPicker in app.js) -->
-                <div class="flex flex-col rounded-2xl border border-brand-border bg-brand-card p-4 sm:p-5 lg:mt-8 lg:h-[500px] text-xs">
-                    <div class="flex items-center justify-between gap-3">
-                        <div class="flex items-center gap-2">
-                            <i data-lucide="plus-circle" class="w-4 h-4 text-brand-olive"></i>
-                            <span class="font-bold text-slate-900 text-sm">Add Accessories</span>
-                        </div>
-                        <span id="accessory-toggle" class="text-[11px] font-semibold text-brand-oliveHover"></span>
+                    <div class="field">
+                        <label for="modal-name">Full name</label>
+                        <input id="modal-name" name="name" required type="text" autocomplete="name">
                     </div>
-                    <div class="flex gap-2 mt-3 p-2.5 rounded-lg bg-amber-50 border border-amber-200 text-[11px] text-amber-900 leading-relaxed">
-                        <i data-lucide="tag" class="w-3.5 h-3.5 flex-shrink-0 mt-0.5"></i>
-                        <p><span class="font-semibold">Please note:</span> All optional accessories are add-ons and carry an additional cost. Exact accessory pricing will be calculated in your final quote.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                        <div class="field">
+                            <label for="modal-email">Email</label>
+                            <input id="modal-email" name="email" required type="email" autocomplete="email">
+                        </div>
+                        <div class="field">
+                            <label for="modal-phone">Phone</label>
+                            <input id="modal-phone" name="phone" required type="tel" autocomplete="tel" placeholder="+63 900 000 0000">
+                        </div>
                     </div>
-                    <div id="modal-accessory-chips" class="flex flex-wrap gap-1.5 mt-3 empty:hidden"></div>
-                    <div id="modal-accessory-picker" class="mt-3 flex-1 min-h-0 max-h-72 lg:max-h-none overflow-y-auto pr-1 space-y-4"></div>
+                    <div class="field">
+                        <label for="modal-notes">Notes (optional)</label>
+                        <textarea id="modal-notes" name="notes" rows="4" placeholder="Color, quantity, delivery location"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full">Send request</button>
+                </form>
+
+                <!-- Accessories that fit the selected model (built by renderAccessoryPicker in app.js) -->
+                <div class="flex flex-col p-5 sm:p-8 bg-stone lg:max-h-[640px]">
+                    <div class="flex items-baseline justify-between gap-3">
+                        <h3 class="text-lg font-semibold text-ink">Add accessories</h3>
+                        <span id="accessory-toggle" class="text-sm text-ink-2" aria-live="polite"></span>
+                    </div>
+                    <p class="text-sm text-ink-2 mt-2">Accessories are paid add-ons. We price them in your quote.</p>
+                    <div id="modal-accessory-chips" class="flex flex-wrap gap-2 mt-4 empty:hidden"></div>
+                    <div id="modal-accessory-picker" class="mt-4 flex-1 min-h-0 max-h-80 lg:max-h-none overflow-y-auto space-y-6"></div>
                 </div>
             </div>
         </div>

@@ -1037,7 +1037,7 @@ function goToHomeSection(sectionId) {
 function handleHomeQuoteSubmit(e) {
     e.preventDefault();
     e.target.reset();
-    showToast('Thanks! Our team will contact you with your quote shortly.');
+    showToast("Request sent. We'll reply with your quote.");
 }
 
 // Testimonials Carousel State for About Page
@@ -1297,7 +1297,10 @@ function initMobileMenu() {
     const btn = document.getElementById('mobile-menu-btn');
     if (btn) btn.addEventListener('click', () => toggleMobileMenu());
     document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') toggleMobileMenu(false);
+        if (e.key === 'Escape') {
+            toggleMobileMenu(false);
+            closeQuoteModal();
+        }
     });
 }
 
@@ -1496,12 +1499,21 @@ function openQuoteModal(productName = '', notes = '') {
         renderAccessoryChips();
         renderAccessoryPicker();
         modal.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden');
+        quoteModalReturnFocus = document.activeElement;
+        const first = document.getElementById('modal-name');
+        if (first) setTimeout(() => first.focus(), 0);
     }
 }
 
+let quoteModalReturnFocus = null;
+
 function closeQuoteModal() {
     const modal = document.getElementById('quote-modal');
-    if (modal) modal.classList.add('hidden');
+    if (!modal || modal.classList.contains('hidden')) return;
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+    if (quoteModalReturnFocus && quoteModalReturnFocus.focus) quoteModalReturnFocus.focus();
 }
 
 function handleModalQuoteSubmit(e) {
@@ -1510,7 +1522,8 @@ function handleModalQuoteSubmit(e) {
     const refCode = 'QT-' + Math.floor(100000 + Math.random() * 900000);
     const count = quoteAccessories.size;
     const accessoryNote = count ? ` with ${count} accessor${count === 1 ? 'y' : 'ies'}` : '';
-    showToast(`Quote Request Sent${accessoryNote}! Reference Code: #${refCode}`);
+    showToast(`Request sent${accessoryNote}. Your reference is ${refCode}.`);
+    e.target.reset();
     quoteAccessories = new Set();
 }
 
@@ -1671,19 +1684,7 @@ function renderHomeRange() {
             </div>
             <div class="max-w-site mx-auto md:px-8 lg:px-12">
                 <ul class="home-range">
-                    ${models.map((p, i) => `
-                        <li class="home-range-item">
-                            <a href="${routeHref('product-details', p.slug)}" data-route="product-details" data-slug="${p.slug}" class="group block h-full">
-                                <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
-                                    <img src="${p.image}" alt="${p.name}, ${categoryLabel(p.category)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain">
-                                </div>
-                                <div class="pt-5 pb-2 pr-4">
-                                    <p class="type-lg text-ink">${p.name}</p>
-                                    <p class="text-sm text-mute mt-2">${homeSpecLine(p)}</p>
-                                </div>
-                            </a>
-                        </li>
-                    `).join('')}
+                    ${models.map((p, i) => `<li class="home-range-item">${renderModelTile(p, { eager: i < 3 })}</li>`).join('')}
                 </ul>
             </div>
         </section>
@@ -2374,27 +2375,25 @@ function renderAccessoryPicker() {
     const groups = getCompatibleAccessoryGroups(select.value);
 
     picker.innerHTML = groups.length ? groups.map(g => `
-        <div class="space-y-1.5">
-            <p class="text-[10px] font-extrabold uppercase tracking-wider text-brand-slate">${g.group}</p>
+        <fieldset class="space-y-2">
+            <legend class="text-sm text-ink-2 mb-2">${g.group}</legend>
             ${g.items.map(item => {
                 const photo = item.product && (PRODUCTS_DATA.find(p => p.slug === item.product) || {}).image;
                 return `
-                    <label class="flex items-center gap-3 p-2 rounded-lg bg-white border border-brand-border hover:border-brand-olive/50 cursor-pointer">
-                        <input type="checkbox" ${quoteAccessories.has(item.id) ? 'checked' : ''} onchange="toggleQuoteAccessory('${item.id}')" class="w-4 h-4 accent-[#749E35] flex-shrink-0">
-                        <span class="w-9 h-9 rounded-md bg-brand-card flex items-center justify-center overflow-hidden flex-shrink-0">
-                            ${photo ? `<img src="${photo}" alt="" class="max-w-full max-h-full object-contain">` : '<i data-lucide="package" class="w-4 h-4 text-slate-400"></i>'}
+                    <label class="flex items-center gap-3 p-2.5 bg-paper border border-line hover:border-ink-2 cursor-pointer">
+                        <input type="checkbox" ${quoteAccessories.has(item.id) ? 'checked' : ''} onchange="toggleQuoteAccessory('${item.id}')" class="w-4 h-4 accent-[#151714] flex-shrink-0">
+                        <span class="w-10 h-10 bg-stone flex items-center justify-center overflow-hidden flex-shrink-0">
+                            ${photo ? `<img src="${photo}" alt="" loading="lazy" class="max-w-full max-h-full object-contain">` : ''}
                         </span>
-                        <span class="flex-1 min-w-0">
-                            <span class="block text-slate-800 font-medium">${item.name}</span>
-                            ${item.sku ? `<span class="block text-[10px] text-slate-400">${item.sku}</span>` : ''}
+                        <span class="flex-1 min-w-0 text-sm">
+                            <span class="block text-ink">${item.name}</span>
+                            ${item.sku ? `<span class="block text-xs text-mute">${item.sku}</span>` : ''}
                         </span>
-                        <span class="flex-shrink-0 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-[10px] font-semibold text-amber-800 whitespace-nowrap">+ Paid Add-on</span>
                     </label>`;
             }).join('')}
-        </div>
-    `).join('') + '<p class="text-[10px] text-slate-400">Fitment is confirmed by our team before quoting.</p>'
-        : '<p class="text-slate-500">No add-on accessories are listed for this model yet. Mention what you need in the notes.</p>';
-
+        </fieldset>
+    `).join('') + '<p class="text-sm text-ink-2">We confirm fitment before quoting.</p>'
+        : '<p class="text-sm text-ink-2">No accessories are listed for this model yet. Tell us what you need in the notes.</p>';
     if (window.lucide) lucide.createIcons();
 }
 
@@ -2405,9 +2404,9 @@ function renderAccessoryChips() {
         chips.innerHTML = [...quoteAccessories].map(id => {
             const item = findAccessory(id);
             return item ? `
-                <span class="inline-flex items-center gap-1 pl-2.5 pr-1 py-1 rounded-full bg-brand-olive/15 text-slate-800 text-[11px] font-medium">
+                <span class="inline-flex items-center gap-1 pl-3 pr-1 py-1 bg-paper border border-ink text-sm text-ink rounded-[2px]">
                     ${item.name}
-                    <button type="button" onclick="toggleQuoteAccessory('${id}')" aria-label="Remove ${item.name}" class="w-4 h-4 rounded-full hover:bg-brand-olive/30 leading-none">&times;</button>
+                    <button type="button" onclick="toggleQuoteAccessory('${id}')" aria-label="Remove ${item.name}" class="w-6 h-6 leading-none hover:bg-stone">&times;</button>
                 </span>` : '';
         }).join('');
     }
@@ -2553,10 +2552,7 @@ function updateDetailBuildSummary() {
         ? (getProductBodyColors(product).find(c => c.name === detailBuild.body) || {}).hex
         : null;
     const pill = (label, value, hex) => value ? `
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/95 border border-brand-border shadow-sm text-[11px] text-slate-700">
-            <span class="w-3 h-3 rounded-full border border-slate-300" style="background:${hex}"></span>
-            <span class="text-slate-400">${label}</span> <span class="font-semibold">${value}</span>
-        </span>` : '';
+        <span class="build-chip"><span class="detail-trim-dot" style="background:${hex}"></span><span class="text-mute">${label}</span> <span class="text-ink font-medium">${value}</span></span>` : '';
     summary.innerHTML = pill('Body', detailBuild.body, bodyHex)
         + pill('Seat', detailBuild.seat, getTrimHex('seat', detailBuild.seat))
         + pill('Canopy', detailBuild.canopy, getTrimHex('canopy', detailBuild.canopy));
@@ -2636,8 +2632,6 @@ function updateSeatPhoto(value) {
     panel.querySelector('.seat-photo-name').textContent = value;
 }
 
-const DETAIL_FEATURE_ICONS = ['sparkles', 'shield-check', 'zap', 'settings-2', 'armchair', 'sun'];
-
 let detailTabObserver = null;
 
 function isMeaningful(value) {
@@ -2667,7 +2661,10 @@ function selectDetailColor(index) {
     const color = getProductBodyColors(product)[index];
     if (!color) return;
 
-    document.querySelectorAll('.detail-swatch').forEach((el, i) => el.classList.toggle('detail-swatch-active', i === index));
+    document.querySelectorAll('.detail-swatch').forEach((el, i) => {
+        el.classList.toggle('detail-swatch-active', i === index);
+        el.setAttribute('aria-checked', String(i === index));
+    });
     const label = document.getElementById('detail-color-name');
     if (label) label.textContent = color.name;
     const quoteBtn = document.getElementById('detail-color-quote');
@@ -2717,109 +2714,6 @@ function initDetailTabs() {
 
 // --- BUILD SELECTOR (blueprint 03: choose build level, then battery and approved packages) ---
 
-function renderBuildCompareTable(buildSet) {
-    const rowsMax = Math.max(...buildSet.builds.map(b => b.includes.length));
-    return `
-        <div class="overflow-x-auto rounded-3xl border border-brand-border bg-white">
-            <table class="w-full min-w-[560px] text-left text-sm">
-                <thead>
-                    <tr class="border-b border-brand-border">
-                        ${buildSet.builds.map(b => `
-                            <th class="p-5 align-top">
-                                <p class="text-xl font-extrabold text-slate-900 tracking-tight">${b.name}</p>
-                                <p class="text-xs font-medium text-brand-olive">${b.tagline}</p>
-                            </th>`).join('')}
-                    </tr>
-                </thead>
-                <tbody>
-                    ${Array.from({ length: rowsMax }, (_, r) => `
-                        <tr class="border-b border-brand-border/60 last:border-0">
-                            ${buildSet.builds.map(b => `<td class="px-5 py-3 text-slate-700">${b.includes[r] ? `<span class="inline-flex items-start gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${b.includes[r]}</span>` : ''}</td>`).join('')}
-                        </tr>`).join('')}
-                    <tr>
-                        ${buildSet.builds.map(b => `<td class="px-5 pb-5 text-xs text-slate-500">${b.note || ''}</td>`).join('')}
-                    </tr>
-                </tbody>
-            </table>
-        </div>`;
-}
-
-function renderBuildSection(product, buildSet, packageKeys) {
-    return `
-        <!-- BUILD: three clear builds, then compatible packages underneath -->
-        <section id="build" class="detail-section reveal scroll-mt-44 space-y-10">
-            <div class="text-center space-y-3">
-                <p class="text-brand-olive text-sm sm:text-base font-semibold">Build your ${product.name}</p>
-                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">${buildSet.title}</h2>
-                ${buildSet.note ? `<p class="text-slate-500 text-base sm:text-lg max-w-2xl mx-auto">${buildSet.note}</p>` : ''}
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-${buildSet.builds.length} gap-4 sm:gap-6" role="radiogroup" aria-label="Build level">
-                ${buildSet.builds.map((b, i) => `
-                    <button type="button" role="radio" aria-checked="${i === 0}" onclick="selectBuildLevel('${b.id}')" data-build="${b.id}" class="build-card ${i === 0 ? 'build-card-active' : ''} text-left rounded-3xl border-2 bg-white p-6 sm:p-7 flex flex-col gap-4 transition-all">
-                        <div class="flex items-start justify-between gap-3">
-                            <div>
-                                <p class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">${product.name} ${b.name}</p>
-                                <p class="text-sm font-semibold text-brand-olive mt-1">${b.tagline}</p>
-                            </div>
-                            <span class="build-card-check w-6 h-6 rounded-full border-2 flex items-center justify-center flex-shrink-0"><i data-lucide="check" class="w-3.5 h-3.5"></i></span>
-                        </div>
-                        <ul class="space-y-1.5 text-sm text-slate-600">
-                            ${b.includes.map(x => `<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${x}</li>`).join('')}
-                        </ul>
-                        ${b.note ? `<p class="text-xs text-slate-500 mt-auto">${b.note}</p>` : ''}
-                        ${b.proposed ? '<p class="text-[11px] font-semibold text-amber-700">Proposed package, confirmed in your quote</p>' : ''}
-                    </button>
-                `).join('')}
-            </div>
-
-            ${packageKeys.length ? `
-                <div class="space-y-4">
-                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">Add packages</h3>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(packageKeys.length, 4)} gap-3">
-                        ${packageKeys.map(key => {
-                            const pkg = BUILD_PACKAGES[key];
-                            if (pkg.choices) {
-                                return `
-                                    <div class="rounded-2xl border border-brand-border bg-white p-4 space-y-2">
-                                        <p class="font-bold text-slate-900">${pkg.name}</p>
-                                        <div class="flex flex-wrap gap-1.5" role="group" aria-label="${pkg.name}">
-                                            ${pkg.choices.map((c, i) => `<button type="button" onclick="selectBuildRims('${c}')" data-rims="${c}" class="detail-trim ${i === 0 ? 'detail-trim-active' : ''}">${c}</button>`).join('')}
-                                        </div>
-                                        <p class="text-[11px] text-slate-500">${pkg.detail}</p>
-                                    </div>`;
-                            }
-                            return `
-                                <button type="button" onclick="toggleBuildPackage('${key}')" data-package="${key}" aria-pressed="false" class="build-package text-left rounded-2xl border border-brand-border bg-white p-4 space-y-1 transition-all">
-                                    <span class="flex items-center justify-between gap-2">
-                                        <span class="font-bold text-slate-900">${pkg.name}</span>
-                                        <span class="build-package-toggle text-xs font-bold text-brand-oliveHover">+ Add</span>
-                                    </span>
-                                    <span class="block text-[11px] text-slate-500">${pkg.detail}</span>
-                                </button>`;
-                        }).join('')}
-                    </div>
-                    <p class="text-[11px] text-slate-400">Packages and upgrades are paid add-ons, available only for approved model and component combinations.</p>
-                </div>
-            ` : ''}
-
-            <!-- Review: the build in the brief's configuration language -->
-            <div class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-                <div>
-                    <p class="text-xs uppercase tracking-widest text-brand-olive font-semibold">Your build</p>
-                    <p id="build-summary-line" class="text-2xl sm:text-3xl font-extrabold tracking-tight mt-1"></p>
-                    <p class="text-slate-400 text-sm mt-1">Pick your colors below, then request a quote. Inclusions, pricing and availability are confirmed by our team.</p>
-                </div>
-                <div class="flex flex-wrap gap-3 flex-shrink-0">
-                    <button onclick="requestQuoteInColor()" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Request a Quote</button>
-                    <button onclick="scrollToDetailSection('colors')" class="bg-white/10 hover:bg-white/20 border border-white/20 font-semibold px-6 py-3 rounded-full text-sm transition-all">Choose colors</button>
-                </div>
-            </div>
-            ${buildSet.confirmed ? '' : '<p class="text-[11px] text-slate-400 text-center">Build names and package contents are proposed and may change.</p>'}
-        </section>
-    `;
-}
-
 // "Tempo 2 Scratch + Caddy Package + Lithium" (the brief's configuration language)
 function getBuildSummaryText() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
@@ -2857,14 +2751,17 @@ function toggleBuildPackage(key) {
         btn.classList.toggle('build-package-active', on);
         btn.setAttribute('aria-pressed', on ? 'true' : 'false');
         const label = btn.querySelector('.build-package-toggle');
-        if (label) label.textContent = on ? '✓ Added' : '+ Add';
+        if (label) label.textContent = on ? 'Added' : 'Add';
     }
     updateBuildSummaryLine();
 }
 
 function selectBuildRims(choice) {
     detailBuild.rims = choice;
-    document.querySelectorAll('[data-rims]').forEach(b => b.classList.toggle('detail-trim-active', b.dataset.rims === choice));
+    document.querySelectorAll('[data-rims]').forEach(b => {
+        b.classList.toggle('detail-trim-active', b.dataset.rims === choice);
+        b.setAttribute('aria-pressed', String(b.dataset.rims === choice));
+    });
     updateBuildSummaryLine();
 }
 
@@ -2874,6 +2771,129 @@ function splitStatValue(value) {
     const match = String(value).match(/^([\d.]+(?:\s*[–-]\s*[\d.]+)?)\s*([A-Za-z\/]+)?\s*(.*)$/);
     if (!match) return { number: value, unit: '', note: '' };
     return { number: match[1], unit: (match[2] || '').toLowerCase(), note: match[3] || '' };
+}
+
+// Model tile: studio cutout on stone, the name set large, one line of specs. Used by the homepage range,
+// related models and the cart list.
+function renderModelTile(p, { eager = false } = {}) {
+    const isVehicle = p.category !== 'Accessories';
+    return `
+        <a href="${routeHref('product-details', p.slug)}" data-route="product-details" data-slug="${p.slug}" class="group block h-full">
+            <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
+                <img src="${p.image}" alt="${p.name}${isVehicle ? `, ${categoryLabel(p.category)}` : ''}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain">
+            </div>
+            <div class="pt-5 pb-2 pr-4">
+                <p class="${isVehicle ? 'type-lg' : 'type-md'} text-ink">${p.name}</p>
+                <p class="text-sm text-mute mt-2">${isVehicle ? homeSpecLine(p) : (p.tagline || categoryLabel(p.category))}</p>
+            </div>
+        </a>`;
+}
+
+// Build comparison table (pillar pages): one column per build, inclusions as rows
+function renderBuildCompareTable(buildSet) {
+    const rowsMax = Math.max(...buildSet.builds.map(b => b.includes.length));
+    return `
+        <div class="overflow-x-auto border-y border-line">
+            <table class="w-full min-w-[560px] text-left">
+                <thead>
+                    <tr class="border-b border-line">
+                        ${buildSet.builds.map(b => `
+                            <th scope="col" class="py-6 pr-6 align-top font-normal">
+                                <p class="type-md text-ink">${b.name}</p>
+                                <p class="text-sm text-mute mt-1">${b.tagline}</p>
+                            </th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${Array.from({ length: rowsMax }, (_, r) => `
+                        <tr class="border-b border-line">
+                            ${buildSet.builds.map(b => `<td class="py-3 pr-6 text-[0.9375rem]">${b.includes[r] || ''}</td>`).join('')}
+                        </tr>`).join('')}
+                    <tr>
+                        ${buildSet.builds.map(b => `<td class="py-4 pr-6 text-sm text-mute align-top">${b.note || ''}</td>`).join('')}
+                    </tr>
+                </tbody>
+            </table>
+        </div>`;
+}
+
+function renderBuildSection(product, buildSet, packageKeys) {
+    return `
+        <section id="build" class="detail-section rise scroll-mt-32 home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-12">
+                <h2 class="type-xl text-ink lg:col-span-7">${buildSet.title}</h2>
+                ${buildSet.note ? `<p class="measure lg:col-span-5">${buildSet.note}</p>` : ''}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-${buildSet.builds.length} gap-4" role="radiogroup" aria-label="Build level">
+                ${buildSet.builds.map((b, i) => `
+                    <button type="button" role="radio" aria-checked="${i === 0}" onclick="selectBuildLevel('${b.id}')" data-build="${b.id}" class="build-card ${i === 0 ? 'build-card-active' : ''} text-left p-6 lg:p-8 flex flex-col gap-5">
+                        <span class="flex items-start justify-between gap-4">
+                            <span>
+                                <span class="block type-md text-ink">${product.name} ${b.name}</span>
+                                <span class="block text-sm text-mute mt-1">${b.tagline}</span>
+                            </span>
+                            <span class="build-card-check" aria-hidden="true"></span>
+                        </span>
+                        <ul class="home-list text-[0.9375rem]">
+                            ${b.includes.map(x => `<li>${x}</li>`).join('')}
+                        </ul>
+                        ${b.note ? `<span class="block text-sm text-mute mt-auto">${b.note}</span>` : ''}
+                        ${b.proposed ? '<span class="block text-sm text-green-text font-medium">Proposed package, confirmed in your quote</span>' : ''}
+                    </button>
+                `).join('')}
+            </div>
+
+            ${packageKeys.length ? `
+                <div class="mt-16 space-y-5">
+                    <h3 class="type-md text-ink">Add packages</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(packageKeys.length, 4)} gap-4">
+                        ${packageKeys.map(key => {
+                            const pkg = BUILD_PACKAGES[key];
+                            if (pkg.choices) {
+                                return `
+                                    <div class="build-package p-5 space-y-3">
+                                        <p class="font-semibold text-ink">${pkg.name}</p>
+                                        <div class="flex flex-wrap gap-2" role="group" aria-label="${pkg.name}">
+                                            ${pkg.choices.map((c, i) => `<button type="button" onclick="selectBuildRims('${c}')" data-rims="${c}" aria-pressed="${i === 0}" class="detail-trim ${i === 0 ? 'detail-trim-active' : ''}">${c}</button>`).join('')}
+                                        </div>
+                                        <p class="text-sm text-mute">${pkg.detail}</p>
+                                    </div>`;
+                            }
+                            return `
+                                <button type="button" onclick="toggleBuildPackage('${key}')" data-package="${key}" aria-pressed="false" class="build-package text-left p-5 space-y-2">
+                                    <span class="flex items-center justify-between gap-3">
+                                        <span class="font-semibold text-ink">${pkg.name}</span>
+                                        <span class="build-package-toggle text-sm font-medium text-green-text">Add</span>
+                                    </span>
+                                    <span class="block text-sm text-mute">${pkg.detail}</span>
+                                </button>`;
+                        }).join('')}
+                    </div>
+                    <p class="text-sm text-mute">Packages and upgrades are paid add-ons, offered only for approved model and component combinations.</p>
+                </div>
+            ` : ''}
+
+            <div class="mt-16 bg-ink text-paper p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <p class="text-sm text-[#B9BAB3]">Your build</p>
+                    <p id="build-summary-line" class="type-md mt-2" aria-live="polite"></p>
+                    <p class="text-sm text-[#B9BAB3] mt-3 measure">Choose colors next, then send it to us. We confirm inclusions, pricing and availability in the quote.</p>
+                </div>
+                <div class="flex flex-wrap gap-3 flex-shrink-0">
+                    <button type="button" onclick="scrollToDetailSection('colors')" class="btn btn-primary">Choose colors</button>
+                    <button type="button" onclick="requestQuoteInColor()" class="btn btn-on-dark">Get a quote</button>
+                </div>
+            </div>
+            ${buildSet.confirmed ? '' : '<p class="text-sm text-mute mt-4">Build names and package contents are proposed and may change.</p>'}
+        </section>
+    `;
+}
+
+function showDetailImage(button, src) {
+    const img = document.getElementById('detail-main-img');
+    if (img) img.src = src;
+    document.querySelectorAll('.gallery-thumb').forEach(b => b.setAttribute('aria-pressed', String(b === button)));
 }
 
 function renderProductDetailsPage() {
@@ -2901,7 +2921,7 @@ function renderProductDetailsPage() {
     const related = PRODUCTS_DATA.filter(p => p.category === product.category && p.slug !== product.slug).slice(0, 3);
     const accessoryCount = getCompatibleAccessoryGroups(product.slug).reduce((n, g) => n + g.items.length, 0);
 
-    // Big-number strip: the four figures buyers compare first
+    // The four figures buyers compare first
     const stats = [
         { label: 'Seating', value: product.seating },
         { label: 'Range', value: product.range },
@@ -2914,169 +2934,145 @@ function renderProductDetailsPage() {
         ...(buildSet ? [{ id: 'build', label: 'Build' }] : []),
         ...(isVehicle ? [{ id: 'colors', label: 'Colors' }] : []),
         { id: 'features', label: 'Highlights' },
-        { id: 'specifications', label: 'Tech Specs' }
+        { id: 'specifications', label: 'Specifications' }
     ];
 
     setTimeout(initDetailTabs, 50);
 
     return `
-    <div class="pb-8">
-        <!-- LOCAL NAV: product name, section links, quote button (Apple-style sticky bar) -->
-        <nav class="sticky top-[63px] sm:top-[65px] z-30 border-b border-brand-border bg-white/85 backdrop-blur-xl">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-                <span class="hidden sm:block text-lg font-bold text-slate-900 tracking-tight whitespace-nowrap">${product.name}</span>
-                <div class="flex items-center gap-1 sm:gap-3 overflow-x-auto scrollbar-none">
-                    ${tabs.map((t, i) => `
-                        <button onclick="scrollToDetailSection('${t.id}')" data-target="${t.id}" class="detail-tab ${i === 0 ? 'detail-tab-active' : ''}">${t.label}</button>
-                    `).join('')}
-                    <button onclick="openQuoteModal('${safeName}')" class="ml-1 flex-shrink-0 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-4 py-1.5 rounded-full text-xs transition-all">Request a Quote</button>
+        <!-- Section bar: model name, section links and the quote action -->
+        <nav class="model-subnav" aria-label="${product.name} sections">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 flex items-center justify-between gap-6">
+                <span class="hidden md:block font-display text-xl text-ink whitespace-nowrap">${product.name}</span>
+                <div class="flex items-center -ml-3 md:ml-0 overflow-x-auto scrollbar-none">
+                    ${tabs.map((t, i) => `<button type="button" onclick="scrollToDetailSection('${t.id}')" data-target="${t.id}" class="detail-tab ${i === 0 ? 'detail-tab-active' : ''}">${t.label}</button>`).join('')}
                 </div>
+                <button type="button" onclick="openQuoteModal('${safeName}')" class="hidden sm:inline-flex btn btn-primary min-h-[2.5rem] px-5 text-sm flex-shrink-0">Get a quote</button>
             </div>
         </nav>
 
-        <!-- HERO: oversized name, one-line tagline, two actions, and a large product photo -->
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-10 text-center">
-            <div class="text-left">
-                <button onclick="navigateTo('products')" class="inline-flex items-center gap-1 text-brand-slate hover:text-slate-900 text-xs sm:text-sm font-medium transition-colors">
-                    <i data-lucide="chevron-left" class="w-4 h-4"></i> All vehicles
-                </button>
-            </div>
-            <div class="detail-hero-copy space-y-3 sm:space-y-4 pt-6 sm:pt-10">
-                <p class="text-brand-olive text-sm sm:text-base font-semibold">${categoryLabel(product.category)}</p>
-                <h1 class="text-5xl sm:text-7xl lg:text-8xl font-extrabold text-slate-900 tracking-tighter leading-[0.95]">${product.name}</h1>
-                <p class="text-xl sm:text-2xl lg:text-3xl font-semibold text-slate-500 tracking-tight">${product.tagline}</p>
-                <p class="text-sm text-slate-500">${product.priceLabel || 'Inquire for Price'}</p>
-                ${product.heroProduct ? '<p class="inline-block px-3 py-1 rounded-full bg-brand-olive/15 text-brand-oliveHover text-xs font-bold">Our bestseller</p>' : ''}
-                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-3">
-                    ${buildSet ? `
-                        <button onclick="scrollToDetailSection('build')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Build Your Cart</button>
-                        <button onclick="openQuoteModal('${safeName}')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
-                            Request a Quote <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </button>
-                    ` : `
-                        <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Request a Quote</button>
-                        <button onclick="scrollToDetailSection('overview')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
-                            Learn more <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                        </button>
-                    `}
-                </div>
-            </div>
-
-            <div class="relative mt-6 sm:mt-10 h-[320px] sm:h-[520px] lg:h-[620px] flex items-center justify-center overflow-hidden">
-                <div class="absolute inset-0 hero-cart-glow pointer-events-none"></div>
-                <img id="detail-main-img" src="${product.image}" alt="${product.name}" class="detail-hero-img relative h-[120%] w-auto max-w-[120%] object-contain pointer-events-none drop-shadow-[0_35px_35px_rgba(0,0,0,0.18)]">
-            </div>
-            ${product.gallery.length > 1 ? `
-                <div class="flex items-center justify-center gap-3 pt-2">
-                    ${product.gallery.map(img => `
-                        <button onclick="document.getElementById('detail-main-img').src='${img}'" aria-label="Show another view" class="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl border-2 border-brand-border hover:border-brand-olive transition-all bg-white p-1.5 flex items-center justify-center">
-                            <img src="${img}" alt="" class="max-h-full object-contain">
-                        </button>
-                    `).join('')}
-                </div>
-            ` : ''}
-        </section>
-
-        ${stats.length ? `
-        <!-- STAT STRIP: big numbers, small labels -->
-        <section class="reveal mt-16 sm:mt-24 border-y border-brand-border bg-brand-card/60">
-            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 grid grid-cols-2 lg:grid-cols-${stats.length} gap-y-10 gap-x-6">
-                ${stats.map(s => `
-                    <div class="text-center space-y-1">
-                        <p class="text-xs sm:text-sm text-slate-500 font-medium">${s.label}</p>
-                        <p class="text-slate-900 font-extrabold tracking-tight leading-none">
-                            <span class="text-5xl sm:text-6xl lg:text-7xl">${s.number}</span>${s.unit ? `<span class="text-xl sm:text-2xl lg:text-3xl ml-1">${s.unit}</span>` : ''}
-                        </p>
-                        ${s.note ? `<p class="text-xs sm:text-sm text-slate-500">${s.note}</p>` : ''}
+        <!-- Hero: the model name set large beside a big studio shot -->
+        <section id="overview" class="detail-section scroll-mt-32 bg-stone">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-8 pb-12 lg:pb-16 grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                <div class="lg:col-span-5 lg:pb-10 space-y-6 order-2 lg:order-1">
+                    <a href="${routeHref('products')}" data-route="products" class="text-sm text-ink-2 hover:text-ink">All carts</a>
+                    <p class="text-sm text-ink-2">${categoryLabel(product.category)}${product.heroProduct ? ' · our bestseller' : ''}</p>
+                    <h1 class="type-hero text-ink">${product.name}</h1>
+                    <p class="text-xl text-ink-2 measure">${product.tagline}</p>
+                    <p class="text-sm text-ink-2">${product.priceLabel === 'Inquire for Price' || !product.priceLabel ? 'Price on request' : product.priceLabel}</p>
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        ${buildSet
+                            ? `<button type="button" onclick="scrollToDetailSection('build')" class="btn btn-primary">Build your ${product.name}</button>
+                               <button type="button" onclick="openQuoteModal('${safeName}')" class="btn btn-outline">Get a quote</button>`
+                            : `<button type="button" onclick="openQuoteModal('${safeName}')" class="btn btn-primary">Get a quote</button>`}
                     </div>
-                `).join('')}
+                </div>
+                <div class="lg:col-span-7 order-1 lg:order-2">
+                    <div class="aspect-[4/3] flex items-center justify-center">
+                        <img id="detail-main-img" src="${product.image}" alt="${product.name}" fetchpriority="high" class="max-h-full w-auto object-contain">
+                    </div>
+                    ${product.gallery.length > 1 ? `
+                        <div class="flex gap-2 justify-end" role="group" aria-label="Views">
+                            ${product.gallery.map((img, i) => `
+                                <button type="button" onclick="showDetailImage(this, '${img}')" aria-pressed="${i === 0}" aria-label="View ${i + 1} of ${product.gallery.length}" class="gallery-thumb">
+                                    <img src="${img}" alt="" loading="lazy" class="w-full h-full object-contain">
+                                </button>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
             </div>
         </section>
-        ` : ''}
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-28 sm:space-y-40 pt-24 sm:pt-32">
-            <!-- OVERVIEW: one large statement, Apple-style gray text with the name in black -->
-            <section id="overview" class="detail-section reveal scroll-mt-44 max-w-4xl mx-auto text-center space-y-10">
-                <p class="text-2xl sm:text-4xl lg:text-5xl font-bold tracking-tight leading-tight text-slate-400">
-                    <span class="text-slate-900">${product.name}.</span> ${product.description}
-                </p>
+        <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            ${stats.length ? `
+                <dl class="stat-strip" style="--stat-cols:${stats.length}">
+                    ${stats.map(s => `
+                        <div>
+                            <dt class="text-sm text-mute">${s.label}</dt>
+                            <dd class="mt-3 text-ink font-display leading-none"><span class="text-[clamp(2.5rem,1.8rem+2.4vw,4.5rem)] tracking-[-0.03em]">${s.number}</span>${s.unit ? `<span class="text-xl ml-1">${s.unit}</span>` : ''}</dd>
+                            ${s.note ? `<dd class="text-sm text-mute mt-2">${s.note}</dd>` : ''}
+                        </div>
+                    `).join('')}
+                </dl>
+            ` : ''}
+
+            <div class="rise home-section grid lg:grid-cols-12 gap-10 lg:gap-12">
+                <p class="lg:col-span-8 type-lg text-mute"><span class="text-ink">${product.name}.</span> ${product.description}</p>
                 ${isVehicle ? `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-10 pt-2 text-left sm:text-center">
-                        ${[
-                            { label: 'Powertrain', value: product.powertrain },
-                            { label: 'Battery', value: product.battery }
-                        ].filter(h => isMeaningful(h.value)).map(h => `
-                            <div class="border-t border-brand-border pt-5">
-                                <p class="text-xs uppercase tracking-widest text-brand-olive font-semibold">${h.label}</p>
-                                <p class="text-lg sm:text-xl font-semibold text-slate-900 mt-1">${h.value}</p>
+                    <dl class="lg:col-span-4 space-y-6 lg:pt-3">
+                        ${[{ label: 'Powertrain', value: product.powertrain }, { label: 'Battery', value: product.battery }]
+                            .filter(h => isMeaningful(h.value)).map(h => `
+                            <div class="border-t border-line pt-4">
+                                <dt class="text-sm text-mute">${h.label}</dt>
+                                <dd class="text-lg text-ink mt-1">${h.value}</dd>
                             </div>
                         `).join('')}
+                    </dl>
+                ` : (product.gallery[1] ? `
+                    <div class="lg:col-span-4 bg-stone aspect-square flex items-center justify-center p-8">
+                        <img src="${product.gallery[1]}" alt="${product.name}, another view" loading="lazy" class="max-h-full object-contain">
+                    </div>` : '')}
+            </div>
+        </div>
+
+        ${buildSet ? `<div class="border-t border-line">${renderBuildSection(product, buildSet, packageKeys)}</div>` : ''}
+
+        ${isVehicle ? `
+        <!-- Colors: the preview stays pinned on desktop while the pickers scroll past it -->
+        <section id="colors" class="detail-section rise scroll-mt-32 home-section border-t border-line">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 class="type-xl text-ink mb-12">${bodyColors.length ? 'Your color. Your seat.' : 'Make it yours.'}</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
+                    <div class="lg:col-span-7 lg:sticky lg:top-36">
+                        <div class="relative bg-stone px-4 sm:px-8 py-8">
+                            <div class="relative aspect-[4/3] flex items-center justify-center">
+                                <img id="detail-color-img" src="${startColor && startColor.image ? startColor.image : product.image}" alt="${product.name} color preview" class="w-full h-full object-contain">
+                            </div>
+                            <p id="detail-color-photo-note" class="${startColor && !startColor.image ? '' : 'hidden'} text-sm text-ink-2 mt-2">Photo shows a standard finish</p>
+                            <!-- Live summary of the selected body / seat / canopy colors -->
+                            <div id="detail-build-summary" class="flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-4 mt-4" aria-live="polite"></div>
+                        </div>
                     </div>
-                ` : `
-                    <div class="h-64 sm:h-96 flex items-center justify-center">
-                        <img src="${product.gallery[1] || product.image}" alt="${product.name}" class="max-h-full max-w-full object-contain rounded-3xl">
-                    </div>
-                `}
-            </section>
 
-            ${buildSet ? renderBuildSection(product, buildSet, packageKeys) : ''}
-
-            ${isVehicle ? `
-            <!-- COLORS: preview on the left stays pinned while the pickers on the right scroll past it -->
-            <section id="colors" class="detail-section reveal scroll-mt-44 space-y-8 sm:space-y-10">
-                <h2 class="text-center text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">${bodyColors.length ? 'Pick your colors.' : 'Make it yours.'}</h2>
-
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
-                <div class="lg:col-span-7 lg:sticky lg:top-[140px]">
-                <div class="relative rounded-[2rem] bg-brand-card border border-brand-border px-4 sm:px-8 pt-14 sm:pt-16 pb-8">
-                    <!-- Live summary of the selected body / seat / canopy colors -->
-                    <div id="detail-build-summary" class="absolute top-4 left-1/2 -translate-x-1/2 flex flex-wrap justify-center gap-1.5 w-[calc(100%-2rem)]"></div>
-                    <div class="relative h-72 sm:h-[420px] lg:h-[480px] flex items-center justify-center">
-                        <img id="detail-color-img" src="${startColor && startColor.image ? startColor.image : product.image}" alt="${product.name} color preview" class="w-full h-full object-contain drop-shadow-[0_25px_30px_rgba(0,0,0,0.18)]">
-                        <span id="detail-color-photo-note" class="${startColor && !startColor.image ? '' : 'hidden'} absolute bottom-0 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white/90 border border-brand-border text-[11px] text-slate-500 whitespace-nowrap">Photo shows a standard finish</span>
-                    </div>
-                </div>
-                </div>
-
-                <div class="lg:col-span-5 space-y-10">
-                    <div class="space-y-5">
-                        ${bodyColors.length ? `
-                            <p class="text-lg font-bold text-slate-900">Body color: <span id="detail-color-name" class="font-semibold text-slate-600">${startColor.name}</span></p>
-                            ${(() => {
-                                let idx = 0;
-                                return colorFamily.body.map(group => `
-                                    <div class="space-y-2">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">${group.tier}</p>
-                                        <div class="flex flex-wrap gap-2.5">
-                                            ${group.colors.map(c => {
-                                                const i = idx++;
-                                                return `<button onclick="selectDetailColor(${i})" title="${c.name}" aria-label="${c.name}" class="detail-swatch ${i === startColorIdx ? 'detail-swatch-active' : ''}" style="background:${c.hex}"></button>`;
-                                            }).join('')}
+                    <div class="lg:col-span-5 space-y-10">
+                        <div class="space-y-5">
+                            ${bodyColors.length ? `
+                                <p class="text-lg text-ink">Body color: <span id="detail-color-name" class="font-semibold">${startColor.name}</span></p>
+                                ${(() => {
+                                    let idx = 0;
+                                    return colorFamily.body.map(group => `
+                                        <div class="space-y-3">
+                                            <p class="text-sm text-mute">${group.tier}</p>
+                                            <div class="flex flex-wrap gap-3" role="radiogroup" aria-label="${group.tier}">
+                                                ${group.colors.map(c => {
+                                                    const i = idx++;
+                                                    return `<button type="button" role="radio" aria-checked="${i === startColorIdx}" onclick="selectDetailColor(${i})" title="${c.name}" aria-label="${c.name}" class="detail-swatch ${i === startColorIdx ? 'detail-swatch-active' : ''}" style="background:${c.hex}"></button>`;
+                                                }).join('')}
+                                            </div>
                                         </div>
-                                    </div>
-                                `).join('');
-                            })()}
-                            <p class="text-[11px] text-slate-400">Swatches are approximate screen colors. Our team will confirm the final finish.</p>
-                        ` : `
-                            <p class="text-lg font-bold text-slate-900">Body color</p>
-                            <p class="text-slate-600 text-sm leading-relaxed">Available body colors for the ${product.name} are confirmed per order. Request a quote and our team will send the current options.</p>
-                        `}
-                    </div>
+                                    `).join('');
+                                })()}
+                                <p class="text-sm text-mute">Swatches are approximate screen colors. We confirm the final finish with you.</p>
+                            ` : `
+                                <p class="text-lg text-ink">Body color</p>
+                                <p class="measure">Body colors for the ${product.name} are confirmed per order. Ask for a quote and we'll send the current options.</p>
+                            `}
+                        </div>
 
-                    <div class="space-y-6">
                         ${[
                             { type: 'seat', title: 'Seat color', groups: seatGroups },
                             { type: 'canopy', title: 'Canopy color', groups: canopyOptions.length ? [{ tier: null, options: canopyOptions }] : [] }
                         ].filter(t => t.groups.length).map(t => `
-                            <div class="space-y-3">
-                                <p class="text-lg font-bold text-slate-900">${t.title}: <span id="detail-${t.type}-name" class="font-semibold text-slate-600">Standard</span></p>
+                            <div class="space-y-4 border-t border-line pt-8">
+                                <p class="text-lg text-ink">${t.title}: <span id="detail-${t.type}-name" class="font-semibold">Standard</span></p>
                                 ${t.groups.map(group => `
-                                    <div class="space-y-2">
-                                        ${group.tier && t.groups.length > 1 ? `<p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">${group.tier}</p>` : ''}
+                                    <div class="space-y-3">
+                                        ${group.tier && t.groups.length > 1 ? `<p class="text-sm text-mute">${group.tier}</p>` : ''}
                                         <div class="flex flex-wrap gap-2" role="group" aria-label="${group.tier || t.title}">
                                             ${group.options.map(opt => `
                                                 <button type="button" onclick="selectDetailTrim('${t.type}', '${opt}')" data-type="${t.type}" data-value="${opt}" aria-pressed="false" class="detail-trim">
-                                                    <span class="detail-trim-dot" style="background:${getTrimHex(t.type, opt) || '#CBD5E1'}"></span>${opt}
+                                                    <span class="detail-trim-dot" style="background:${getTrimHex(t.type, opt) || '#D6D6CE'}"></span>${opt}
                                                 </button>
                                             `).join('')}
                                         </div>
@@ -3084,7 +3080,7 @@ function renderProductDetailsPage() {
                                 `).join('')}
                                 ${t.type === 'seat' && seatGroups === CLUB_CAR_SEAT_GROUPS ? `
                                     <div id="detail-seat-photo" class="seat-photo-panel hidden" aria-live="polite">
-                                        <p class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">Seat photo: <span class="seat-photo-name normal-case tracking-normal text-slate-600"></span></p>
+                                        <p class="text-sm text-mute">Seat photo: <span class="seat-photo-name text-ink"></span></p>
                                         <div class="seat-photo-grid"></div>
                                     </div>
                                 ` : ''}
@@ -3092,94 +3088,81 @@ function renderProductDetailsPage() {
                         `).join('')}
 
                         ${seatOptions.length || canopyOptions.length ? `
-                            <div class="flex gap-2.5 p-3 rounded-xl bg-brand-card border border-brand-olive/30 text-xs text-slate-600 leading-relaxed">
-                                <i data-lucide="info" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>
-                                <p><span class="font-semibold text-slate-800">Note:</span> Custom seat and canopy color combinations may vary by model. Select your preferred color options for custom quotation.</p>
-                            </div>
+                            <p class="text-sm text-ink-2 border-l-2 border-green pl-4">Seat and canopy combinations vary by model. Choose your preferred options and we'll confirm them in your quote.</p>
                         ` : ''}
 
-                        <div class="flex flex-wrap gap-3 pt-1">
-                            <button id="detail-color-quote" onclick="requestQuoteInColor()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full shadow-lg text-sm transition-all btn-shimmer">
-                                <i data-lucide="${bodyColors.length ? 'palette' : 'file-text'}" class="w-4 h-4"></i>
-                                <span>${bodyColors.length || canopyOptions.length ? 'Request a Quote with These Colors' : 'Request a Quote'}</span>
-                            </button>
-                            ${accessoryCount ? `
-                                <button onclick="addAccessoriesFromDetail()" class="inline-flex items-center gap-2 bg-white hover:bg-brand-olive/10 border-2 border-dashed border-brand-olive/50 hover:border-brand-olive text-brand-oliveHover font-bold px-5 py-3 rounded-full text-sm transition-all">
-                                    <i data-lucide="plus-circle" class="w-4 h-4"></i>
-                                    <span>Add Accessories</span>
-                                    <span class="text-xs font-semibold text-slate-500">(${accessoryCount} paid add-ons)</span>
-                                </button>
-                            ` : ''}
+                        <div class="flex flex-wrap gap-3">
+                            <button type="button" id="detail-color-quote" onclick="requestQuoteInColor()" class="btn btn-primary">${bodyColors.length || canopyOptions.length ? 'Get a quote for this build' : 'Get a quote'}</button>
+                            ${accessoryCount ? `<button type="button" onclick="addAccessoriesFromDetail()" class="btn btn-outline">Add accessories <span class="font-normal text-mute">(${accessoryCount})</span></button>` : ''}
                         </div>
                     </div>
                 </div>
-                </div>
-            </section>
-            ` : ''}
+            </div>
+        </section>
+        ` : ''}
 
-            <!-- HIGHLIGHTS: large text callouts, no boxes -->
-            <section id="features" class="detail-section reveal scroll-mt-44 space-y-10 sm:space-y-14">
-                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Highlights.</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+        <section id="features" class="detail-section rise scroll-mt-32 home-section border-t border-line">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-10 lg:gap-12">
+                <h2 class="type-xl text-ink lg:col-span-4">Highlights.</h2>
+                <ol class="lg:col-span-8 border-b border-line">
                     ${product.features.map((f, i) => `
-                        <div class="border-t border-brand-border pt-6 flex gap-5">
-                            <span class="text-brand-olive font-bold text-sm pt-1.5">0${i + 1}</span>
-                            <div class="flex items-start gap-3">
-                                <i data-lucide="${DETAIL_FEATURE_ICONS[i % DETAIL_FEATURE_ICONS.length]}" class="w-6 h-6 text-slate-400 flex-shrink-0 mt-1"></i>
-                                <h3 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight leading-snug">${f}</h3>
-                            </div>
-                        </div>
+                        <li class="grid grid-cols-[3rem_1fr] gap-4 py-6 border-t border-line">
+                            <span class="text-sm text-mute pt-1.5">0${i + 1}</span>
+                            <span class="type-md text-ink">${f}</span>
+                        </li>
                     `).join('')}
-                </div>
-            </section>
+                </ol>
+            </div>
+        </section>
 
-            <!-- TECH SPECS: every group visible, label / value rows -->
-            <section id="specifications" class="detail-section reveal scroll-mt-44 space-y-10 sm:space-y-14">
-                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Tech Specs.</h2>
-                <div class="divide-y divide-brand-border border-y border-brand-border">
+        <section id="specifications" class="detail-section rise scroll-mt-32 home-section border-t border-line">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 class="type-xl text-ink mb-12">Specifications.</h2>
+                <div class="border-b border-line">
                     ${specGroups.map(g => `
-                        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-8 py-8">
-                            <h3 class="md:col-span-3 text-lg font-bold text-slate-900">${g.title}</h3>
-                            <dl class="md:col-span-9 grid grid-cols-1 sm:grid-cols-2 gap-x-10 gap-y-5">
+                        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-12 py-8 border-t border-line">
+                            <h3 class="lg:col-span-4 type-md text-ink">${g.title}</h3>
+                            <dl class="lg:col-span-8">
                                 ${g.rows.map(([k, v]) => `
-                                    <div>
-                                        <dt class="text-xs text-slate-500">${k}</dt>
-                                        <dd class="text-base sm:text-lg font-semibold text-slate-900 mt-0.5">${v}</dd>
+                                    <div class="grid grid-cols-2 gap-6 py-3 border-b border-line last:border-0">
+                                        <dt class="text-mute">${k}</dt>
+                                        <dd class="text-ink">${v}</dd>
                                     </div>
                                 `).join('')}
                             </dl>
                         </div>
                     `).join('')}
                 </div>
-                <p class="text-[11px] text-slate-400">Specifications may change without prior notice. Actual range varies with load, terrain, and driving habits.</p>
-            </section>
+                <p class="text-sm text-mute mt-6">Specifications may change without notice. Actual range varies with load, terrain and driving.</p>
+            </div>
+        </section>
 
-            <!-- CLOSING CTA -->
-            <section class="reveal rounded-[2rem] bg-brand-card border border-brand-border px-6 py-16 sm:py-24 text-center space-y-5">
-                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter">Make it yours.</h2>
-                <p class="text-slate-500 text-base sm:text-xl max-w-xl mx-auto">Get pricing, availability, and customization options for the ${product.name}.</p>
-                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 pt-3">
-                    <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Request a Quote</button>
-                    <button onclick="goToHomeSection('home-branches')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base transition-colors">
-                        Find a branch <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                    </button>
+        <section class="rise bg-ink text-paper">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-8 items-end">
+                <h2 class="type-xl lg:col-span-7">Make it yours.</h2>
+                <div class="lg:col-span-5 space-y-6">
+                    <p class="text-[#B9BAB3] measure">Pricing, lead times and customization for the ${product.name}, from your nearest branch.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" onclick="openQuoteModal('${safeName}')" class="btn btn-primary">Get a quote</button>
+                        <button type="button" onclick="goToHomeSection('home-branches')" class="btn btn-on-dark">Find a branch</button>
+                    </div>
                 </div>
-            </section>
+            </div>
+        </section>
 
-            ${related.length ? `
-            <!-- RELATED -->
-            <section class="space-y-10">
-                <div class="flex items-end justify-between gap-4">
-                    <h2 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter">Explore more ${categoryLabel(product.category)}.</h2>
-                    <button onclick="setCategoryAndNavigate('${product.category}')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm whitespace-nowrap">View all <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+        ${related.length ? `
+        <section class="home-section">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                    <h2 class="type-lg text-ink">More from ${categoryLabel(product.category)}.</h2>
+                    <a href="${routeHref('products')}" onclick="event.preventDefault(); setCategoryAndNavigate('${product.category}')" class="link self-start md:self-auto">See all</a>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    ${related.map(p => renderProductCardHTML(p)).join('')}
-                </div>
-            </section>
-            ` : ''}
-        </div>
-    </div>
+                <ul class="grid grid-cols-1 md:grid-cols-3 gap-x-8 gap-y-12">
+                    ${related.map(p => `<li>${renderModelTile(p)}</li>`).join('')}
+                </ul>
+            </div>
+        </section>
+        ` : ''}
     `;
 }
 

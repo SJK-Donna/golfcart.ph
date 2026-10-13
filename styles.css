@@ -13,7 +13,6 @@ body {
     overflow-x: hidden;
 }
 
-
 /* ==========================================================================
    Universal Container Mouse-Following Border Light & Glare Effect
    ========================================================================== */
@@ -111,10 +110,6 @@ body {
 
 .hero-overlay {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.85) 65%, #FFFFFF 100%);
-}
-
-.hero-cart-glow {
-    background: radial-gradient(circle, rgba(116, 158, 53, 0.14) 0%, rgba(255, 255, 255, 0) 70%);
 }
 
 /* ==========================================================================
@@ -362,57 +357,6 @@ input:focus, select:focus, textarea:focus {
 /* ==========================================================================
    Vehicle Detail Page: Sticky Tabs, Color Swatches, Spec Accordions
    ========================================================================== */
-.detail-tab {
-    position: relative;
-    padding: 1rem 0.75rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: #64748B;
-    white-space: nowrap;
-    transition: color 0.2s ease;
-}
-
-.detail-tab:hover {
-    color: #0F172A;
-}
-
-.detail-tab::after {
-    content: '';
-    position: absolute;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0;
-    height: 3px;
-    border-radius: 3px;
-    background: #749E35;
-    transform: scaleX(0);
-    transition: transform 0.25s ease;
-}
-
-.detail-tab-active {
-    color: #0F172A;
-}
-
-.detail-tab-active::after {
-    transform: scaleX(1);
-}
-
-.detail-swatch {
-    width: 2.75rem;
-    height: 2.75rem;
-    border-radius: 9999px;
-    border: 3px solid #FFFFFF;
-    box-shadow: 0 0 0 1px #CBD5E1;
-    transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.detail-swatch:hover {
-    transform: scale(1.08);
-}
-
-.detail-swatch-active {
-    box-shadow: 0 0 0 2px #749E35;
-}
 
 .detail-spec-group summary::-webkit-details-marker {
     display: none;
@@ -543,88 +487,8 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Seat & canopy color options (vehicle page): selectable pills with an active ring like the body swatches */
-.detail-trim {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    padding: 0.4rem 0.85rem 0.4rem 0.45rem;
-    border-radius: 9999px;
-    background: #FFFFFF;
-    border: 1px solid #E1E7DD;
-    font-size: 0.75rem;
-    font-weight: 500;
-    color: #334155;
-    cursor: pointer;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
-}
-
-.detail-trim:hover {
-    border-color: rgba(116, 158, 53, 0.6);
-    transform: translateY(-1px);
-}
-
-.detail-trim-active {
-    border-color: #749E35;
-    box-shadow: 0 0 0 2px rgba(116, 158, 53, 0.35);
-    color: #0F172A;
-    font-weight: 700;
-}
-
-.detail-trim-dot {
-    width: 1.1rem;
-    height: 1.1rem;
-    border-radius: 9999px;
-    border: 1px solid #CBD5E1;
-    flex-shrink: 0;
-}
 
 /* Photo of the selected seat, shown under the seat picker */
-.seat-photo-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    padding: 0.9rem;
-    border-radius: 1rem;
-    background: #fff;
-    border: 1px solid #E2E8F0;
-    animation: seat-photo-in 0.35s ease;
-}
-
-.seat-photo-panel.hidden {
-    display: none;
-}
-
-.seat-photo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 0.6rem;
-}
-
-.seat-photo {
-    margin: 0;
-    border-radius: 0.75rem;
-    overflow: hidden;
-    background: #F8FAFC;
-}
-
-.seat-photo img {
-    display: block;
-    width: 100%;
-    max-height: 220px;
-    object-fit: contain;
-}
-
-.seat-photo figcaption {
-    padding: 0.35rem 0.6rem;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: #64748B;
-}
-
-@keyframes seat-photo-in {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: none; }
-}
 
 /* Battery comparison meters fill in when the section scrolls into view */
 .battery-bar {
@@ -756,34 +620,6 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Build selector (vehicle page) */
-.build-card {
-    border-color: #E1E7DD;
-}
-
-.build-card:hover {
-    border-color: rgba(116, 158, 53, 0.55);
-}
-
-.build-card-active {
-    border-color: #749E35;
-    box-shadow: 0 18px 40px -20px rgba(116, 158, 53, 0.55);
-}
-
-.build-card-check {
-    border-color: #CBD5E1;
-    color: transparent;
-}
-
-.build-card-active .build-card-check {
-    border-color: #749E35;
-    background: #749E35;
-    color: #0F172A;
-}
-
-.build-package-active {
-    border-color: #749E35;
-    background: rgba(116, 158, 53, 0.08);
-}
 
 /* Header navigation (blueprint menu) */
 .header-nav-link {
