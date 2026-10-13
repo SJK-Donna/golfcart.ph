@@ -947,14 +947,15 @@ const NAV_SEGMENTS = [
 ];
 
 // Header navigation order from the blueprint: three buying pillars, then value, fleet and aftersales routes
+// Short labels keep the header to one line; the pages themselves use the full names.
 const MAIN_NAV = [
-    { segment: 'golfer' },
-    { segment: 'lifestyle' },
-    { segment: 'resort' },
-    { segment: 'remanufactured' },
-    { label: 'Fleet Solutions', action: "navigateTo('solutions')", page: 'solutions' },
-    { label: 'Parts & Accessories', action: "setCategoryAndNavigate('Accessories')" },
-    { label: 'Service & Support', action: "navigateTo('service')", page: 'service' }
+    { segment: 'golfer', label: 'Golfer' },
+    { segment: 'lifestyle', label: 'Lifestyle' },
+    { segment: 'resort', label: 'Resort' },
+    { segment: 'remanufactured', label: 'Remanufactured' },
+    { label: 'Fleet', href: 'fleet/', page: 'solutions' },
+    { label: 'Parts', href: 'carts/?category=Accessories', action: "setCategoryAndNavigate('Accessories')" },
+    { label: 'Service', href: 'service/', page: 'service' }
 ];
 
 // Primary action for individual buyers: start on the hero product's build selector
@@ -963,69 +964,28 @@ function buildYourCart() {
     setTimeout(() => scrollToDetailSection('build'), 350);
 }
 
-// Main Hero Carousel Variables
-let currentSlideIndex = 0;
-let carouselTimer = null;
-
-const CAROUSEL_SLIDES = [
-    {
-        image: "image/Hero/hero-1.jpg",
-        alt: "Fairway? Covered. Club Car golf cart on the course",
-        ctaLabel: "Explore The Golfer",
-        ctaAction: "openSegment('golfer')"
-    },
-    {
-        image: "image/Hero/hero-2.webp",
-        alt: "End of Year Sale - 5% off Club Car golf carts",
-        ctaLabel: "Shop the Sale",
-        ctaAction: "navigateTo('products')"
-    },
-    {
-        image: "image/Hero/hero-3.webp",
-        alt: "More than just golf carts. We keep you rolling.",
-        ctaLabel: "Book Service",
-        ctaAction: "navigateTo('service')"
-    },
-    {
-        image: "image/Hero/hero-5.png",
-        alt: "One cart is great. A whole fleet? Even better.",
-        ctaLabel: "Request a Fleet Proposal",
-        ctaAction: "navigateTo('solutions')"
-    }
-];
-
 // ==========================================
-// HOMEPAGE CONTENT (layout modelled on a model-led automotive homepage)
+// HOMEPAGE CONTENT
 // ==========================================
 
-// The three buying pillars, side by side under the hero (blueprint: "lead with the three buying pillars")
-const HOME_SOLUTION_PANELS = [
-    {
-        eyebrow: 'The Golfer',
-        title: 'Built around the way you play.',
-        text: 'A personal cart for regular golf. Tempo 2, 2+2 and 4 in Golfer, Scratch and Pro builds.',
-        ctaLabel: 'Explore The Golfer', ctaAction: "openSegment('golfer')", ctaIcon: 'flag',
-        golfSlides: true
-    },
-    {
-        eyebrow: 'Lifestyle & Private Use',
-        title: 'Mobility for homes, villages, estates and farms.',
-        text: 'Practical, comfort and premium builds for family transport and life around a private property.',
-        ctaLabel: 'Explore Lifestyle', ctaAction: "openSegment('lifestyle')", ctaIcon: 'home',
-        media: `<img src="image/Banners/personal.jpg" alt="Golfers sharing a Club Car" loading="lazy" class="home-panel-media" style="object-position:50% 45%">`
-    },
-    {
-        eyebrow: 'Resort & Hospitality',
-        title: 'Guest transport and daily property operations.',
-        text: 'Guest transportation, utility and fit-to-task solutions for resorts, hotels and properties.',
-        ctaLabel: 'Explore Resort & Hospitality', ctaAction: "openSegment('resort')", ctaIcon: 'play-circle',
-        media: `<video autoplay loop muted playsinline class="home-panel-media"><source src="video/resort_video.mp4" type="video/mp4"></video>`
-    }
-];
+// The range: one model per seating size, shown as studio cutouts with the model name set large
+const HOME_RANGE = ['golfer-tempo-2', 'golfer-tempo-2-2', 'lifestyle-tempo-4-2', 'villager-8', 'minibus-14', 'carryall-500'];
 
-// Lineup filter tabs on the homepage (the three buying pillars)
-const HOME_LINEUP_TABS = ['All', 'The Golfer', 'Lifestyle & Private Use', 'Resort & Hospitality'];
-let homeLineupFilter = 'All';
+// Shop by use. Golfer leads with the largest photo; Remanufactured is a text-led strip (see renderHomeUses)
+const HOME_USES = {
+    golfer: { image: 'image/Banners/golf.jpg', alt: 'Green Tempo 2+2 with beige seats on a fairway', width: 1800, height: 1239 },
+    lifestyle: { image: 'image/Banners/personal.jpg', alt: 'Two golfers greeting each other beside a white Tempo 2', width: 990, height: 960 },
+    resort: { image: 'image/Banners/resort.jpg', alt: 'Cream guest shuttle parked at a resort entrance', width: 1800, height: 1399 }
+};
+
+// Body colors in the homepage color preview (a few from the Tempo range; the full list is in the builder)
+const HOME_PREVIEW_COLORS = ['White', 'Black', 'Sangria', 'Sapphire', 'Green', 'Atomic Orange'];
+const HOME_PREVIEW_SLUG = 'golfer-tempo-2';
+let homePreviewColor = 'White';
+let homePreviewToken = 0;
+
+// The intro video ends on a white logo card at about 4.5s; the hero loops only the footage before it
+const HERO_LOOP_END = 4;
 
 const BRANCHES = [
     {
@@ -1060,15 +1020,6 @@ const HOME_FAQS = [
     { q: 'Where can I see the carts in person?', a: 'Visit any of our branches in Manila, Cebu, Laguna (Santa Rosa) or Pampanga (Clark). You can also request a quote and our team will arrange a viewing for you.' }
 ];
 
-function setHomeLineupFilter(cat) {
-    homeLineupFilter = cat;
-    const section = document.getElementById('home-lineup');
-    if (section) {
-        section.outerHTML = renderHomeLineup();
-        if (window.lucide) lucide.createIcons();
-    }
-}
-
 // Scrolls to a homepage section, navigating home first when needed
 function goToHomeSection(sectionId) {
     const scroll = () => {
@@ -1087,66 +1038,6 @@ function handleHomeQuoteSubmit(e) {
     e.preventDefault();
     e.target.reset();
     showToast('Thanks! Our team will contact you with your quote shortly.');
-}
-
-// ==========================================
-// GOLF OPERATIONS CAROUSEL ENGINE
-// ==========================================
-let currentGolfSlide = 0;
-const totalGolfSlides = 4;
-let golfCarouselTimer = null;
-
-function setGolfSlide(index) {
-    currentGolfSlide = index;
-    updateGolfCarouselUI();
-}
-
-function nextGolfSlide() {
-    currentGolfSlide = (currentGolfSlide + 1) % totalGolfSlides;
-    updateGolfCarouselUI();
-}
-
-function prevGolfSlide() {
-    currentGolfSlide = (currentGolfSlide - 1 + totalGolfSlides) % totalGolfSlides;
-    updateGolfCarouselUI();
-}
-
-function startGolfCarousel() {
-    stopGolfCarousel();
-    golfCarouselTimer = setInterval(() => {
-        nextGolfSlide();
-    }, 2000); // Updated: auto slides every 2 seconds
-}
-
-function stopGolfCarousel() {
-    if (golfCarouselTimer) clearInterval(golfCarouselTimer);
-}
-
-function updateGolfCarouselUI() {
-    for (let i = 0; i < totalGolfSlides; i++) {
-        const slide = document.getElementById(`golf-slide-${i}`);
-        const dot = document.getElementById(`golf-dot-${i}`);
-        
-        if (slide) {
-            if (i === currentGolfSlide) {
-                slide.classList.remove('opacity-0');
-                slide.classList.add('opacity-100');
-            } else {
-                slide.classList.remove('opacity-100');
-                slide.classList.add('opacity-0');
-            }
-        }
-        
-        if (dot) {
-            if (i === currentGolfSlide) {
-                dot.classList.add('w-6', 'bg-brand-olive');
-                dot.classList.remove('w-2', 'bg-white/60');
-            } else {
-                dot.classList.remove('w-6', 'bg-brand-olive');
-                dot.classList.add('w-2', 'bg-white/60');
-            }
-        }
-    }
 }
 
 // Testimonials Carousel State for About Page
@@ -1180,57 +1071,6 @@ function updateTestimonialUI() {
         textElem.innerText = `"${TESTIMONIALS_DATA[currentTestimonialIndex].quote}"`;
         authorElem.innerText = TESTIMONIALS_DATA[currentTestimonialIndex].author;
     }
-}
-
-function nextSlide() {
-    currentSlideIndex = (currentSlideIndex + 1) % CAROUSEL_SLIDES.length;
-    updateCarouselUI();
-}
-
-function prevSlide() {
-    currentSlideIndex = (currentSlideIndex - 1 + CAROUSEL_SLIDES.length) % CAROUSEL_SLIDES.length;
-    updateCarouselUI();
-}
-
-function goToSlide(index) {
-    currentSlideIndex = index;
-    updateCarouselUI();
-}
-
-function startCarouselAutoPlay() {
-    stopCarouselAutoPlay();
-    carouselTimer = setInterval(() => {
-        nextSlide();
-    }, 2000); // Updated: auto slides every 2 seconds
-}
-
-function stopCarouselAutoPlay() {
-    if (carouselTimer) clearInterval(carouselTimer);
-}
-
-function updateCarouselUI() {
-    CAROUSEL_SLIDES.forEach((_, idx) => {
-        const slide = document.getElementById(`hero-slide-${idx}`);
-        const dot = document.getElementById(`carousel-dot-${idx}`);
-        if (slide) {
-            if (idx === currentSlideIndex) {
-                slide.classList.remove('carousel-slide-hidden');
-                slide.classList.add('carousel-slide-active');
-            } else {
-                slide.classList.remove('carousel-slide-active');
-                slide.classList.add('carousel-slide-hidden');
-            }
-        }
-        if (dot) {
-            if (idx === currentSlideIndex) {
-                dot.classList.add('w-8', 'bg-brand-olive');
-                dot.classList.remove('w-2.5', 'bg-slate-300');
-            } else {
-                dot.classList.remove('w-8', 'bg-brand-olive');
-                dot.classList.add('w-2.5', 'bg-slate-300');
-            }
-        }
-    });
 }
 
 const SOLUTIONS_DATA = [
@@ -1341,41 +1181,152 @@ let currentSlug = null;
 let productFilterCategory = 'All';
 let productSearchQuery = '';
 
+// ==========================================
+// ROUTING: every page has a real URL
+// ==========================================
+// The site's base path comes from <base href>: "/" locally, "/golfcart.ph/" on GitHub Pages
+// (set by scripts/build.mjs). Paths below are relative to it.
+function siteBasePath() {
+    const base = document.querySelector('base');
+    return base ? new URL(base.href).pathname : '/';
+}
+
+// Page + slug -> path relative to the site base, e.g. ('product-details', 'golfer-tempo-2') -> 'models/golfer-tempo-2/'
+function routeToPath(page, slug = null) {
+    switch (page) {
+        case 'products': return productFilterCategory && productFilterCategory !== 'All'
+            ? `carts/?category=${encodeURIComponent(productFilterCategory)}` : 'carts/';
+        case 'product-details': return `models/${slug}/`;
+        case 'segment': return `use/${slug}/`;
+        case 'solutions': return 'fleet/';
+        case 'service': return 'service/';
+        case 'blogs': return 'blog/';
+        case 'blog-details': return `blog/${slug}/`;
+        case 'about': return 'about/';
+        case 'contact': return 'contact/';
+        default: return '';
+    }
+}
+
+// Absolute path -> { page, slug }; unknown paths fall back to the homepage
+function pathToRoute(pathname, search = '') {
+    const base = siteBasePath();
+    const rel = pathname.startsWith(base) ? pathname.slice(base.length) : pathname.replace(/^\//, '');
+    const [first, second] = rel.split('/').filter(Boolean);
+    const simple = { carts: 'products', fleet: 'solutions', service: 'service', blog: 'blogs', about: 'about', contact: 'contact' };
+    if (first === 'models' && PRODUCTS_DATA.some(p => p.slug === second)) return { page: 'product-details', slug: second };
+    if (first === 'use' && NAV_SEGMENTS.some(s => s.id === second)) return { page: 'segment', slug: second };
+    if (first === 'blog' && second && BLOGS_DATA.some(b => b.slug === second)) return { page: 'blog-details', slug: second };
+    if (simple[first] && !second) {
+        const category = new URLSearchParams(search).get('category');
+        return { page: simple[first], slug: null, category };
+    }
+    return rel.replace(/^index\.html$/, '') ? { page: 'not-found', slug: null } : { page: 'home', slug: null };
+}
+
+// Link target for <a href> (relative, so it resolves against <base href>)
+function routeHref(page, slug = null) {
+    return routeToPath(page, slug) || './';
+}
+
+// Title and description for each page, used by the browser on navigation and by the pre-render build
+function getPageMeta(page, slug = null) {
+    const site = 'Golfcarts.ph';
+    const defaultDescription = 'Low-speed electric vehicles for private roads: golf carts, resort shuttles and utility vehicles for golf courses, resorts, gated villages, estates and industrial sites. Branches in Manila, Cebu, Laguna and Clark.';
+    const product = page === 'product-details' && PRODUCTS_DATA.find(p => p.slug === slug);
+    const segment = page === 'segment' && NAV_SEGMENTS.find(s => s.id === slug);
+    const post = page === 'blog-details' && BLOGS_DATA.find(b => b.slug === slug);
+    if (product) return {
+        title: `${product.name}${product.category ? `, ${categoryLabel(product.category)}` : ''} | ${site}`,
+        description: `${product.tagline || ''} ${product.description || ''}`.trim().slice(0, 158),
+        image: product.image
+    };
+    if (segment) return { title: `${segment.label} | ${site}`, description: (segment.description || defaultDescription).slice(0, 158), image: segment.image || null };
+    if (post) return { title: `${post.title} | ${site}`, description: (post.excerpt || defaultDescription).slice(0, 158), image: post.image };
+    const pages = {
+        home: { title: `${site} | Low-speed electric vehicles for private roads`, description: defaultDescription },
+        products: { title: `All carts | ${site}`, description: 'Every Golfcarts.ph cart: golf, lifestyle, resort and utility models, with colors, seats and accessories.' },
+        solutions: { title: `Fleet solutions | ${site}`, description: 'Fleet proposals for golf courses, resorts, estates and industrial sites: guest transport, utility and fit-to-task carts.' },
+        service: { title: `Service and support | ${site}`, description: 'Book a service, order parts and get maintenance and charging advice from the Golfcarts.ph team.' },
+        blogs: { title: `Blog | ${site}`, description: 'Buying guides, maintenance tips and stories about low-speed electric vehicles.' },
+        about: { title: `About | ${site}`, description: 'Golfcarts.ph, run by SJK Guahan Inc., sells, customizes and services low-speed electric vehicles for private roads.' },
+        contact: { title: `Contact | ${site}`, description: 'Visit or call our branches in Manila, Cebu, Laguna and Clark, or send us a message.' },
+        'not-found': { title: `Page not found | ${site}`, description: defaultDescription }
+    };
+    return { ...(pages[page] || pages.home), image: null };
+}
+
+function applyPageMeta(page, slug) {
+    const meta = getPageMeta(page, slug);
+    document.title = meta.title;
+    const desc = document.querySelector('meta[name="description"]');
+    if (desc) desc.setAttribute('content', meta.description);
+}
+
+// Real links: <a href="..." data-route="page" data-slug="..."> navigate in place (new tab / modifier clicks still work)
+document.addEventListener('click', e => {
+    const a = e.target.closest('a[data-route]');
+    if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    e.preventDefault();
+    navigateTo(a.dataset.route, a.dataset.slug || null);
+});
+
+window.addEventListener('popstate', () => {
+    const route = pathToRoute(location.pathname, location.search);
+    if (route.category) productFilterCategory = route.category;
+    navigateTo(route.page, route.slug, { fromHistory: true });
+});
+
 // Application Initialization
 window.addEventListener('DOMContentLoaded', () => {
-    initScrollHeader();
+    // Open the page the address points at (pre-rendered pages are re-rendered in place, same markup)
+    const route = pathToRoute(location.pathname, location.search);
+    currentPage = route.page;
+    currentSlug = route.slug;
+    if (route.category) productFilterCategory = route.category;
+
     renderSegmentMenus();
     initMobileMenu();
     populateModalProductDropdown();
-    initCustomCursor();
-    initMouseSpotlight();
+    applyPageMeta(currentPage, currentSlug);
+    updateNavState();
     renderApp();
-    startGolfCarousel();
 });
-
-function initScrollHeader() {
-    window.addEventListener('scroll', () => {
-        const bar = document.getElementById('header-bar');
-        if (bar) {
-            if (window.scrollY > 30) {
-                bar.classList.add('bg-white/95', 'shadow-xl');
-                bar.classList.remove('bg-white/75', 'shadow-lg');
-            } else {
-                bar.classList.remove('bg-white/95', 'shadow-xl');
-                bar.classList.add('bg-white/75', 'shadow-lg');
-            }
-        }
-    });
-}
 
 function initMobileMenu() {
     const btn = document.getElementById('mobile-menu-btn');
-    if (btn) btn.addEventListener('click', toggleMobileMenu);
+    if (btn) btn.addEventListener('click', () => toggleMobileMenu());
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') toggleMobileMenu(false);
+    });
 }
 
-function toggleMobileMenu() {
+// Opens or closes the mobile menu; pass true / false to force a state
+function toggleMobileMenu(open) {
     const drawer = document.getElementById('mobile-drawer');
-    if (drawer) drawer.classList.toggle('hidden');
+    const btn = document.getElementById('mobile-menu-btn');
+    if (!drawer) return;
+    const show = typeof open === 'boolean' ? open : drawer.classList.contains('hidden');
+    drawer.classList.toggle('hidden', !show);
+    document.body.classList.toggle('overflow-hidden', show);
+    if (btn) {
+        btn.setAttribute('aria-expanded', String(show));
+        const label = btn.querySelector('.mobile-menu-label');
+        if (label) label.textContent = show ? 'Close' : 'Menu';
+    }
+}
+
+// Marks the header link for the current page (pillar pages and their carts mark their pillar)
+function updateNavState() {
+    const pillarProduct = currentPage === 'product-details' && PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    const pillarSeg = currentPage === 'segment' ? currentSlug
+        : pillarProduct ? (NAV_SEGMENTS.find(s => s.category === pillarProduct.category) || {}).id : null;
+    const activePage = currentPage === 'blog-details' ? 'blogs' : pillarSeg ? null : currentPage === 'product-details' ? 'products' : currentPage;
+    document.querySelectorAll('.nav-link').forEach(link => {
+        const active = (activePage && link.dataset.page === activePage) || (pillarSeg && link.dataset.segment === pillarSeg);
+        if (active) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+    });
 }
 
 function showToast(message) {
@@ -1390,30 +1341,19 @@ function showToast(message) {
     }
 }
 
-function navigateTo(page, slug = null) {
+function navigateTo(page, slug = null, options = {}) {
     currentPage = page;
     currentSlug = slug;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Record the page in the address bar so back / forward / sharing work
+    if (!options.fromHistory) {
+        const url = siteBasePath() + routeToPath(page, slug);
+        if (url !== location.pathname + location.search) history.pushState({ page, slug }, '', url);
+    }
+    applyPageMeta(page, slug);
+    window.scrollTo({ top: 0, behavior: options.fromHistory ? 'auto' : 'smooth' });
     
-    const drawer = document.getElementById('mobile-drawer');
-    if (drawer) drawer.classList.add('hidden');
-    
-    const activePage = page === 'blog-details' ? 'blogs' : (page === 'product-details' || page === 'segment') ? 'products' : page;
-    
-    // Toggle active state classes dynamically across desktop navigation items
-    // Pillar pages and cart pages highlight their pillar in the header
-    const pillarProduct = page === 'product-details' && PRODUCTS_DATA.find(p => p.slug === slug);
-    const pillarSeg = page === 'segment' ? slug
-        : pillarProduct ? (NAV_SEGMENTS.find(s => s.category === pillarProduct.category) || {}).id : null;
-    document.querySelectorAll('.nav-link').forEach(btn => {
-        if (btn.dataset.page === activePage || (pillarSeg && btn.dataset.segment === pillarSeg)) {
-            btn.classList.add('bg-slate-100/80', 'font-bold', 'text-slate-900');
-            btn.classList.remove('text-slate-600');
-        } else {
-            btn.classList.remove('bg-slate-100/80', 'font-bold', 'text-slate-900');
-            btn.classList.add('text-slate-600');
-        }
-    });
+    toggleMobileMenu(false);
+    updateNavState();
 
     renderApp();
 }
@@ -1452,25 +1392,32 @@ function modelMenuAction(seg, sub, key) {
         : `openSegment('${seg.id}', '${modelAnchorId(seg.id, sub.id, key)}')`;
 }
 
+// Menu entry for a model: a link to its own page when it has one, otherwise a button to its card on the pillar page
+function modelMenuItem(seg, sub, key, className) {
+    const model = VEHICLE_MODELS[key];
+    const badge = model.badge ? ` <span class="text-green-text text-xs font-medium">${model.badge}</span>` : '';
+    return model.slug
+        ? `<a href="${routeHref('product-details', model.slug)}" data-route="product-details" data-slug="${model.slug}" class="${className}" role="menuitem">${model.name}${badge}</a>`
+        : `<button type="button" onclick="${modelMenuAction(seg, sub, key)}" class="${className}" role="menuitem">${model.name}${badge}</button>`;
+}
+
 // Hover/focus sub-menu for a pillar (header nav and Cart page tabs)
 function renderSegmentDropdown(seg) {
     return `
         <div class="segment-dropdown" role="menu">
-            <div class="segment-dropdown-inner grid gap-6" style="grid-template-columns: repeat(${seg.subcategories.length}, minmax(190px, 1fr));">
+            <div class="segment-dropdown-inner grid gap-8" style="grid-template-columns: repeat(${seg.subcategories.length}, minmax(180px, 1fr));">
                 ${seg.subcategories.map(sub => `
                     <div class="space-y-3">
-                        <button onclick="openSegment('${seg.id}', '${seg.id}-${sub.id}')" class="block text-left text-xs font-extrabold uppercase tracking-wider text-brand-olive hover:text-brand-oliveHover">${sub.label}</button>
+                        <button type="button" onclick="openSegment('${seg.id}', '${seg.id}-${sub.id}')" class="block text-left text-[0.8125rem] font-medium text-mute hover:text-ink">${sub.label}</button>
                         ${sub.groups.map(group => `
-                            <div class="space-y-1">
-                                ${group.label !== sub.label ? `<p class="text-[11px] font-bold text-slate-900">${group.label}</p>` : ''}
-                                ${group.items.map(key => `
-                                    <button onclick="${modelMenuAction(seg, sub, key)}" class="segment-dropdown-item" role="menuitem">${VEHICLE_MODELS[key].name}${VEHICLE_MODELS[key].badge ? ` <span class="ml-1 px-1.5 py-0.5 rounded bg-brand-olive/15 text-brand-oliveHover text-[10px] font-bold">${VEHICLE_MODELS[key].badge}</span>` : ''}</button>
-                                `).join('')}
+                            <div class="space-y-0.5">
+                                ${group.label !== sub.label ? `<p class="text-xs font-semibold text-ink">${group.label}</p>` : ''}
+                                ${group.items.map(key => modelMenuItem(seg, sub, key, 'segment-dropdown-item')).join('')}
                             </div>
                         `).join('')}
                         ${sub === seg.subcategories[0] && seg.links ? `
-                            <div class="pt-2 mt-1 border-t border-brand-border space-y-1">
-                                ${seg.links.map(l => `<button onclick="openSegment('${seg.id}', '${seg.id}-${l.anchor}')" class="segment-dropdown-item font-semibold text-brand-oliveHover" role="menuitem">${l.label} &rarr;</button>`).join('')}
+                            <div class="pt-3 mt-2 border-t border-line space-y-0.5">
+                                ${seg.links.map(l => `<button type="button" onclick="openSegment('${seg.id}', '${seg.id}-${l.anchor}')" class="segment-dropdown-item" role="menuitem">${l.label}</button>`).join('')}
                             </div>
                         ` : ''}
                     </div>
@@ -1489,13 +1436,11 @@ function renderMainNav() {
         if (seg) {
             return `
                 <div class="segment-menu header-menu relative">
-                    <button onclick="openSegment('${seg.id}')" class="nav-link header-nav-link" data-segment="${seg.id}" aria-haspopup="true">
-                        ${seg.label}<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
-                    </button>
+                    <a href="${routeHref('segment', seg.id)}" data-route="segment" data-slug="${seg.id}" class="nav-link header-nav-link" data-segment="${seg.id}" aria-haspopup="true">${item.label || seg.label}</a>
                     ${renderSegmentDropdown(seg)}
                 </div>`;
         }
-        return `<button onclick="${item.action}" class="nav-link header-nav-link" ${item.page ? `data-page="${item.page}"` : ''}>${item.label}</button>`;
+        return `<a href="${item.href}" ${item.page ? `data-route="${item.page}" data-page="${item.page}"` : `onclick="event.preventDefault(); ${item.action}"`} class="nav-link header-nav-link">${item.label}</a>`;
     }).join('');
 }
 
@@ -1504,27 +1449,14 @@ function renderSegmentMenus() {
     const mobile = document.getElementById('mobile-segment-menus');
     if (mobile) {
         mobile.innerHTML = NAV_SEGMENTS.map(seg => `
-            <details class="mobile-segment rounded-xl">
-                <summary class="flex items-center justify-between px-4 py-3 rounded-xl font-medium text-slate-600 hover:bg-slate-200/80 text-sm cursor-pointer list-none">
-                    <span>${seg.label}</span>
-                    <i data-lucide="chevron-down" class="w-4 h-4 text-brand-slate mobile-segment-chevron"></i>
-                </summary>
-                <div class="pl-4 pr-2 pb-3 pt-1 space-y-3">
-                    <button onclick="openSegment('${seg.id}')" class="text-xs font-semibold text-brand-olive">View all ${seg.label} &rarr;</button>
+            <details class="mobile-segment">
+                <summary><span>${seg.label}</span><span class="disclosure-sign" aria-hidden="true"></span></summary>
+                <div class="mobile-segment-models">
+                    <a href="${routeHref('segment', seg.id)}" data-route="segment" data-slug="${seg.id}" class="font-semibold text-ink">All ${seg.label}</a>
                     ${seg.subcategories.map(sub => `
-                        <div class="space-y-1.5">
-                            <p class="text-[11px] font-extrabold uppercase tracking-wider text-slate-900">${sub.label}</p>
-                            ${sub.groups.map(group => `
-                                ${group.label !== sub.label ? `<p class="text-[11px] font-semibold text-brand-slate pt-1">${group.label}</p>` : ''}
-                                <div class="flex flex-wrap gap-1.5">
-                                    ${group.items.map(key => `
-                                        <button onclick="${modelMenuAction(seg, sub, key)}" class="px-3 py-1.5 rounded-full bg-slate-100 hover:bg-brand-olive/15 text-slate-700 text-xs">${VEHICLE_MODELS[key].name}</button>
-                                    `).join('')}
-                                </div>
-                            `).join('')}
-                        </div>
+                        ${seg.subcategories.length > 1 ? `<p class="pt-3 text-[0.8125rem] font-medium text-mute">${sub.label}</p>` : ''}
+                        ${sub.groups.flatMap(group => group.items).map(key => modelMenuItem(seg, sub, key, '')).join('')}
                     `).join('')}
-                    ${seg.links ? `<div class="flex flex-wrap gap-x-4 gap-y-1">${seg.links.map(l => `<button onclick="openSegment('${seg.id}', '${seg.id}-${l.anchor}')" class="text-xs font-semibold text-brand-oliveHover">${l.label} &rarr;</button>`).join('')}</div>` : ''}
                 </div>
             </details>
         `).join('');
@@ -1582,61 +1514,6 @@ function handleModalQuoteSubmit(e) {
     quoteAccessories = new Set();
 }
 
-// Custom Cursor & Universal Container Light Tracker Engine
-function initCustomCursor() {
-    const dot = document.getElementById('custom-cursor-dot');
-    const ring = document.getElementById('custom-cursor-ring');
-    
-    if (!dot || !ring) return;
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let ringX = mouseX;
-    let ringY = mouseY;
-
-    window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
-        dot.style.transform = `translate(${mouseX}px, ${mouseY}px) translate(-50%, -50%)`;
-    });
-
-    function renderRing() {
-        ringX += (mouseX - ringX) * 0.15;
-        ringY += (mouseY - ringY) * 0.15;
-        ring.style.transform = `translate(${ringX}px, ${ringY}px) translate(-50%, -50%)`;
-        requestAnimationFrame(renderRing);
-    }
-    renderRing();
-
-    document.addEventListener('mouseover', (e) => {
-        if (e.target.closest('button, a, select, input, .product-card, .client-logo-card, .container-light-beam')) {
-            document.body.classList.add('cursor-hover');
-        } else {
-            document.body.classList.remove('cursor-hover');
-        }
-    });
-}
-
-function initMouseSpotlight() {
-    const spotlight = document.getElementById('mouse-spotlight');
-
-    window.addEventListener('mousemove', (e) => {
-        if (spotlight) {
-            spotlight.style.setProperty('--mouse-x', `${e.clientX}px`);
-            spotlight.style.setProperty('--mouse-y', `${e.clientY}px`);
-        }
-
-        const hoveredContainer = e.target.closest('.container-light-beam');
-        if (hoveredContainer) {
-            const rect = hoveredContainer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            hoveredContainer.style.setProperty('--container-mouse-x', `${x}px`);
-            hoveredContainer.style.setProperty('--container-mouse-y', `${y}px`);
-        }
-    });
-}
-
 // SPA View Renderer Switchboard
 function renderApp() {
     const viewport = document.getElementById('app-viewport');
@@ -1644,7 +1521,7 @@ function renderApp() {
     
     if (currentPage === 'home') {
         viewport.innerHTML = renderHomePage();
-        startGolfCarousel();
+        initHomePage();
     } else if (currentPage === 'products') {
         viewport.innerHTML = renderProductsPage();
         bindProductsFilterEvents();
@@ -1664,6 +1541,8 @@ function renderApp() {
         viewport.innerHTML = renderAboutPage();
     } else if (currentPage === 'contact') {
         viewport.innerHTML = renderContactPage();
+    } else if (currentPage === 'not-found') {
+        viewport.innerHTML = renderNotFoundPage();
     }
 
     initRevealOnScroll();
@@ -1675,53 +1554,9 @@ function renderApp() {
 
 // --- PAGE RENDERING FUNCTIONS ---
 
-function renderHomeSectionHeading(eyebrow, title, align = 'center') {
-    return `
-        <div class="${align === 'center' ? 'text-center max-w-3xl mx-auto' : ''} space-y-2">
-            <span class="text-brand-olive text-sm sm:text-base font-semibold">${eyebrow}</span>
-            <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">${title}</h2>
-        </div>
-    `;
-}
-
-// Three solution panels in one container. On desktop the hovered panel expands
-// (CSS flex-grow accordion) and reveals its description and button.
-function renderHomeSolutionPanels() {
-    return `
-        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 space-y-6 sm:space-y-8">
-            <div class="reveal">${renderHomeSectionHeading('Solutions', 'Built for every setting.')}</div>
-            <div class="home-panels">
-                ${HOME_SOLUTION_PANELS.map((panel, i) => `
-                    <article class="home-panel reveal group" style="--reveal-delay:${i * 120}ms" ${panel.golfSlides ? 'onmouseenter="stopGolfCarousel()" onmouseleave="startGolfCarousel()"' : ''} onclick="${panel.ctaAction}">
-                        ${panel.golfSlides
-                            ? [4, 5, 6, 7].map((n, s) => `
-                                <div id="golf-slide-${s}" class="golf-carousel-slide absolute inset-0 transition-opacity duration-700 ${s === 0 ? 'opacity-100' : 'opacity-0'}">
-                                    <img src="image/${n}.png" alt="Golf fleet in operation ${s + 1}" loading="lazy" class="home-panel-media">
-                                </div>
-                            `).join('')
-                            : panel.media}
-                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent z-10 pointer-events-none"></div>
-                        <div class="absolute inset-x-0 bottom-0 z-20 p-6 sm:p-8 space-y-3">
-                            <span class="inline-block px-3 py-1 rounded-full bg-brand-olive/90 backdrop-blur-md text-slate-900 text-[11px] font-bold uppercase tracking-widest shadow-lg">${panel.eyebrow}</span>
-                            <h3 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tighter leading-[1.05] drop-shadow-md">${panel.title}</h3>
-                            <div class="home-panel-details space-y-4">
-                                <p class="text-slate-200 text-sm sm:text-base leading-relaxed max-w-md">${panel.text}</p>
-                                <button onclick="event.stopPropagation(); ${panel.ctaAction}" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-xl transition-all shadow-xl text-xs sm:text-sm btn-shimmer">
-                                    <i data-lucide="${panel.ctaIcon}" class="w-4 h-4"></i>
-                                    <span>${panel.ctaLabel}</span>
-                                </button>
-                            </div>
-                        </div>
-                    </article>
-                `).join('')}
-            </div>
-        </section>
-    `;
-}
-
 // Fades sections in as they scroll into view (elements with the .reveal class)
 function initRevealOnScroll() {
-    const items = document.querySelectorAll('.reveal:not(.is-visible)');
+    const items = document.querySelectorAll('.reveal:not(.is-visible), .rise:not(.is-visible)');
     if (!('IntersectionObserver' in window)) {
         items.forEach(el => el.classList.add('is-visible'));
         return;
@@ -1737,16 +1572,15 @@ function initRevealOnScroll() {
     items.forEach(el => observer.observe(el));
 }
 
-// Battery comparison rows. `bars` are relative 0-100 lengths for the visual meter
-// (higher = better for the buyer), so each row reads at a glance.
+// Battery comparison rows. `bars` are relative 0-100 lengths for the meter (higher = better for the buyer).
 const BATTERY_COMPARISON = [
-    { icon: 'calendar-clock', label: 'Lifespan', lead: '3–5 years', lithium: '8–12+ years', bars: [35, 100] },
-    { icon: 'plug-zap', label: 'Charging Time', lead: '8–10 hours', lithium: '2–4 hours', bars: [30, 100] },
-    { icon: 'weight', label: 'Battery Weight', lead: '135–180 kg', lithium: '45–68 kg', bars: [35, 100] },
-    { icon: 'wrench', label: 'Maintenance', lead: 'Monthly water top-ups and terminal cleaning', lithium: 'None. Sealed, with built-in battery management', bars: [25, 100] },
-    { icon: 'mountain', label: 'Power on Hills', lead: 'Slows down as the charge drops', lithium: 'Full power until empty', bars: [45, 100] },
-    { icon: 'wallet', label: 'Upfront Cost', lead: 'Lower', lithium: 'About 2–3× higher', bars: [100, 40] },
-    { icon: 'piggy-bank', label: '10-Year Cost', lead: 'Higher: 2–3 pack replacements', lithium: 'Lower: one pack lasts the decade', bars: [40, 100] }
+    { label: 'Lifespan', lead: '3–5 years', lithium: '8–12+ years', bars: [35, 100] },
+    { label: 'Charging time', lead: '8–10 hours', lithium: '2–4 hours', bars: [30, 100] },
+    { label: 'Battery weight', lead: '135–180 kg', lithium: '45–68 kg', bars: [35, 100] },
+    { label: 'Maintenance', lead: 'Monthly water top-ups and terminal cleaning', lithium: 'None. Sealed, with built-in battery management', bars: [25, 100] },
+    { label: 'Power on hills', lead: 'Slows down as the charge drops', lithium: 'Full power until empty', bars: [45, 100] },
+    { label: 'Upfront cost', lead: 'Lower', lithium: 'About 2–3× higher', bars: [100, 40] },
+    { label: '10-year cost', lead: 'Higher: 2–3 pack replacements', lithium: 'Lower: one pack lasts the decade', bars: [40, 100] }
 ];
 
 // `side` is 'lead' or 'lithium'. Bars grow outward from the middle column: the lead-acid bar is anchored
@@ -1754,461 +1588,367 @@ const BATTERY_COMPARISON = [
 function renderBatteryBar(value, side) {
     const isLithium = side === 'lithium';
     return `
-        <div class="h-1.5 w-full rounded-full bg-slate-200/80 overflow-hidden flex ${isLithium ? 'justify-start' : 'justify-end'}">
-            <div class="battery-bar h-full rounded-full ${isLithium ? 'bg-brand-olive' : 'bg-slate-400'}" style="--bar:${value}%"></div>
+        <div class="battery-track ${isLithium ? 'justify-start' : 'justify-end'}" aria-hidden="true">
+            <div class="battery-bar ${isLithium ? 'bg-green' : 'bg-mute'}" style="--bar:${value}%"></div>
         </div>`;
 }
 
-// Lead-acid vs lithium scorecard with "best for" guidance; sits after the partner logos.
-// Lead-acid on the left, the thing being compared in the middle, lithium on the right.
+// Lead-acid on the left, what is being compared in the middle, lithium on the right
 function renderHomeBatteryCompare() {
     return `
-        <section id="home-battery" class="reveal max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 sm:space-y-10">
-            <div class="text-center max-w-2xl mx-auto space-y-3">
-                <span class="text-brand-olive text-sm sm:text-base font-semibold">Choose Your Power</span>
-                <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Lead-acid or lithium?</h2>
-                <p class="text-slate-500 text-lg sm:text-xl">It comes down to a lower price today or lower costs and less upkeep over the life of your cart.</p>
+        <section id="home-battery" class="rise home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-12 lg:mb-16">
+                <h2 class="type-xl text-ink lg:col-span-7">Lead-acid or lithium?</h2>
+                <p class="measure lg:col-span-5">It comes down to a lower price today, or lower costs and less upkeep over the life of the cart.</p>
             </div>
 
-            <!-- Scorecard -->
-            <div class="max-w-5xl mx-auto rounded-3xl border border-brand-border bg-white shadow-xl p-2 sm:p-3">
-                <!-- Column heads -->
+            <div class="max-w-5xl mx-auto">
                 <div class="battery-grid">
-                    <div class="battery-cell-lead px-4 sm:px-6 pt-4 pb-3 md:text-right flex flex-col justify-end">
-                        <div class="flex items-center gap-2 sm:gap-3 md:justify-end">
-                            <i data-lucide="battery-medium" class="w-6 h-6 sm:w-8 sm:h-8 text-slate-500 flex-shrink-0"></i>
-                            <span class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight whitespace-nowrap">Lead-Acid</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">Flooded (FLA)</p>
+                    <div class="battery-cell-lead px-4 sm:px-6 pt-4 pb-4 md:text-right">
+                        <p class="type-md text-ink">Lead-acid</p>
+                        <p class="text-sm text-mute mt-1">Flooded (FLA)</p>
                     </div>
-                    <div class="battery-cell-label hidden md:flex items-end justify-center pb-4">
-                        <span class="text-[11px] font-bold uppercase tracking-wider text-brand-slate">Compare</span>
-                    </div>
-                    <div class="battery-cell-lithium px-4 sm:px-6 pt-4 pb-3 rounded-t-2xl bg-brand-olive/10 relative">
-                        <span class="inline-block mb-2 sm:mb-0 sm:absolute sm:top-3 sm:right-3 px-2.5 py-1 rounded-full bg-brand-olive text-slate-900 text-[10px] sm:text-xs font-bold uppercase tracking-wider">Best Value</span>
-                        <div class="flex items-center gap-2 sm:gap-3">
-                            <i data-lucide="battery-full" class="w-6 h-6 sm:w-8 sm:h-8 text-brand-olive flex-shrink-0"></i>
-                            <span class="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight whitespace-nowrap">Lithium</span>
-                        </div>
-                        <p class="text-xs sm:text-sm text-slate-500 mt-1">LiFePO₄</p>
+                    <div class="battery-cell-label hidden md:block"></div>
+                    <div class="battery-cell-lithium px-4 sm:px-6 pb-4 pt-4 bg-stone">
+                        <p class="type-md text-ink">Lithium</p>
+                        <p class="text-sm text-ink-2 mt-1">LiFePO₄ · lower running cost</p>
                     </div>
                 </div>
 
-                <!-- One row per comparison; the whole row lifts on hover -->
                 ${BATTERY_COMPARISON.map(row => `
                     <div class="battery-row battery-grid">
-                        <div class="battery-cell-label flex items-center justify-center gap-2 px-3 pt-3 md:py-2.5 text-center">
-                            <div class="p-1.5 rounded-lg bg-brand-card text-brand-olive flex-shrink-0"><i data-lucide="${row.icon}" class="w-4 h-4"></i></div>
-                            <span class="font-semibold text-slate-800 text-sm">${row.label}</span>
-                        </div>
-                        <div class="battery-cell-lead px-4 sm:px-6 py-2.5 space-y-1.5 md:text-right md:flex md:flex-col md:justify-center">
-                            <p class="text-slate-600 text-sm leading-snug">${row.lead}</p>
+                        <p class="battery-cell-label px-4 pt-4 md:py-4 text-sm font-medium text-ink md:text-center">${row.label}</p>
+                        <div class="battery-cell-lead px-4 sm:px-6 py-3 md:py-4 space-y-2 md:text-right">
+                            <p class="text-sm leading-snug">${row.lead}</p>
                             ${renderBatteryBar(row.bars[0], 'lead')}
                         </div>
-                        <div class="battery-cell-lithium px-4 sm:px-6 py-2.5 space-y-1.5 bg-brand-olive/10 md:flex md:flex-col md:justify-center">
-                            <p class="text-slate-900 font-semibold text-sm leading-snug">${row.lithium}</p>
+                        <div class="battery-cell-lithium px-4 sm:px-6 py-3 md:py-4 space-y-2 bg-stone">
+                            <p class="text-sm leading-snug text-ink font-medium">${row.lithium}</p>
                             ${renderBatteryBar(row.bars[1], 'lithium')}
                         </div>
                     </div>
                 `).join('')}
             </div>
 
-            <!-- Best for -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-                <div class="rounded-3xl border border-brand-border bg-brand-card p-6 sm:p-7 flex flex-col gap-4">
-                    <h3 class="font-extrabold text-slate-900 text-2xl tracking-tight">Lead-acid is best if you…</h3>
-                    <ul class="space-y-2 text-sm text-slate-600">
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>Are working with a tight upfront budget</li>
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>Plan to keep the cart for 2 years or less</li>
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-slate-500 flex-shrink-0 mt-0.5"></i>Don't mind monthly water checks</li>
+            <div class="max-w-5xl mx-auto grid md:grid-cols-2 gap-px bg-line border-y border-line mt-16">
+                <div class="bg-paper py-8 md:pr-10 space-y-4">
+                    <h3 class="type-md text-ink">Lead-acid suits you if you</h3>
+                    <ul class="home-list">
+                        <li>are working with a tight upfront budget</li>
+                        <li>plan to keep the cart for two years or less</li>
+                        <li>don't mind monthly water checks</li>
                     </ul>
-                    <button onclick="openQuoteModal('', 'Battery preference: Lead-Acid')" class="mt-auto self-start inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-5 py-2.5 rounded-xl border border-brand-border text-sm transition-all">
-                        Quote with Lead-Acid
-                    </button>
+                    <button type="button" onclick="openQuoteModal('', 'Battery preference: Lead-Acid')" class="btn btn-outline">Quote with lead-acid</button>
                 </div>
-                <div class="rounded-3xl border border-brand-olive/40 bg-brand-olive/10 p-6 sm:p-7 flex flex-col gap-4">
-                    <h3 class="font-extrabold text-slate-900 text-2xl tracking-tight">Lithium is best if you…</h3>
-                    <ul class="space-y-2 text-sm text-slate-700">
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>Keep your cart long-term, or run a resort, golf or township fleet</li>
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>Drive on hills or rough terrain</li>
-                        <li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>Want zero maintenance and fast charging</li>
+                <div class="bg-paper py-8 md:pl-10 space-y-4">
+                    <h3 class="type-md text-ink">Lithium suits you if you</h3>
+                    <ul class="home-list">
+                        <li>keep the cart long-term, or run a resort, golf or village fleet</li>
+                        <li>drive on hills or rough ground</li>
+                        <li>want fast charging and no battery maintenance</li>
                     </ul>
-                    <button onclick="openQuoteModal('', 'Battery preference: Lithium')" class="mt-auto self-start inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-xl shadow-lg text-sm transition-all btn-shimmer">
-                        Quote with Lithium
-                    </button>
+                    <button type="button" onclick="openQuoteModal('', 'Battery preference: Lithium')" class="btn btn-primary">Quote with lithium</button>
                 </div>
             </div>
-            <p class="text-center text-[11px] text-slate-400">Typical figures for golf cart battery packs; actual results vary with model, usage, and charging habits.</p>
+            <p class="max-w-5xl mx-auto mt-6 text-[0.8125rem] text-mute">Typical figures for golf cart battery packs. Actual results vary with model, use and charging habits.</p>
         </section>
     `;
 }
 
-// Filterable vehicle lineup; re-rendered in place by setHomeLineupFilter()
-function renderHomeLineup() {
-    const vehicles = PRODUCTS_DATA.filter(p => p.category !== 'Accessories'
-        && (homeLineupFilter === 'All' || p.category === homeLineupFilter));
-    const shown = vehicles.slice(0, 6);
-    const viewAllAction = homeLineupFilter === 'All' ? "navigateTo('products')" : `setCategoryAndNavigate('${homeLineupFilter}')`;
+// "2 Seats (Forward Facing)" + "85 km per charge" + "30 km/h max" -> "2 seats · 85 km range · 30 km/h"
+function homeSpecLine(p) {
+    const seats = (p.seating || '').replace(/\s*\(.*\)/, '').replace('Seats', 'seats').replace('Cargo Box', 'cargo bed');
+    return [seats, p.range && p.range.replace(' per charge', ' range'), p.speed && p.speed.replace(' max', '')].filter(Boolean).join(' · ');
+}
 
+function renderHomeRange() {
+    const models = HOME_RANGE.map(slug => PRODUCTS_DATA.find(p => p.slug === slug)).filter(Boolean);
     return `
-        <section id="home-lineup" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            ${renderHomeSectionHeading('Vehicle Lineup', 'Explore the lineup.')}
-            <div class="flex items-center justify-start sm:justify-center gap-2 overflow-x-auto scrollbar-none pb-1">
-                ${HOME_LINEUP_TABS.map(cat => `
-                    <button onclick="setHomeLineupFilter('${cat}')" class="px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                        homeLineupFilter === cat ? 'bg-brand-olive text-slate-900 shadow-md' : 'bg-brand-card border border-brand-border text-slate-600 hover:bg-slate-200/80'
-                    }">${cat}</button>
-                `).join('')}
+        <section class="rise home-section" aria-labelledby="home-range-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 lg:mb-14">
+                <h2 id="home-range-title" class="type-xl text-ink">Two seats. Four.<br>Fourteen.</h2>
+                <a href="${routeHref('products')}" data-route="products" class="link self-start md:self-auto">See every cart</a>
             </div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                ${shown.map(p => renderProductCardHTML(p)).join('')}
+            <div class="max-w-site mx-auto md:px-8 lg:px-12">
+                <ul class="home-range">
+                    ${models.map((p, i) => `
+                        <li class="home-range-item">
+                            <a href="${routeHref('product-details', p.slug)}" data-route="product-details" data-slug="${p.slug}" class="group block h-full">
+                                <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
+                                    <img src="${p.image}" alt="${p.name}, ${categoryLabel(p.category)}" loading="${i < 3 ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain">
+                                </div>
+                                <div class="pt-5 pb-2 pr-4">
+                                    <p class="type-lg text-ink">${p.name}</p>
+                                    <p class="text-sm text-mute mt-2">${homeSpecLine(p)}</p>
+                                </div>
+                            </a>
+                        </li>
+                    `).join('')}
+                </ul>
             </div>
-            <div class="text-center">
-                <button onclick="${viewAllAction}" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-6 py-3 rounded-xl border border-brand-border transition-all text-sm">
-                    View All ${homeLineupFilter === 'All' ? 'Vehicles' : homeLineupFilter} (${vehicles.length})
-                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                </button>
+        </section>
+    `;
+}
+
+function renderHomeUseTile(id, sizeClass, imageClass) {
+    const seg = NAV_SEGMENTS.find(s => s.id === id);
+    const use = HOME_USES[id];
+    return `
+        <a href="${routeHref('segment', id)}" data-route="segment" data-slug="${id}" class="group block ${sizeClass}">
+            <div class="media-zoom ${imageClass}">
+                <img src="${use.image}" alt="${use.alt}" width="${use.width}" height="${use.height}" loading="lazy" decoding="async" class="w-full h-full object-cover">
+            </div>
+            <div class="pt-5 space-y-2">
+                <h3 class="type-lg text-ink">${seg.label}</h3>
+                <p class="measure">${seg.tagline}</p>
+            </div>
+        </a>`;
+}
+
+// Editorial grid: a large Golfer photo, two offset tiles of different sizes, and a text-led Remanufactured strip
+function renderHomeUses() {
+    const reman = NAV_SEGMENTS.find(s => s.id === 'remanufactured');
+    return `
+        <section class="rise home-section bg-paper" aria-labelledby="home-uses-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 id="home-uses-title" class="type-xl text-ink mb-12 lg:mb-16 max-w-[14ch]">Shop by how you'll use it.</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-x-8 gap-y-14">
+                    ${renderHomeUseTile('golfer', 'lg:col-span-7', 'aspect-[4/3] lg:aspect-[7/6]')}
+                    <div class="lg:col-span-5 grid gap-y-14 lg:pt-40">
+                        ${renderHomeUseTile('lifestyle', '', 'aspect-square lg:aspect-[5/4]')}
+                    </div>
+                    <div class="lg:col-span-5 lg:col-start-2">
+                        ${renderHomeUseTile('resort', '', 'aspect-[4/3]')}
+                    </div>
+                    <a href="${routeHref('segment', 'remanufactured')}" data-route="segment" data-slug="remanufactured" class="group lg:col-span-5 lg:col-start-8 self-end border-t border-ink pt-6 grid grid-cols-[1fr_auto] gap-6 items-start">
+                        <div class="space-y-3">
+                            <h3 class="type-lg text-ink">${reman.label}</h3>
+                            <p class="measure">Rebuilt Tempo carts, each quoted with its rebuild scope, battery condition and warranty terms.</p>
+                            <span class="link inline-block">See available builds</span>
+                        </div>
+                        <img src="image/Products/reman 4.png" alt="" loading="lazy" decoding="async" class="w-28 sm:w-40 object-contain">
+                    </a>
+                </div>
+            </div>
+        </section>
+    `;
+}
+
+// One Tempo 2 that repaints from a few swatches, leading into the full builder
+function renderHomeConfigurator() {
+    const colors = getProductBodyColors(PRODUCTS_DATA.find(p => p.slug === HOME_PREVIEW_SLUG))
+        .filter(c => HOME_PREVIEW_COLORS.includes(c.name));
+    const base = hasLiveColorPreview(HOME_PREVIEW_SLUG) ? COLOR_PREVIEW[HOME_PREVIEW_SLUG].base : 'image/Products/Premium.png';
+    return `
+        <section class="rise home-section bg-stone" aria-labelledby="home-config-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+                <div class="lg:col-span-7 lg:order-2">
+                    <img id="home-config-img" src="${base}" alt="Tempo 2 in ${homePreviewColor}" class="w-full aspect-[4/3] object-contain">
+                </div>
+                <div class="lg:col-span-5 space-y-8">
+                    <h2 id="home-config-title" class="type-xl text-ink">Your color. Your seat. Your cart.</h2>
+                    <p class="measure text-ink-2">Pick the body, seats, canopy and build, see it on the cart, and send it to us for a quote.</p>
+                    <div class="space-y-3">
+                        <p class="text-sm text-ink-2">Body color: <span id="home-config-color" class="font-semibold text-ink">${homePreviewColor}</span></p>
+                        <div role="radiogroup" aria-label="Body color" class="flex flex-wrap gap-3">
+                            ${colors.map(c => `
+                                <button type="button" role="radio" aria-checked="${c.name === homePreviewColor}" aria-label="${c.name}" title="${c.name}"
+                                    onclick="selectHomeColor('${c.name}')" class="home-swatch" style="--swatch:${c.hex}"></button>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <button type="button" onclick="buildYourCart()" class="btn btn-primary">Build your cart</button>
+                </div>
+            </div>
+        </section>
+    `;
+}
+
+function selectHomeColor(name) {
+    homePreviewColor = name;
+    document.querySelectorAll('.home-swatch').forEach(b => b.setAttribute('aria-checked', String(b.getAttribute('aria-label') === name)));
+    const label = document.getElementById('home-config-color');
+    if (label) label.textContent = name;
+    const product = PRODUCTS_DATA.find(p => p.slug === HOME_PREVIEW_SLUG);
+    const color = getProductBodyColors(product).find(c => c.name === name);
+    if (!color || !hasLiveColorPreview(HOME_PREVIEW_SLUG) || !livePreviewAvailable) return;
+    const token = ++homePreviewToken;
+    renderCartPreview(HOME_PREVIEW_SLUG, { body: color.hex, seat: null, canopy: null }).then(url => {
+        const img = document.getElementById('home-config-img');
+        if (!url || !img || token !== homePreviewToken) return;
+        img.src = url;
+        img.alt = `Tempo 2 in ${name}`;
+    }).catch(() => { livePreviewAvailable = false; });
+}
+
+function renderHomeTrust() {
+    return `
+        <section class="rise home-section" aria-labelledby="home-trust-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 space-y-10">
+                    <h2 id="home-trust-title" class="type-lg text-ink">Running on courses, resorts and sites across the Philippines.</h2>
+                    <dl class="grid grid-cols-2 gap-8 border-t border-line pt-8">
+                        <div><dt class="text-sm text-mute">Clients</dt><dd class="type-xl text-ink mt-2">${CLIENT_LOGOS.length}+</dd></div>
+                        <div><dt class="text-sm text-mute">Branches</dt><dd class="type-xl text-ink mt-2">${BRANCHES.length}</dd></div>
+                    </dl>
+                </div>
+                <ul class="lg:col-span-8 home-logos" aria-label="Clients">
+                    ${CLIENT_LOGOS.slice(0, 24).map((logo, i) => `
+                        <li class="${i >= 12 ? 'hidden md:flex' : 'flex'}"><img src="${logo}" alt="Client logo ${i + 1}" loading="lazy" decoding="async"></li>
+                    `).join('')}
+                </ul>
+            </div>
+        </section>
+    `;
+}
+
+function renderHomeQuote() {
+    const vehicleOptions = PRODUCTS_DATA.filter(p => p.category !== 'Accessories');
+    return `
+        <section id="home-quote" class="rise home-section bg-paper border-t border-line scroll-mt-20" aria-labelledby="home-quote-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 space-y-5">
+                    <h2 id="home-quote-title" class="type-xl text-ink">Get a quote.</h2>
+                    <p class="measure">Choose a model and your nearest branch. We'll reply with pricing and lead times.</p>
+                </div>
+                <form onsubmit="handleHomeQuoteSubmit(event)" class="lg:col-span-7 lg:col-start-6 grid sm:grid-cols-2 gap-x-6 gap-y-5">
+                    <div class="field"><label for="hq-name">Full name</label><input id="hq-name" name="name" required type="text" autocomplete="name"></div>
+                    <div class="field"><label for="hq-phone">Mobile number</label><input id="hq-phone" name="phone" required type="tel" autocomplete="tel" placeholder="+63 900 000 0000"></div>
+                    <div class="field"><label for="hq-email">Email</label><input id="hq-email" name="email" required type="email" autocomplete="email"></div>
+                    <div class="field"><label for="hq-qty">Quantity</label><input id="hq-qty" name="quantity" type="number" min="1" value="1"></div>
+                    <div class="field"><label for="hq-model">Model</label>
+                        <select id="hq-model" name="model" required>
+                            <option value="">Select a model</option>
+                            ${vehicleOptions.map(p => `<option value="${p.slug}">${p.name} (${categoryLabel(p.category)})</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="field"><label for="hq-branch">Nearest branch</label>
+                        <select id="hq-branch" name="branch" required>
+                            <option value="">Select a branch</option>
+                            ${BRANCHES.map(b => `<option>${b.name}</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="field sm:col-span-2"><label for="hq-notes">Notes (optional)</label><textarea id="hq-notes" name="notes" rows="3" placeholder="Color, accessories, delivery location"></textarea></div>
+                    <div class="sm:col-span-2"><button type="submit" class="btn btn-primary">Send request</button></div>
+                </form>
+            </div>
+        </section>
+    `;
+}
+
+function renderHomeBranches() {
+    return `
+        <section id="home-branches" class="rise home-section scroll-mt-20" aria-labelledby="home-branches-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 id="home-branches-title" class="type-xl text-ink mb-12 lg:mb-16">Four branches.</h2>
+                <ul class="border-b border-line">
+                    ${BRANCHES.map(b => `
+                        <li class="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-3 py-8 border-t border-line">
+                            <h3 class="type-md text-ink md:col-span-3">${b.name.replace(' Branch', '')}</h3>
+                            <p class="md:col-span-5 measure">${b.address}</p>
+                            <p class="md:col-span-2 text-sm space-y-1">${b.phones.length
+                                ? b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="block hover:text-ink">${ph}</a>`).join('')
+                                : `<a href="${routeHref('contact')}" data-route="contact" class="hover:text-ink">Contact us</a>`}</p>
+                            <p class="md:col-span-2 md:text-right"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}" target="_blank" rel="noopener" class="link text-sm">Get directions<span class="sr-only"> to the ${b.name} (opens Google Maps)</span></a></p>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        </section>
+    `;
+}
+
+function renderHomeFaq() {
+    return `
+        <section class="rise home-section pt-0" aria-labelledby="home-faq-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 space-y-5">
+                    <h2 id="home-faq-title" class="type-lg text-ink">Questions, answered.</h2>
+                    <a href="${routeHref('contact')}" data-route="contact" class="link inline-block">Ask us something else</a>
+                </div>
+                <div class="lg:col-span-8 border-b border-line">
+                    ${HOME_FAQS.map(faq => `
+                        <details class="home-faq border-t border-line">
+                            <summary class="flex items-start justify-between gap-6 py-6 cursor-pointer list-none text-lg text-ink font-medium">
+                                <span>${faq.q}</span><span class="home-faq-sign" aria-hidden="true"></span>
+                            </summary>
+                            <p class="pb-6 -mt-2 measure">${faq.a}</p>
+                        </details>
+                    `).join('')}
+                </div>
             </div>
         </section>
     `;
 }
 
 function renderHomePage() {
-    setTimeout(() => {
-        startCarouselAutoPlay();
-    }, 100);
-
-    const latestPosts = [...BLOGS_DATA].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 3);
-    const vehicleOptions = PRODUCTS_DATA.filter(p => p.category !== 'Accessories');
-    const quickLinks = [
-        { icon: 'sliders-horizontal', title: 'Build Your Cart', text: 'Choose your model, build and packages, then get a quote.', action: 'buildYourCart()' },
-        { icon: 'building-2', title: 'Request a Fleet Proposal', text: 'For golf courses, resorts and commercial fleets.', action: "navigateTo('solutions')" },
-        { icon: 'wrench', title: 'Book Service', text: 'Repairs, preventive maintenance and parts.', action: "navigateTo('service')" },
-        { icon: 'map-pin', title: 'Find a Branch', text: 'Visit our showrooms in Manila, Cebu, Laguna and Clark.', action: "goToHomeSection('home-branches')" }
-    ];
-    const tempo2 = PRODUCTS_DATA.find(p => p.slug === 'golfer-tempo-2');
-    const tempo2Builds = BUILD_SETS['golfer-2'].builds;
-
     return `
-    <div class="pb-16">
-        <!-- 1. HERO: full-width banner slider with vehicle CTAs -->
-        <section class="relative sm:-mt-[65px] bg-slate-900" onmouseenter="stopCarouselAutoPlay()" onmouseleave="startCarouselAutoPlay()">
-            <div class="hero-banner relative w-full overflow-hidden">
-                <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent z-10 pointer-events-none"></div>
-                ${CAROUSEL_SLIDES.map((slide, idx) => `
-                    <div id="hero-slide-${idx}" class="carousel-slide hero-banner-slide ${idx === 0 ? 'carousel-slide-active' : 'carousel-slide-hidden'} absolute inset-0">
-                        <img src="${slide.image}" alt="${slide.alt}" class="hero-banner-img absolute inset-x-0 top-0 w-full object-cover" ${idx === 0 ? 'fetchpriority="high"' : 'loading="lazy"'}>
-
-                        <div class="hero-banner-actions absolute left-4 sm:left-[4.2%] z-20 flex flex-wrap items-center gap-2 sm:gap-4">
-                            <button onclick="${slide.ctaAction}" class="flex items-center gap-2 sm:gap-3 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-extrabold px-4 py-2.5 sm:px-7 sm:py-3.5 rounded-xl transition-all shadow-xl shadow-black/30 hover:scale-105 text-xs sm:text-sm btn-shimmer">
-                                <span>${slide.ctaLabel}</span>
-                                <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                            </button>
-                            <button onclick="openQuoteModal()" class="flex items-center gap-2 bg-white/85 hover:bg-white text-slate-900 font-semibold px-4 py-2.5 sm:px-6 sm:py-3.5 rounded-xl border border-white/60 backdrop-blur-md transition-all shadow-xl shadow-black/20 text-xs sm:text-sm">
-                                <span>Get a Quote</span>
-                            </button>
-                        </div>
-                    </div>
-                `).join('')}
-
-                <!-- Carousel Controls -->
-                <div class="absolute inset-x-0 bottom-3 sm:bottom-5 z-30 px-4 sm:px-8 flex items-center justify-between">
-                    <div class="flex items-center gap-2">
-                        ${CAROUSEL_SLIDES.map((_, idx) => `
-                            <button id="carousel-dot-${idx}" onclick="goToSlide(${idx})" class="h-2.5 rounded-full transition-all duration-300 ${idx === 0 ? 'w-8 bg-brand-olive' : 'w-2.5 bg-slate-300 hover:bg-slate-400'}" aria-label="Go to slide ${idx + 1}"></button>
-                        `).join('')}
-                    </div>
-
-                    <div class="flex items-center gap-2 sm:gap-3">
-                        <button onclick="prevSlide()" class="p-2 sm:p-3 rounded-xl bg-white/80 backdrop-blur-md border border-white/60 text-slate-700 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Previous Slide">
-                            <i data-lucide="chevron-left" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                        </button>
-                        <button onclick="nextSlide()" class="p-2 sm:p-3 rounded-xl bg-white/80 backdrop-blur-md border border-white/60 text-slate-700 hover:text-slate-900 hover:border-brand-olive transition-all" aria-label="Next Slide">
-                            <i data-lucide="chevron-right" class="w-4 h-4 sm:w-5 sm:h-5"></i>
-                        </button>
-                    </div>
-                </div>
+        <section class="home-hero" aria-labelledby="home-hero-title">
+            <video id="home-hero-video" class="home-hero-media" muted playsinline preload="metadata" poster="image/Hero/hero-poster.jpg" aria-hidden="true" tabindex="-1">
+                <source src="video/intro_golfcartph.mp4" type="video/mp4">
+            </video>
+            <div class="home-hero-scrim" aria-hidden="true"></div>
+            <div class="home-hero-copy max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h1 id="home-hero-title" class="type-hero text-paper max-w-[11ch]">Built for private roads.</h1>
+                <p class="home-hero-sub measure">Golf carts, shuttles and utility vehicles for courses, resorts, villages and estates.</p>
+                <button type="button" onclick="buildYourCart()" class="btn btn-primary">Build your cart</button>
             </div>
+            <button type="button" id="home-hero-toggle" class="home-hero-toggle" aria-label="Pause background video" hidden>
+                <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+            </button>
         </section>
 
-        <!-- 2. SOLUTION PANELS: resort video, industrial photo, golf fleet slideshow -->
-        ${renderHomeSolutionPanels()}
+        ${renderHomeRange()}
+        ${renderHomeUses()}
+        ${renderHomeConfigurator()}
+        ${renderHomeBatteryCompare()}
+        ${renderHomeTrust()}
+        ${renderHomeQuote()}
+        ${renderHomeBranches()}
+        ${renderHomeFaq()}
+    `;
+}
 
-        <div class="space-y-20 sm:space-y-28 pt-16 sm:pt-20">
-            <!-- 3. TEMPO 2 HERO RANGE: the bestseller in Golfer / Scratch / Pro -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-                <div class="text-center max-w-3xl mx-auto space-y-3">
-                    <span class="text-brand-olive text-sm sm:text-base font-semibold">Tempo 2 · Our bestseller</span>
-                    <h2 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Golfer. Scratch. Pro.</h2>
-                    <p class="text-slate-500 text-lg sm:text-xl">${tempo2.description}</p>
-                </div>
-                <div class="h-64 sm:h-[420px] flex items-center justify-center">
-                    <img src="${tempo2.image}" alt="Tempo 2" loading="lazy" class="max-h-full object-contain drop-shadow-[0_30px_30px_rgba(0,0,0,0.18)]">
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                    ${tempo2Builds.map(b => `
-                        <div class="rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-7 space-y-3">
-                            <p class="text-2xl font-extrabold text-slate-900 tracking-tight">Tempo 2 ${b.name}</p>
-                            <p class="text-sm font-semibold text-brand-olive">${b.tagline}</p>
-                            <ul class="space-y-1.5 text-sm text-slate-600">${b.includes.map(x => `<li class="flex gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-olive flex-shrink-0 mt-0.5"></i>${x}</li>`).join('')}</ul>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-                    <button onclick="buildYourCart()" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-7 py-3 rounded-full text-sm sm:text-base shadow-lg transition-all btn-shimmer">Build Your Cart</button>
-                    <button onclick="openSegment('golfer', 'golfer-compare')" class="inline-flex items-center gap-1 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm sm:text-base">Compare Tempo 2, 2+2 and 4 <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                </div>
-            </section>
+// Starts the hero video (unless reduced motion is on) and wires its pause control
+function initHomePage() {
+    const video = document.getElementById('home-hero-video');
+    const toggle = document.getElementById('home-hero-toggle');
+    if (!video || !toggle) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sync = () => {
+        toggle.classList.toggle('is-paused', video.paused);
+        toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
+    };
+    const play = () => {
+        const p = video.play && video.play();
+        if (p && p.catch) p.catch(() => sync());
+    };
+    video.addEventListener('timeupdate', () => {
+        if (video.currentTime >= HERO_LOOP_END) {
+            video.currentTime = 0;
+            play();
+        }
+    });
+    video.addEventListener('ended', () => { video.currentTime = 0; play(); });
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    toggle.addEventListener('click', () => (video.paused ? play() : video.pause()));
+    toggle.hidden = false;
+    sync();
+    if (!reduceMotion) play();
+}
 
-            <!-- 4. REMANUFACTURED: value route -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-[2rem] bg-brand-card border border-brand-border p-6 sm:p-12">
-                    <div class="lg:col-span-6 space-y-4">
-                        <span class="text-brand-olive text-sm sm:text-base font-semibold">Remanufactured</span>
-                        <h2 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Rebuilt carts. Clear value.</h2>
-                        <p class="text-slate-500 text-lg leading-relaxed">Golf and lifestyle builds, quoted with the actual unit, rebuild scope, battery condition, included equipment and warranty terms.</p>
-                        <button onclick="openSegment('remanufactured')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">See Remanufactured Builds</button>
-                    </div>
-                    <div class="lg:col-span-6 grid grid-cols-2 gap-4">
-                        <img src="image/Products/reman 4.png" alt="Remanufactured 2+2" loading="lazy" class="w-full h-48 sm:h-64 object-contain">
-                        <img src="image/Products/reman 5.png" alt="Remanufactured 2+2 Lifted" loading="lazy" class="w-full h-48 sm:h-64 object-contain">
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5. RESORT SOLUTIONS -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                ${renderHomeSectionHeading('Resort & Hospitality', 'Solutions for every property.')}
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-                    ${NAV_SEGMENTS.find(s => s.id === 'resort').subcategories.map(sub => {
-                        const firstImage = sub.groups[0].items.map(k => VEHICLE_MODELS[k].image).find(Boolean);
-                        const names = sub.groups.flatMap(g => g.items).map(k => VEHICLE_MODELS[k].name);
-                        return `
-                            <button onclick="openSegment('resort', 'resort-${sub.id}')" class="group text-left rounded-3xl bg-white border border-brand-border hover:border-brand-olive/60 hover:shadow-xl transition-all overflow-hidden flex flex-col">
-                                <div class="h-52 bg-brand-card flex items-center justify-center p-4"><img src="${firstImage}" alt="${sub.label}" loading="lazy" class="max-h-full object-contain transition-transform duration-500 group-hover:scale-105"></div>
-                                <div class="p-6 space-y-2">
-                                    <h3 class="text-2xl font-bold text-slate-900 tracking-tight">${sub.label}</h3>
-                                    <p class="text-sm text-slate-500">${names.slice(0, 5).join(' · ')}${names.length > 5 ? ' · and more' : ''}</p>
-                                    <span class="inline-flex items-center gap-1 text-brand-oliveHover font-semibold text-sm">Explore <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
-                                </div>
-                            </button>`;
-                    }).join('')}
-                </div>
-                <div class="text-center">
-                    <button onclick="navigateTo('solutions')" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-6 py-3 rounded-full border border-brand-border text-sm">Request a Fleet Proposal <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                </div>
-            </section>
-
-            <!-- 6. SERVICE SUPPORT -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="rounded-[2rem] bg-slate-900 text-white overflow-hidden grid grid-cols-1 lg:grid-cols-12 items-center">
-                    <div class="lg:col-span-6 p-8 sm:p-12 space-y-4">
-                        <span class="text-brand-olive text-sm sm:text-base font-semibold">Service &amp; Support</span>
-                        <h2 class="text-4xl sm:text-5xl font-extrabold tracking-tighter leading-[1.05]">We keep you rolling.</h2>
-                        <p class="text-slate-300 text-lg">Book service, request parts, and get maintenance and charging guidance from our team.</p>
-                        <div class="flex flex-wrap gap-3 pt-1">
-                            <button onclick="navigateTo('service')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Book Service</button>
-                            <button onclick="setCategoryAndNavigate('Accessories')" class="bg-white/10 hover:bg-white/20 border border-white/20 font-semibold px-6 py-3 rounded-full text-sm transition-all">Parts &amp; Accessories</button>
-                        </div>
-                    </div>
-                    <div class="lg:col-span-6 h-64 lg:h-full min-h-[18rem]">
-                        <img src="image/Hero/hero-3.webp" alt="Golfcarts.ph service technician" loading="lazy" class="w-full h-full object-cover">
-                    </div>
-                </div>
-            </section>
-
-            <!-- 7. VEHICLE LINEUP: filterable grid -->
-            ${renderHomeLineup()}
-
-            <!-- 4. BRAND STORY: split media (left) / text (right) -->
-            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 reveal lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                <div class="lg:col-span-7 relative rounded-3xl overflow-hidden border border-brand-border shadow-2xl h-[280px] sm:h-[420px] bg-slate-900">
-                    <video autoplay loop muted playsinline class="w-full h-full object-cover">
-                        <source src="video/intro_golfcartph.mp4" type="video/mp4">
-                    </video>
-                </div>
-                <div class="lg:col-span-5 space-y-5">
-                    <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">Who is Golfcarts.ph?</span>
-                    <h2 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Low-speed electric vehicles for private roads.</h2>
-                    <p class="text-slate-500 text-lg sm:text-xl leading-relaxed">
-                        We sell, customize and service low-speed electric vehicles for private roads: golf courses, resorts, gated villages, estates and industrial sites. Run by SJK Guahan Inc., with branches across the Philippines.
-                    </p>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
-                            <div class="text-2xl font-black text-slate-900">${CLIENT_LOGOS.length}+</div>
-                            <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">Partner Clients</div>
-                        </div>
-                        <div class="rounded-2xl bg-brand-card border border-brand-border p-4">
-                            <div class="text-2xl font-black text-slate-900">${BRANCHES.length}</div>
-                            <div class="text-[11px] uppercase tracking-wider text-brand-slate font-medium">Branches nationwide</div>
-                        </div>
-                    </div>
-                    <button onclick="navigateTo('about')" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl transition-all shadow-lg hover:scale-105 text-sm btn-shimmer">
-                        <span>Learn More</span>
-                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
-                </div>
-            </section>
-
-            <!-- 5. PARTNERS: client logo marquee -->
-            <section class="py-12 sm:py-16 bg-gradient-to-b from-brand-dark via-brand-card/60 to-brand-dark border-y border-brand-border/60 overflow-hidden">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6 sm:mb-8">
-                    ${renderHomeSectionHeading('Trusted Partnership Network', 'Trusted by industry leaders.')}
-                </div>
-                <div class="relative w-full overflow-hidden marquee-container">
-                    <div class="absolute left-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-r from-brand-dark to-transparent z-10 pointer-events-none"></div>
-                    <div class="absolute right-0 top-0 bottom-0 w-16 sm:w-24 bg-gradient-to-l from-brand-dark to-transparent z-10 pointer-events-none"></div>
-                    <div class="animate-marquee flex items-center gap-4 sm:gap-6 px-4">
-                        ${[...CLIENT_LOGOS, ...CLIENT_LOGOS].map(logoPath => `
-                            <div class="container-light-beam client-logo-card w-32 sm:w-40 h-20 sm:h-24 rounded-2xl bg-white/80 border border-brand-border/80 p-3 flex items-center justify-center flex-shrink-0 cursor-pointer shadow-md">
-                                <img src="${logoPath}" alt="Client Partner Logo" class="client-logo-img max-h-full max-w-full object-contain" loading="lazy">
-                            </div>
-                        `).join('')}
-                    </div>
-                </div>
-            </section>
-
-            <!-- 5b. BATTERY COMPARISON: lead-acid vs lithium scorecard -->
-            ${renderHomeBatteryCompare()}
-
-            <!-- 6. REQUEST A QUOTE: full-width background with lead form -->
-            <section id="home-quote" class="relative overflow-hidden scroll-mt-28">
-                <img src="image/7.png" alt="" aria-hidden="true" loading="lazy" class="absolute inset-0 w-full h-full object-cover">
-                <div class="absolute inset-0 bg-slate-950/75"></div>
-                <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-                    <div class="lg:col-span-5 space-y-4 text-white">
-                        <span class="px-3 py-1 rounded-full bg-brand-olive/90 text-slate-900 text-xs font-bold uppercase tracking-widest">Request a Quote</span>
-                        <h2 class="text-4xl sm:text-6xl font-extrabold tracking-tighter leading-[1.05]">Get pricing for your next cart.</h2>
-                        <p class="text-slate-300 text-lg sm:text-xl leading-relaxed">Pick a model and your nearest branch, and our team will send you a quote.</p>
-                    </div>
-                    <form onsubmit="handleHomeQuoteSubmit(event)" class="lg:col-span-7 rounded-3xl bg-white p-6 sm:p-8 shadow-2xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Full Name *</label>
-                            <input required type="text" placeholder="Juan Dela Cruz" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Mobile Number *</label>
-                            <input required type="tel" placeholder="+63 900 000 0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Email Address *</label>
-                            <input required type="email" placeholder="juan@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Quantity</label>
-                            <input type="number" min="1" value="1" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Vehicle Model *</label>
-                            <select required class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                                <option value="">Select a model</option>
-                                ${vehicleOptions.map(p => `<option>${p.name}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div>
-                            <label class="block font-medium text-slate-600 mb-1">Preferred Branch *</label>
-                            <select required class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                                <option value="">Select a branch</option>
-                                ${BRANCHES.map(b => `<option>${b.name}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="sm:col-span-2">
-                            <label class="block font-medium text-slate-600 mb-1">Notes (optional)</label>
-                            <textarea rows="2" placeholder="Preferred color, accessories, delivery location..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea>
-                        </div>
-                        <button type="submit" class="sm:col-span-2 w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">
-                            Request a Quote
-                        </button>
-                    </form>
-                </div>
-            </section>
-
-            <!-- 7. BRANCH LOCATOR -->
-            <section id="home-branches" class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 scroll-mt-28">
-                ${renderHomeSectionHeading('Find a Branch', 'Visit our showrooms.')}
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    ${BRANCHES.map(b => `
-                        <div class="container-light-beam rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-8 flex flex-col gap-4">
-                            <div class="flex items-center gap-3">
-                                <div class="p-3 rounded-xl bg-brand-olive/10 text-brand-olive"><i data-lucide="map-pin" class="w-5 h-5"></i></div>
-                                <h3 class="text-2xl font-bold text-slate-900 tracking-tight">${b.name}</h3>
-                            </div>
-                            <p class="text-slate-600 text-sm leading-relaxed">${b.address}</p>
-                            <div class="flex flex-wrap gap-x-4 gap-y-1 text-sm text-slate-700 empty:hidden">
-                                ${b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="inline-flex items-center gap-1.5 hover:text-brand-olive"><i data-lucide="phone" class="w-3.5 h-3.5"></i>${ph}</a>`).join('')}
-                            </div>
-                            <div class="flex flex-wrap gap-3 pt-2 mt-auto relative z-30">
-                                <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}" target="_blank" rel="noopener" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition-all">
-                                    <i data-lucide="navigation" class="w-4 h-4"></i> Get Directions
-                                </a>
-                                <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-5 py-2.5 rounded-xl border border-brand-border text-xs sm:text-sm transition-all">
-                                    Request a Quote
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </section>
-
-            <!-- 8. BLOG -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                    ${renderHomeSectionHeading('The Golfcarts.ph Blog', 'Guides, tips & stories.', 'left')}
-                    <button onclick="navigateTo('blogs')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-oliveHover font-semibold text-sm">View All <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    ${latestPosts.map(post => `
-                        <article onclick="navigateTo('blog-details', '${post.slug}')" class="container-light-beam group cursor-pointer flex flex-col rounded-3xl bg-brand-card border border-brand-border overflow-hidden shadow-lg hover:border-brand-olive/50 transition-all">
-                            <div class="h-48 bg-white flex items-center justify-center p-4">
-                                <img src="${post.image}" alt="${post.title}" loading="lazy" class="product-card-img max-h-full object-contain">
-                            </div>
-                            <div class="p-6 flex flex-col gap-3 flex-1">
-                                <div class="flex items-center gap-2 text-[11px]">
-                                    <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
-                                    <span class="text-slate-500">${formatBlogDate(post.date)}</span>
-                                </div>
-                                <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight leading-snug group-hover:text-brand-olive transition-colors">${post.title}</h3>
-                                <p class="text-slate-600 text-xs sm:text-sm leading-relaxed line-clamp-3 flex-1">${post.excerpt}</p>
-                                <span class="inline-flex items-center gap-1 text-brand-olive text-xs font-semibold">Continue reading <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i></span>
-                            </div>
-                        </article>
-                    `).join('')}
-                </div>
-            </section>
-
-            <!-- 9. FAQ ACCORDION -->
-            <section class="reveal max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-                ${renderHomeSectionHeading('Need Help?', 'Questions? Answers.')}
-                <div class="space-y-3">
-                    ${HOME_FAQS.map(faq => `
-                        <details class="home-faq group rounded-2xl bg-brand-card border border-brand-border">
-                            <summary class="flex items-center justify-between gap-4 p-5 cursor-pointer list-none font-semibold text-slate-900 text-sm sm:text-base">
-                                <span>${faq.q}</span>
-                                <i data-lucide="plus" class="home-faq-icon w-5 h-5 text-brand-olive flex-shrink-0"></i>
-                            </summary>
-                            <p class="px-5 pb-5 -mt-1 text-slate-600 text-sm leading-relaxed">${faq.a}</p>
-                        </details>
-                    `).join('')}
-                </div>
-                <div class="text-center">
-                    <button onclick="navigateTo('contact')" class="inline-flex items-center gap-2 text-brand-olive hover:text-brand-oliveHover font-semibold text-sm">Still have questions? Contact us <i data-lucide="arrow-right" class="w-4 h-4"></i></button>
-                </div>
-            </section>
-
-            <!-- 10. QUICK LINKS -->
-            <section class="reveal max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    ${quickLinks.map(link => `
-                        <button onclick="${link.action}" class="container-light-beam group text-left rounded-2xl bg-brand-card border border-brand-border p-5 hover:border-brand-olive/50 transition-all flex flex-col gap-3">
-                            <div class="p-2.5 rounded-xl bg-brand-olive/10 text-brand-olive w-fit"><i data-lucide="${link.icon}" class="w-5 h-5"></i></div>
-                            <h3 class="font-bold text-slate-900 text-lg tracking-tight group-hover:text-brand-olive transition-colors">${link.title}</h3>
-                            <p class="text-slate-500 text-xs leading-relaxed">${link.text}</p>
-                        </button>
-                    `).join('')}
-                </div>
-            </section>
-        </div>
-    </div>
+function renderNotFoundPage() {
+    return `
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12 min-h-[60vh]">
+            <h1 class="type-xl text-ink max-w-[14ch]">This page isn't on the map.</h1>
+            <p class="measure mt-6">The link may be old or mistyped. Start from the homepage or see every cart.</p>
+            <div class="flex flex-wrap gap-4 mt-10">
+                <a href="./" data-route="home" class="btn btn-primary">Go to the homepage</a>
+                <a href="${routeHref('products')}" data-route="products" class="btn btn-outline">See every cart</a>
+            </div>
+        </section>
     `;
 }
 

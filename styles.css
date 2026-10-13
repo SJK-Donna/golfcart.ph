@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Pre-redesign page styles. Fonts, colours and base type come from src/styles (tokens.css + site.css). */
 
 /* ==========================================================================
    Base Styles & Smooth Scrolling
@@ -10,22 +10,8 @@ html {
 }
 
 body {
-    background-color: #FFFFFF;
-    color: #1E293B;
-    font-family: 'Inter', sans-serif;
     overflow-x: hidden;
 }
-
-
-
-    #mouse-spotlight {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 1;
-        background: radial-gradient(650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(116, 158, 53, 0.07), transparent 80%);
-        transition: opacity 0.5s ease;
-    }
 
 
 /* ==========================================================================
@@ -305,11 +291,10 @@ input:focus, select:focus, textarea:focus {
 .segment-dropdown-inner {
     width: max-content;
     max-width: min(92vw, 760px);
-    padding: 1.25rem 1.5rem;
-    border-radius: 1rem;
-    background: #FFFFFF;
-    border: 1px solid #E1E7DD;
-    box-shadow: 0 20px 45px -12px rgba(15, 23, 42, 0.25);
+    padding: 1.5rem 1.75rem;
+    border-radius: 0;
+    background: var(--paper);
+    border: 1px solid var(--line);
 }
 
 .segment-dropdown-item {
@@ -318,16 +303,16 @@ input:focus, select:focus, textarea:focus {
     text-align: left;
     padding: 0.3rem 0.5rem;
     margin-left: -0.5rem;
-    border-radius: 0.5rem;
-    font-size: 0.8125rem;
-    color: #475569;
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    color: var(--ink-2);
     transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .segment-dropdown-item:hover,
 .segment-dropdown-item:focus-visible {
-    background-color: rgba(116, 158, 53, 0.1);
-    color: #0F172A;
+    background-color: var(--stone);
+    color: var(--ink);
 }
 
 /* Mobile accordion chevron */
@@ -644,7 +629,7 @@ input:focus, select:focus, textarea:focus {
 /* Battery comparison meters fill in when the section scrolls into view */
 .battery-bar {
     width: 0;
-    transition: width 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+    transition: width 1.1s var(--ease) 0.25s;
 }
 
 #home-battery.is-visible .battery-bar {
@@ -675,19 +660,17 @@ input:focus, select:focus, textarea:focus {
 /* Each row lifts slightly toward the reader on hover so that one comparison stands out */
 .battery-row {
     position: relative;
-    border-top: 1px solid #E1E7DD;
-    overflow: hidden;
-    background: #FFFFFF;
-    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-radius 0.3s ease;
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    transition: transform 0.4s var(--ease), outline-color 0.3s var(--ease);
+    outline: 1px solid transparent;
 }
 
-/* Square at rest so the lithium column reads as one continuous band; rounded only while lifted */
+/* The hovered comparison scales up slightly and is outlined, so one row stands out */
 .battery-row:hover {
     z-index: 2;
-    border-radius: 1rem;
-    transform: scale(1.03);
-    border-top-color: transparent;
-    box-shadow: 0 18px 40px -16px rgba(15, 23, 42, 0.28);
+    transform: scale(1.02);
+    outline-color: var(--ink);
 }
 
 /* The row after a lifted one hides its divider so the gap looks clean */
@@ -807,11 +790,11 @@ input:focus, select:focus, textarea:focus {
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    padding: 0.5rem 0.7rem;
-    border-radius: 9999px;
-    font-size: 0.8125rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0;
+    font-size: 0.875rem;
     font-weight: 500;
-    color: #475569;
+    color: var(--ink-2);
     white-space: nowrap;
     transition: color 0.2s ease, background-color 0.2s ease;
 }
@@ -819,8 +802,11 @@ input:focus, select:focus, textarea:focus {
 .header-nav-link:hover,
 .header-menu:hover > .header-nav-link,
 .header-menu:focus-within > .header-nav-link {
-    color: #0F172A;
-    background-color: rgba(241, 245, 249, 0.9);
+    color: var(--ink);
+    background-color: transparent;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.45em;
 }
 
 .header-menu > .segment-dropdown {

@@ -1,0 +1,54 @@
+/* ==========================================================================
+   Design tokens: the single place for colour, type, shape, spacing and motion.
+   Palette: stone off-white, deep ink, warm-olive greys, one green accent.
+   Contrast (WCAG): ink 16.6:1, ink-2 9.7:1 and mute 4.9:1 on paper; green-text 5.4:1 on paper;
+   ink text on green 5.7:1. Muted text is for paper only; on stone use ink-2.
+   ========================================================================== */
+:root {
+    --paper: #F6F6F2;      /* page background */
+    --stone: #ECECE6;      /* bands, studio backdrops behind product shots */
+    --line: #D6D6CE;       /* 1px rules */
+    --mute: #6B6C64;       /* secondary text (paper only) */
+    --ink-2: #3E403A;      /* body text */
+    --ink: #151714;        /* headlines, dark sections */
+    --green: #749E35;      /* the one accent */
+    --green-text: #4F6E22; /* green as text or links */
+
+    --font-display: 'Newsreader Variable', Georgia, serif;
+    --font-text: 'Instrument Sans Variable', system-ui, sans-serif;
+
+    --radius: 2px;         /* buttons, inputs, tags. Images, tiles and sections are square. */
+
+    --space-1: 4px;  --space-2: 8px;   --space-3: 12px;  --space-4: 16px;  --space-6: 24px;
+    --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px; --space-32: 128px; --space-40: 160px;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Self-hosted fonts (copied from @fontsource-variable at build time) */
+@font-face {
+    font-family: 'Newsreader Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 200 800;
+    src: url('../fonts/newsreader-latin-opsz-normal.woff2') format('woff2-variations');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Instrument Sans Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400 700;
+    src: url('../fonts/instrument-sans-latin-wght-normal.woff2') format('woff2-variations');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: 'Instrument Sans Variable';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400 700;
+    src: url('../fonts/instrument-sans-latin-ext-wght-normal.woff2') format('woff2-variations');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}

@@ -24,20 +24,26 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
-      # Static site: no build step. Upload only the files the site serves.
-      - name: Prepare site
-        run: |
-          mkdir -p _site
-          # *.js picks up every script the page loads (app.js, recolor.js, ...)
-          cp -r index.html styles.css *.js .nojekyll image video _site/
+      # Compiles the CSS, copies assets and pre-renders every page into dist/ (see scripts/build.mjs)
+      - name: Build
+        run: npm ci && npm run build
+        env:
+          SITE_ORIGIN: https://sjk-donna.github.io
+          SITE_BASE: /golfcart.ph/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
       - name: Deploy to GitHub Pages
         id: deployment
