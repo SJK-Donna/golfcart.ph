@@ -8,7 +8,8 @@
 
 // Per-product preview setup. `base` should be a photo whose body is a strongly colored paint (red, blue,
 // green) so it separates cleanly from seats, canopy, tires and glass. `seat` / `canopy` are optional:
-//   hue: [from, to] degrees, sat: [min, max], light: [min, max], box: [top, bottom] as fractions of the cart's height.
+//   hue: [from, to] degrees, sat: [min, max], light: [min, max], box: [top, bottom] as fractions of the cart's height,
+//   x: [left, right] (optional) as fractions of the photo's width. A region can also be a list of rules (any match).
 // Tempo 2-seaters share the red Base+ photo: its beige seats and canopy separate cleanly from the paint,
 // so all three regions follow the picker (the dark green / black photos can't be repainted reliably).
 // `seatStripes: true` marks photos showing a single bench seat, where patterned seats (Tsunami) can be
@@ -16,8 +17,15 @@
 const TEMPO_TWO_SEAT_PREVIEW = {
     base: 'image/Products/Base +.png',
     seatStripes: true,
-    seat: { hue: [25, 55], sat: [0.12, 0.8], light: [0.3, 0.95], box: [0.3, 0.7] },
-    canopy: { hue: [25, 55], sat: [0.08, 0.8], light: [0.3, 0.97], box: [0, 0.22] }
+    // Backrest from the seat top to 0.426 of the cart's height, cushion below it
+    seatZones: [0.252, 0.426, 0.7],
+    // Seat: from the top of the backrests (y 0.252) down; between the hood badge (x 0.37) and the rear curtain (x 0.785)
+    seat: { hue: [25, 55], sat: [0.12, 0.8], light: [0.3, 0.95], box: [0.252, 0.7], x: [0.37, 0.785] },
+    // Canopy: the roof, plus the rear side curtain that hangs down beside the seat backs
+    canopy: [
+        { hue: [25, 55], sat: [0.08, 0.8], light: [0.3, 0.97], box: [0, 0.25] },
+        { hue: [25, 55], sat: [0.08, 0.8], light: [0.3, 0.97], box: [0.25, 0.33], x: [0.79, 1] }
+    ]
 };
 
 const COLOR_PREVIEW = {
@@ -147,25 +155,50 @@ function collectRegion(base, test) {
     const height = Math.max(1, base.bottom - base.top);
     for (let i = 0; i < base.w * base.h; i++) {
         if (alpha[i * 4 + 3] < 20) continue;
+        const x = i % base.w;
         const yFrac = (Math.floor(i / base.w) - base.top) / height;
-        if (test(base.hue[i], base.sat[i], base.light[i], yFrac)) {
+        if (test(base.hue[i], base.sat[i], base.light[i], yFrac, x / base.w)) {
             idx.push(i);
             sumL += base.light[i];
-            xs.push(i % base.w);
+            xs.push(x);
         }
     }
-    // Horizontal extent from the 3rd to 97th percentile, so a few stray matching pixels elsewhere on the
-    // cart (e.g. on the dashboard) don't stretch the seat's measured width
-    xs.sort((a, b) => a - b);
-    const minX = xs.length ? xs[Math.floor(xs.length * 0.03)] : 0;
-    const maxX = xs.length ? xs[Math.floor(xs.length * 0.97)] : base.w;
+    const [minX, maxX] = percentileSpan(xs, base.w);
     return { idx, meanL: idx.length ? sumL / idx.length : 0.5, minX, maxX };
 }
 
+// Horizontal span from the 3rd to 97th percentile, so a few stray matching pixels elsewhere on the cart
+// (e.g. on the dashboard) don't stretch the measured width
+function percentileSpan(xs, fallbackW) {
+    if (!xs.length) return [0, fallbackW];
+    xs.sort((p, q) => p - q);
+    return [xs[Math.floor(xs.length * 0.03)], xs[Math.floor(xs.length * 0.97)]];
+}
+
+// Splits a seat region into horizontal zones (e.g. backrest and cushion) at the given fractions of the
+// cart's height, each with its own fixed width, so stripes run straight down each part of the seat
+function seatZones(base, region, cuts) {
+    const height = Math.max(1, base.bottom - base.top);
+    const zones = [];
+    for (let k = 0; k < cuts.length - 1; k++) {
+        const y0 = base.top + cuts[k] * height, y1 = base.top + cuts[k + 1] * height;
+        const xs = region.idx.filter(i => { const y = Math.floor(i / base.w); return y >= y0 && y < y1; }).map(i => i % base.w);
+        const [minX, maxX] = percentileSpan(xs, base.w);
+        zones.push({ y0, y1, minX, maxX });
+    }
+    return zones;
+}
+
+// A region rule, or a list of rules where any one matching is enough
 function regionRule(rule) {
-    return (hh, ss, ll, y) =>
+    if (Array.isArray(rule)) {
+        const tests = rule.map(regionRule);
+        return (hh, ss, ll, y, x) => tests.some(t => t(hh, ss, ll, y, x));
+    }
+    return (hh, ss, ll, y, x) =>
         hueInRange(hh, rule.hue) && ss >= rule.sat[0] && ss <= rule.sat[1] &&
-        ll >= rule.light[0] && ll <= rule.light[1] && y >= rule.box[0] && y <= rule.box[1];
+        ll >= rule.light[0] && ll <= rule.light[1] && y >= rule.box[0] && y <= rule.box[1] &&
+        (!rule.x || (x >= rule.x[0] && x <= rule.x[1]));
 }
 
 // Paints one region toward a target color, keeping the photo's shading.
@@ -173,13 +206,16 @@ function regionRule(rule) {
 // the Tsunami: [{ hsl, to }] where `to` is where the stripe ends, as a fraction of the region's width.
 function paintRegion(out, base, region, target, xGradient, bands) {
     const contrast = 0.85;
-    const span = Math.max(1, region.maxX - region.minX);
     for (const i of region.idx) {
         let th = target[0], ts = target[1], tl = target[2];
         if (bands) {
-            const xf = ((i % base.w) - region.minX) / span;
-            if (xf < 0 || xf > 1) continue; // stray pixel outside the seat: leave the photo as it is
-            const band = bands.find(b => xf <= b.to) || bands[bands.length - 1];
+            // Stripes run across the seat zone (backrest or cushion) this pixel belongs to
+            const y = Math.floor(i / base.w);
+            const zone = (region.zones && region.zones.find(z => y >= z.y0 && y < z.y1)) || region;
+            const xf = ((i % base.w) - zone.minX) / Math.max(1, zone.maxX - zone.minX);
+            // Edge pixels just past the measured width take the outer stripe; far-off specks are left alone
+            if (xf < -0.15 || xf > 1.15) continue;
+            const band = bands.find(b => Math.max(0, xf) <= b.to) || bands[bands.length - 1];
             [th, ts, tl] = band.hsl;
         } else if (xGradient) {
             // Multi-tone paints (chameleon, 3D) shift color across the body
@@ -227,11 +263,13 @@ async function renderCartPreview(slug, choice) {
         // pick up the seat color and show as specks on the panels)
         const notBody = rule => {
             const test = regionRule(rule);
-            return (hh, ss, ll, y) => test(hh, ss, ll, y) && !(ss >= 0.2 && hueDistance(hh, bodyHue) <= 24);
+            return (hh, ss, ll, y, x) => test(hh, ss, ll, y, x) && !(ss >= 0.2 && hueDistance(hh, bodyHue) <= 24);
         };
+        const seat = cfg.seat ? collectRegion(base, notBody(cfg.seat)) : null;
+        if (seat && cfg.seatZones) seat.zones = seatZones(base, seat, cfg.seatZones);
         recolorRegionCache[slug] = {
             body: collectRegion(base, isBody),
-            seat: cfg.seat ? collectRegion(base, notBody(cfg.seat)) : null,
+            seat,
             canopy: cfg.canopy ? collectRegion(base, notBody(cfg.canopy)) : null
         };
     }
