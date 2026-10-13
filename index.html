@@ -89,6 +89,10 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2">
                 <form id="modal-quote-form" onsubmit="handleModalQuoteSubmit(event)" class="p-5 sm:p-8 space-y-5">
+                    <!-- Model, build, packages, colors and accessories chosen so far (renderQuoteSummary in app.js) -->
+                    <div id="quote-summary" aria-live="polite"></div>
+                    <!-- The same summary as text, submitted with the form -->
+                    <textarea id="quote-details" name="details" hidden></textarea>
                     <div class="field">
                         <label for="modal-product-select">Model</label>
                         <select id="modal-product-select" name="model" onchange="onQuoteModelChange()">

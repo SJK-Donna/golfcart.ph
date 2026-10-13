@@ -959,6 +959,8 @@ const MAIN_NAV = [
 
 // Primary action for individual buyers: start on the hero product's build selector
 function buildYourCart() {
+    // The color picked in the homepage preview starts the builder
+    if (currentPage === 'home') pendingBodyColor = homePreviewColor;
     navigateTo('product-details', 'golfer-tempo-2');
     setTimeout(() => scrollToDetailSection('build'), 350);
 }
@@ -981,6 +983,7 @@ const HOME_USES = {
 const HOME_PREVIEW_COLORS = ['White', 'Black', 'Sangria', 'Sapphire', 'Green', 'Atomic Orange'];
 const HOME_PREVIEW_SLUG = 'golfer-tempo-2';
 let homePreviewColor = 'White';
+let pendingBodyColor = null;
 let homePreviewToken = 0;
 
 // The intro video ends on a white logo card at about 4.5s; the hero loops only the footage before it
@@ -1430,8 +1433,11 @@ function openQuoteModal(productName = '', notes = '') {
         }
         // Each quote starts with a fresh accessory selection for the chosen model
         quoteAccessories = new Set();
+        // Opened from a model page: carry everything chosen there (build, packages, colors) into the request
+        quoteBuild = currentPage === 'product-details' ? getBuildDetails() : null;
         renderAccessoryChips();
         renderAccessoryPicker();
+        renderQuoteSummary();
         modal.classList.remove('hidden');
         document.body.classList.add('overflow-hidden');
         quoteModalReturnFocus = document.activeElement;
@@ -1452,13 +1458,69 @@ function closeQuoteModal() {
 
 function handleModalQuoteSubmit(e) {
     e.preventDefault();
-    closeQuoteModal();
     const refCode = 'QT-' + Math.floor(100000 + Math.random() * 900000);
+    // Everything the visitor chose goes into the request alongside their own notes
+    const details = document.getElementById('quote-details');
+    if (details) details.value = `Reference: ${refCode}\n${getQuoteSummaryText()}`;
+    closeQuoteModal();
     const count = quoteAccessories.size;
     const accessoryNote = count ? ` with ${count} accessor${count === 1 ? 'y' : 'ies'}` : '';
     showToast(`Request sent${accessoryNote}. Your reference is ${refCode}.`);
     e.target.reset();
     quoteAccessories = new Set();
+    quoteBuild = null;
+}
+
+// --- QUOTE SUMMARY: what the visitor chose, shown in the quote form and sent with the request ---
+let quoteBuild = null;
+
+// The current model page's choices as label / value rows
+function getBuildDetails() {
+    const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    if (!product) return null;
+    const buildSet = BUILD_SETS[product.buildSet];
+    const level = buildSet && (buildSet.builds.find(b => b.id === detailBuild.level) || buildSet.builds[0]);
+    const family = COLOR_FAMILIES[product.colorFamily];
+    const rows = [['Model', `${product.name} (${categoryLabel(product.category)})`]];
+    if (level) rows.push(['Build', `${product.name} ${level.name}`]);
+    if ((product.packages || []).length) {
+        const packages = (detailBuild.packages || []).map(k => BUILD_PACKAGES[k].name);
+        if (detailBuild.rims && detailBuild.rims !== 'Standard') packages.push(`${detailBuild.rims} rims`);
+        rows.push(['Packages', packages.length ? packages.join(', ') : 'None']);
+    }
+    if (getProductBodyColors(product).length) rows.push(['Body color', detailBuild.body || 'Standard']);
+    if (family && family.seatGroups) rows.push(['Seat', detailBuild.seat || 'Standard']);
+    if ((CANOPY_OPTIONS[product.canopyKey] || []).length) rows.push(['Canopy', detailBuild.canopy || 'Standard']);
+    return { slug: product.slug, rows };
+}
+
+// Rows for the model currently selected in the quote form (the build only applies to the model it came from)
+function getQuoteSummaryRows() {
+    const select = document.getElementById('modal-product-select');
+    const rows = quoteBuild && select && select.value === quoteBuild.slug ? quoteBuild.rows.slice() : [];
+    if (!rows.length && select && select.value) {
+        const option = select.options[select.selectedIndex];
+        rows.push(['Model', option ? option.textContent : select.value]);
+    }
+    const accessories = [...quoteAccessories].map(findAccessory).filter(Boolean);
+    rows.push(['Accessories', accessories.length ? accessories.map(a => a.sku ? `${a.name} (${a.sku})` : a.name).join(', ') : 'None']);
+    return rows;
+}
+
+function getQuoteSummaryText() {
+    return getQuoteSummaryRows().map(([k, v]) => `${k}: ${v}`).join('\n');
+}
+
+function renderQuoteSummary() {
+    const box = document.getElementById('quote-summary');
+    if (!box) return;
+    box.innerHTML = `
+        <p class="text-sm font-medium text-ink mb-2">Your request</p>
+        <dl class="border-y border-line divide-y divide-line text-sm">
+            ${getQuoteSummaryRows().map(([k, v]) => `
+                <div class="grid grid-cols-[7rem_1fr] gap-3 py-2"><dt class="text-mute">${k}</dt><dd class="text-ink">${v}</dd></div>
+            `).join('')}
+        </dl>`;
 }
 
 // SPA View Renderer Switchboard
@@ -2243,6 +2305,7 @@ function toggleQuoteAccessory(id) {
     if (quoteAccessories.has(id)) quoteAccessories.delete(id);
     else quoteAccessories.add(id);
     renderAccessoryChips();
+    renderQuoteSummary();
     const picker = document.getElementById('modal-accessory-picker');
     if (picker && !picker.classList.contains('hidden')) renderAccessoryPicker();
 }
@@ -2261,6 +2324,7 @@ function onQuoteModelChange() {
     const fitting = new Set(getCompatibleAccessoryGroups(select ? select.value : '').flatMap(g => g.items.map(i => i.id)));
     quoteAccessories = new Set([...quoteAccessories].filter(id => fitting.has(id)));
     renderAccessoryChips();
+    renderQuoteSummary();
     const picker = document.getElementById('modal-accessory-picker');
     if (picker && !picker.classList.contains('hidden')) renderAccessoryPicker();
 }
@@ -2273,7 +2337,7 @@ function openQuoteWithAccessories(productName, notes = '') {
 // Vehicle page: opens the quote with the accessory list, carrying over the selected colors
 function addAccessoriesFromDetail() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
-    if (product) openQuoteWithAccessories(product.slug, getDetailBuildNote());
+    if (product) openQuoteWithAccessories(product.slug);
 }
 
 // Swatch colors for every seat option, measured from the seat photos in image/Seats (the vinyl's main
@@ -2355,19 +2419,6 @@ function getTrimHex(type, option) {
 
 // Current color choices on the vehicle page; reset each time a vehicle page renders
 let detailBuild = { body: null, seat: null, canopy: null };
-
-function getDetailBuildNote() {
-    const parts = [
-        detailBuild.body && `Body ${detailBuild.body}`,
-        detailBuild.seat && `Seat ${detailBuild.seat}`,
-        detailBuild.canopy && `Canopy ${detailBuild.canopy}`
-    ].filter(Boolean);
-    const lines = [];
-    const build = getBuildSummaryText();
-    if (build) lines.push(`Build: ${build}`);
-    if (parts.length) lines.push(`Preferred colors: ${parts.join(', ')}`);
-    return lines.join('\n');
-}
 
 // Refreshes the "your build" pills shown on top of the color preview
 function updateDetailBuildSummary() {
@@ -2512,7 +2563,7 @@ function selectDetailColor(index) {
 
 function requestQuoteInColor() {
     const product = PRODUCTS_DATA.find(p => p.slug === currentSlug);
-    if (product) openQuoteModal(product.slug, getDetailBuildNote());
+    if (product) openQuoteModal(product.slug);
 }
 
 function scrollToDetailSection(id) {
@@ -2728,8 +2779,10 @@ function renderProductDetailsPage() {
     const safeName = product.slug; // quote buttons pass the slug (names repeat across pillars)
     const colorFamily = COLOR_FAMILIES[product.colorFamily];
     const bodyColors = getProductBodyColors(product);
-    // Start on a color we have a photo for, so the preview matches the selected swatch
-    const startColorIdx = Math.max(0, bodyColors.findIndex(c => c.image));
+    // Start on the color chosen on the homepage, else on a color we have a photo for
+    const pendingIdx = pendingBodyColor ? bodyColors.findIndex(c => c.name === pendingBodyColor) : -1;
+    pendingBodyColor = null;
+    const startColorIdx = pendingIdx >= 0 ? pendingIdx : Math.max(0, bodyColors.findIndex(c => c.image));
     const startColor = bodyColors[startColorIdx];
     const seatGroups = (colorFamily && colorFamily.seatGroups) || [];
     const seatOptions = seatGroups.flatMap(g => g.options);
