@@ -57,6 +57,12 @@ for (const [from, to] of Object.entries(fontFiles)) fs.copyFileSync(rel(`node_mo
 execFileSync(process.execPath, [rel('node_modules/tailwindcss/lib/cli.js'), '-c', rel('tailwind.config.js'),
     '-i', rel('src/styles/site.css'), '-o', out('css/site.css'), '--minify'], { stdio: 'inherit', cwd: root });
 
+// The source folder also gets the CSS and fonts (git-ignored), so it can be previewed directly with
+// a plain static server such as VS Code Live Server. That preview skips pre-rendering and WebP images.
+fs.mkdirSync(rel('css'), { recursive: true });
+fs.copyFileSync(out('css/site.css'), rel('css/site.css'));
+fs.cpSync(out('fonts'), rel('fonts'), { recursive: true });
+
 // ---- 3. Images ----
 // Each PNG / JPG gets a WebP copy beside it ("x.png" -> "x.png.webp"), resized to at most 1920px wide.
 // The built app.js and HTML point at the copies. The originals stay: recolor.js reads their pixels for

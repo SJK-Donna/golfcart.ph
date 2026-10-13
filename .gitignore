@@ -10,6 +10,9 @@ credentials*.json
 node_modules/
 
 # Build output / caches
+# css/ and fonts/ in the root are build copies for previewing the source folder (npm run build)
+/css/
+/fonts/
 dist/
 build/
 _site/
