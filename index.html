@@ -14,11 +14,7 @@
     <link rel="preload" href="fonts/instrument-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <!-- Built from src/styles (tokens + Tailwind) by `npm run build` -->
     <link rel="stylesheet" href="css/site.css">
-    <!-- Older page styles, removed as each page is converted -->
-    <link rel="stylesheet" href="styles.css">
 
-    <!-- Icons: pinned version; used only for navigation, forms and controls -->
-    <script src="https://unpkg.com/lucide@1.55.0/dist/umd/lucide.min.js"></script>
 </head>
 <body class="min-h-screen flex flex-col bg-paper text-ink-2 selection:bg-green selection:text-ink">
 
@@ -49,7 +45,7 @@
 
             <button id="mobile-menu-btn" type="button" class="xl:hidden inline-flex items-center gap-2 h-10 px-3 -mr-3 text-ink text-sm font-medium" aria-controls="mobile-drawer" aria-expanded="false">
                 <span class="mobile-menu-label">Menu</span>
-                <i data-lucide="menu" class="w-5 h-5" aria-hidden="true"></i>
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
             </button>
         </div>
 
@@ -84,7 +80,7 @@
             <div class="flex items-center justify-between gap-4 px-5 sm:px-8 py-5 border-b border-line">
                 <h2 id="quote-modal-title" class="type-md text-ink">Get a quote</h2>
                 <button type="button" onclick="closeQuoteModal()" aria-label="Close" class="inline-flex items-center justify-center w-10 h-10 -mr-2 text-ink hover:bg-stone rounded-[2px]">
-                    <i data-lucide="x" class="w-5 h-5" aria-hidden="true"></i>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
                 </button>
             </div>
 

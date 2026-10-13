@@ -1,6 +1,5 @@
 /** Tailwind build config. Design tokens live in src/styles/tokens.css; the colours here point at them
- *  so a token change updates every utility. `brand.*` keeps the pre-redesign pages working until each
- *  page is converted (stage 3 and 4 of the redesign), after which it can be removed. */
+ *  so a token change updates every utility. */
 module.exports = {
     content: ['./index.html', './app.js', './scripts/**/*.mjs'],
     // Grid column classes that app.js builds at runtime from a count
@@ -15,17 +14,7 @@ module.exports = {
                 'ink-2': 'var(--ink-2)',
                 ink: 'var(--ink)',
                 green: 'var(--green)',
-                'green-text': 'var(--green-text)',
-                // Pre-redesign palette (legacy pages)
-                brand: {
-                    dark: '#FFFFFF',
-                    card: '#F5F8F3',
-                    border: '#E1E7DD',
-                    olive: '#749E35',
-                    oliveHover: '#5F822B',
-                    slate: '#4F6B7D',
-                    slateMuted: '#688396'
-                }
+                'green-text': 'var(--green-text)'
             },
             fontFamily: {
                 sans: ['"Instrument Sans Variable"', 'system-ui', 'sans-serif'],

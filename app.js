@@ -1024,7 +1024,7 @@ const HOME_FAQS = [
 function goToHomeSection(sectionId) {
     const scroll = () => {
         const target = document.getElementById(sectionId);
-        if (target) target.scrollIntoView({ behavior: 'smooth' });
+        if (target) target.scrollIntoView({ behavior: scrollBehavior() });
     };
     if (currentPage === 'home') {
         scroll();
@@ -1040,8 +1040,7 @@ function handleHomeQuoteSubmit(e) {
     showToast("Request sent. We'll reply with your quote.");
 }
 
-// Testimonials Carousel State for About Page
-let currentTestimonialIndex = 0;
+// Customer quotes on the About page
 
 const TESTIMONIALS_DATA = [
     {
@@ -1051,80 +1050,6 @@ const TESTIMONIALS_DATA = [
     {
         quote: "We used a gas cart for quite some time before making the switch to the electric club car...moving around the course became more peaceful, less problematic, and generally more enjoyable. The cart looks really good too!",
         author: "BJ Imperial"
-    }
-];
-
-function nextTestimonial() {
-    currentTestimonialIndex = (currentTestimonialIndex + 1) % TESTIMONIALS_DATA.length;
-    updateTestimonialUI();
-}
-
-function prevTestimonial() {
-    currentTestimonialIndex = (currentTestimonialIndex - 1 + TESTIMONIALS_DATA.length) % TESTIMONIALS_DATA.length;
-    updateTestimonialUI();
-}
-
-function updateTestimonialUI() {
-    const textElem = document.getElementById('testimonial-quote-text');
-    const authorElem = document.getElementById('testimonial-author-text');
-    if (textElem && authorElem) {
-        textElem.innerText = `"${TESTIMONIALS_DATA[currentTestimonialIndex].quote}"`;
-        authorElem.innerText = TESTIMONIALS_DATA[currentTestimonialIndex].author;
-    }
-}
-
-const SOLUTIONS_DATA = [
-    {
-        id: 'golf-courses',
-        title: 'Golf Courses & Country Clubs',
-        subtitle: 'Elevate player experience and optimize fleet management',
-        description: 'Transform your course operations with our ultra-quiet, turf-friendly electric fleet options. Integrated telematics allow precise geofencing, remote battery monitoring, and seamless fleet scheduling.',
-        image: 'image/Products/Tempo 2+2 - Golf.png',
-        benefits: [
-            'Turf-preserving lightweight chassis & wide tire profile',
-            'Geofencing speed limit controls & exclusion zone alerts',
-            'Fleet Telematics dashboard for remote maintenance diagnostics',
-            'Custom logo embossing & club color customization'
-        ]
-    },
-    {
-        id: 'resorts-hotels',
-        title: 'Luxury Resorts & Hotels',
-        subtitle: 'Silent, sophisticated guest transfers for world-class hospitality',
-        description: 'Deliver uncompromised comfort with luxury guest shuttles designed for beach resorts, mountain retreats, and estate properties. Zero engine noise guarantees uninterrupted tranquility for guests.',
-        image: 'image/Products/Villager 8.png',
-        benefits: [
-            'Whisper-quiet electric drive preserves peaceful resort atmosphere',
-            'All-weather roll-down clear side enclosures for tropical rain',
-            'High seat comfort with memory foam & marine-grade finish',
-            'Fast 3.5-hour charging keeps fleets running continuous shifts'
-        ]
-    },
-    {
-        id: 'gated-communities',
-        title: 'Residential & Gated Communities',
-        subtitle: 'Low-speed electric carts for daily life around your property',
-        description: 'Replace gasoline cars for short neighborhood trips. Our LSV/DOT compliant electric vehicles provide a safe, stylish, and eco-friendly way to commute to community centers, clubhouses, and local shops.',
-        image: 'image/Products/Tempo 2+2 - Family - Sangria Red.png',
-        benefits: [
-            'Street-legal equipped (Seatbelts, LED turn signals, mirrors)',
-            'Subtle, elegant aesthetic matching luxury community vibes',
-            'Standard 110V/220V home outlet charging convenience',
-            'Low total cost of ownership compared to gas vehicles'
-        ]
-    },
-    {
-        id: 'commercial-industrial',
-        title: 'Industrial Facilities & Townships',
-        subtitle: 'Rugged zero-emission utility haulers for heavy operations',
-        description: 'Streamline logistics across manufacturing plants, warehousing compounds, and airport grounds. Heavy payload ratings and hydraulic tilt beds make light work of tough tasks.',
-        image: 'image/Products/Transporter 4.png',
-        benefits: [
-            'Up to 950 kg payload capacity & hydraulic dump options',
-            'Zero indoor emissions suitable for enclosed warehouse use',
-            'Heavy-duty galvanized steel frames built for 24/7 industrial use',
-            'Significantly lower fuel & maintenance operational costs'
-        ]
     }
 ];
 
@@ -1344,6 +1269,11 @@ function showToast(message) {
     }
 }
 
+// Smooth scrolling, unless the visitor asked for reduced motion
+function scrollBehavior() {
+    return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+}
+
 function navigateTo(page, slug = null, options = {}) {
     currentPage = page;
     currentSlug = slug;
@@ -1353,16 +1283,21 @@ function navigateTo(page, slug = null, options = {}) {
         if (url !== location.pathname + location.search) history.pushState({ page, slug }, '', url);
     }
     applyPageMeta(page, slug);
-    window.scrollTo({ top: 0, behavior: options.fromHistory ? 'auto' : 'smooth' });
+    window.scrollTo({ top: 0, behavior: options.fromHistory ? 'auto' : scrollBehavior() });
     
     toggleMobileMenu(false);
     updateNavState();
 
     renderApp();
+    // Keyboard and screen reader users start at the new page's content, not back at the header
+    const main = document.getElementById('app-viewport');
+    if (main) main.focus({ preventScroll: true });
 }
 
 function setCategoryFilter(cat) {
     productFilterCategory = cat;
+    history.replaceState({ page: 'products' }, '', siteBasePath() + routeToPath('products'));
+    applyPageMeta('products');
     renderApp();
 }
 
@@ -1379,7 +1314,7 @@ function openSegment(segmentId, anchorId = null) {
         setTimeout(() => {
             const target = document.getElementById(anchorId);
             if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.scrollIntoView({ behavior: scrollBehavior(), block: 'center' });
                 target.classList.add('segment-card-flash');
                 setTimeout(() => target.classList.remove('segment-card-flash'), 1600);
             }
@@ -1560,16 +1495,13 @@ function renderApp() {
 
     initRevealOnScroll();
 
-    if (window.lucide) {
-        lucide.createIcons();
-    }
 }
 
 // --- PAGE RENDERING FUNCTIONS ---
 
-// Fades sections in as they scroll into view (elements with the .reveal class)
+// Fades major sections in once as they scroll into view (elements with the .rise class)
 function initRevealOnScroll() {
-    const items = document.querySelectorAll('.reveal:not(.is-visible), .rise:not(.is-visible)');
+    const items = document.querySelectorAll('.rise:not(.is-visible)');
     if (!('IntersectionObserver' in window)) {
         items.forEach(el => el.classList.add('is-visible'));
         return;
@@ -1953,176 +1885,72 @@ function renderNotFoundPage() {
     `;
 }
 
-// RENDER CART / PRODUCTS PAGE
+function filterProducts() {
+    const q = productSearchQuery.toLowerCase();
+    return PRODUCTS_DATA.filter(p => (productFilterCategory === 'All' || p.category === productFilterCategory)
+        && (p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q)));
+}
+
+function renderProductGridItems(list) {
+    return list.length
+        ? list.map(p => `<li>${renderModelTile(p)}</li>`).join('')
+        : `<li class="col-span-full py-16 border-y border-line"><p class="type-md text-ink">Nothing matches "${productSearchQuery.replace(/</g, '&lt;')}".</p><p class="mt-2">Try a model name, such as Tempo or Villager.</p></li>`;
+}
+
 function renderProductsPage() {
     const categories = ['All', ...Object.keys(CATEGORY_BANNERS)];
-    const currentBanner = CATEGORY_BANNERS[productFilterCategory];
-
-    const filtered = PRODUCTS_DATA.filter(p => {
-        const matchesCat = productFilterCategory === 'All' || p.category === productFilterCategory;
-        const matchesSearch = p.name.toLowerCase().includes(productSearchQuery.toLowerCase()) || 
-                              p.description.toLowerCase().includes(productSearchQuery.toLowerCase());
-        return matchesCat && matchesSearch;
-    });
+    const banner = CATEGORY_BANNERS[productFilterCategory];
+    const filtered = filterProducts();
 
     return `
-    <div id="cart-page-content" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8 pb-16">
-        
-        <!-- 1. CATEGORY SUB-MENU BAR (DIRECTLY BELOW MAIN NAVIGATION HEADER) -->
-        <div class="container-light-beam relative z-30 flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-6 p-3 sm:p-4 rounded-2xl bg-brand-card border border-brand-border shadow-md" style="overflow: visible;">
-            <!-- Category Filter Buttons (pillar tabs open a sub-menu on hover) -->
-            <div class="flex items-center gap-1.5 sm:gap-2 overflow-x-auto md:overflow-visible w-full md:w-auto pb-2 md:pb-0 scrollbar-none z-10">
-                ${categories.map(cat => {
-                    const segment = NAV_SEGMENTS.find(s => s.category === cat);
-                    const tab = `
-                        <button onclick="setCategoryFilter('${cat}')" class="inline-flex items-center gap-1 px-3.5 py-2 sm:px-4 sm:py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all ${
-                            productFilterCategory === cat ? 'bg-brand-olive text-slate-900 shadow-md font-bold' : 'bg-white/70 text-slate-600 hover:bg-slate-200/80'
-                        }">
-                            ${categoryLabel(cat)}
-                            ${segment ? '<i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>' : ''}
-                        </button>`;
-                    return segment ? `<div class="segment-menu relative">${tab}${renderSegmentDropdown(segment)}</div>` : tab;
-                }).join('')}
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                <h1 class="type-xl text-ink lg:col-span-7">${banner ? banner.headline : 'Every cart we sell.'}</h1>
+                <p class="measure lg:col-span-5">${banner ? banner.subheadline : 'Golf, lifestyle, resort and utility models, plus parts and accessories. Every cart can be built to order.'}</p>
             </div>
 
-            <!-- Search Input Bar -->
-            <div class="relative w-full md:w-72 z-10">
-                <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2"></i>
-                <input id="product-search-input" type="text" value="${productSearchQuery}" placeholder="Search products or accessories..." class="w-full bg-white border border-brand-border rounded-xl pl-10 pr-4 py-2 sm:py-2.5 text-xs sm:text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-brand-olive">
+            <div class="mt-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line">
+                <nav aria-label="Cart categories" class="flex -ml-3 overflow-x-auto scrollbar-none">
+                    ${categories.map(cat => `
+                        <a href="${cat === 'All' ? 'carts/' : `carts/?category=${encodeURIComponent(cat)}`}" onclick="event.preventDefault(); setCategoryFilter('${cat}')"
+                           class="detail-tab ${productFilterCategory === cat ? 'detail-tab-active' : ''}" ${productFilterCategory === cat ? 'aria-current="page"' : ''}>${cat === 'All' ? 'All' : categoryLabel(cat)}</a>
+                    `).join('')}
+                </nav>
+                <div class="field md:w-72 pb-4">
+                    <label for="product-search-input" class="sr-only">Search carts and accessories</label>
+                    <input id="product-search-input" type="search" value="${productSearchQuery.replace(/"/g, '&quot;')}" placeholder="Search carts and accessories" class="!min-h-[2.75rem]">
+                </div>
             </div>
-        </div>
+            <p class="text-sm text-mute mt-4" id="product-count" aria-live="polite">${filtered.length} ${filtered.length === 1 ? 'result' : 'results'}</p>
+        </section>
 
-        <!-- 2. DYNAMIC CATEGORY BANNER OR DEFAULT HEADLINE (UNDER THE SUB-MENU BAR) -->
-        ${currentBanner && currentBanner.photo ? `
-            <!-- Full-bleed lifestyle photo banner with a slow zoom -->
-            <section class="category-banner relative rounded-3xl overflow-hidden h-[320px] sm:h-[400px] lg:h-[460px] shadow-xl bg-slate-950">
-                <!-- Photo fills the banner on small screens and the right two-thirds on desktop, so less of it is cropped -->
-                <div class="absolute inset-y-0 right-0 w-full lg:w-[68%] overflow-hidden">
-                    <img src="${currentBanner.photo}" alt="${currentBanner.title}" class="category-banner-img absolute inset-0 w-full h-full object-cover" style="object-position:${currentBanner.photoFocus || 'center'}">
+        ${banner && banner.photo ? `
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 mt-10">
+                <div class="aspect-[16/9] md:aspect-[21/8] overflow-hidden bg-stone">
+                    <img src="${banner.photo}" alt="${banner.title}" class="w-full h-full object-cover" style="object-position:${banner.photoFocus || 'center'}">
                 </div>
-                <div class="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/70 to-transparent lg:via-slate-950/60 lg:to-transparent lg:from-[32%]"></div>
-                <div class="category-banner-copy relative z-10 h-full flex flex-col justify-center max-w-xl p-6 sm:p-10 lg:p-14 space-y-3 sm:space-y-4">
-                    <span class="self-start px-3 py-1 rounded-full bg-brand-olive/90 text-slate-900 text-[11px] font-bold uppercase tracking-widest shadow-lg">${currentBanner.title}</span>
-                    <h1 class="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md">${currentBanner.headline}</h1>
-                    <p class="text-slate-200 text-xs sm:text-base leading-relaxed max-w-md drop-shadow">${currentBanner.subheadline}</p>
-                    <span class="self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-white text-xs font-semibold">
-                        <i data-lucide="car" class="w-3.5 h-3.5"></i> ${filtered.length} model${filtered.length === 1 ? '' : 's'} available
-                    </span>
-                </div>
-            </section>
-        ` : currentBanner ? `
-            <section class="relative bg-gradient-to-r from-brand-card via-brand-dark to-white border border-brand-border rounded-3xl px-6 sm:px-10 py-6 shadow-lg overflow-hidden">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
-                    <div class="lg:col-span-6 space-y-2 sm:space-y-3">
-                        <span class="px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-widest">
-                            ${currentBanner.title}
-                        </span>
-                        <h1 class="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-                            ${currentBanner.headline}
-                        </h1>
-                        <p class="text-slate-600 text-xs sm:text-base leading-relaxed">
-                            ${currentBanner.subheadline}
-                        </p>
-                    </div>
-                    <div class="lg:col-span-6 h-56 sm:h-72 flex items-center justify-center">
-                        <img src="${currentBanner.image}" alt="${currentBanner.title}" class="max-h-full max-w-full object-contain rounded-2xl drop-shadow-[0_20px_25px_rgba(0,0,0,0.18)]">
-                    </div>
-                </div>
-            </section>
-        ` : `
-            <div class="text-center space-y-2 pt-2 pb-2">
-                <span class="text-brand-olive text-xs font-bold tracking-widest uppercase">Electric Showroom</span>
-                <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Vehicle & Accessory Catalog</h1>
-                <p class="text-slate-600 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
-                    Browse our complete range of golf carts, commercial utility haulers, VIP resort shuttles, and luxury custom accessories.
-                </p>
             </div>
-        `}
+        ` : ''}
 
-        <!-- 3. PRODUCT GRID CONTAINER -->
-        <div id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            ${filtered.length > 0 ? filtered.map(p => renderProductCardHTML(p)).join('') : `
-                <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
-                    <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
-                    <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
-                </div>
-            `}
-        </div>
-
-    </div>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-12 pb-24 lg:pb-32">
+            <ul id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
+                ${renderProductGridItems(filtered)}
+            </ul>
+        </section>
     `;
 }
 
 function bindProductsFilterEvents() {
     const input = document.getElementById('product-search-input');
-    if (input) {
-        input.addEventListener('input', (e) => {
-            productSearchQuery = e.target.value;
-            
-            const gridContainer = document.getElementById('product-grid-container');
-            if (gridContainer) {
-                const filtered = PRODUCTS_DATA.filter(p => {
-                    const matchesCat = productFilterCategory === 'All' || p.category === productFilterCategory;
-                    const matchesSearch = p.name.toLowerCase().includes(productSearchQuery.toLowerCase()) || 
-                                          p.description.toLowerCase().includes(productSearchQuery.toLowerCase());
-                    return matchesCat && matchesSearch;
-                });
-
-                gridContainer.innerHTML = filtered.length > 0 
-                    ? filtered.map(p => renderProductCardHTML(p)).join('') 
-                    : `
-                        <div class="col-span-full text-center py-16 bg-brand-card rounded-2xl border border-brand-border">
-                            <i data-lucide="info" class="w-10 h-10 text-brand-slate mx-auto mb-2"></i>
-                            <p class="text-slate-600 font-semibold">No items found matching criteria.</p>
-                        </div>
-                    `;
-
-                if (window.lucide) {
-                    lucide.createIcons();
-                }
-            }
-        });
-    }
-}
-
-// Apple-style lineup tile: big photo, color dots, name, one-line tagline, key specs, price, two actions
-function renderProductCardHTML(product) {
-    const isVehicle = product.category !== 'Accessories';
-    const safeName = product.slug; // quote buttons pass the slug (names repeat across pillars)
-    const colors = getProductBodyColors(product);
-    const shownColors = colors.slice(0, 7);
-    const specLine = isVehicle
-        ? [product.seating && product.seating.split(' (')[0], isMeaningful(product.range) && product.range].filter(Boolean).join(' · ')
-        : '';
-
-    return `
-    <div class="product-tile group rounded-3xl bg-white border border-brand-border overflow-hidden flex flex-col transition-all duration-300 hover:shadow-2xl hover:shadow-slate-900/10 hover:-translate-y-1">
-        <button onclick="navigateTo('product-details', '${product.slug}')" aria-label="View ${product.name}" class="relative h-60 sm:h-72 overflow-hidden bg-brand-card/70 pt-6 flex items-center justify-center">
-            <img src="${product.image}" alt="${product.name}" loading="lazy" class="cart-img-fill transition-transform duration-500 group-hover:scale-105">
-        </button>
-
-        <div class="px-6 pt-5 pb-6 flex flex-col items-center text-center flex-1 gap-2">
-            ${shownColors.length ? `
-                <div class="flex items-center gap-1.5 h-4" aria-label="${colors.length} colors available">
-                    ${shownColors.map(c => `<span class="w-3 h-3 rounded-full border border-slate-300" style="background:${c.hex}" title="${c.name}"></span>`).join('')}
-                    ${colors.length > shownColors.length ? `<span class="text-[11px] text-slate-500 font-medium ml-0.5">+${colors.length - shownColors.length}</span>` : ''}
-                </div>
-            ` : '<div class="h-4"></div>'}
-            <p class="text-[11px] font-semibold uppercase tracking-widest text-brand-olive pt-1">${categoryLabel(product.category)}</p>
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">${product.name}</h3>
-            <p class="text-sm text-slate-500 leading-snug line-clamp-2 min-h-[2.5rem]">${product.tagline}</p>
-            ${specLine ? `<p class="text-xs text-slate-500">${specLine}</p>` : ''}
-            <p class="text-sm font-semibold text-slate-900">${product.priceLabel || 'Inquire for Price'}</p>
-
-            <div class="mt-auto pt-4 flex flex-wrap items-center justify-center gap-4">
-                <button onclick="openQuoteModal('${safeName}')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-5 py-2 rounded-full text-sm transition-all btn-shimmer">Request a Quote</button>
-                <button onclick="navigateTo('product-details', '${product.slug}')" class="inline-flex items-center gap-0.5 text-brand-oliveHover hover:text-slate-900 font-semibold text-sm transition-colors">
-                    Learn more <i data-lucide="chevron-right" class="w-4 h-4"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-    `;
+    if (!input) return;
+    input.addEventListener('input', e => {
+        productSearchQuery = e.target.value;
+        const list = filterProducts();
+        const grid = document.getElementById('product-grid-container');
+        if (grid) grid.innerHTML = renderProductGridItems(list);
+        const count = document.getElementById('product-count');
+        if (count) count.textContent = `${list.length} ${list.length === 1 ? 'result' : 'results'}`;
+    });
 }
 
 // --- VEHICLE DETAIL PAGE (Overview / Colors / Features / Specifications) ---
@@ -2394,7 +2222,6 @@ function renderAccessoryPicker() {
         </fieldset>
     `).join('') + '<p class="text-sm text-ink-2">We confirm fitment before quoting.</p>'
         : '<p class="text-sm text-ink-2">No accessories are listed for this model yet. Tell us what you need in the notes.</p>';
-    if (window.lucide) lucide.createIcons();
 }
 
 function renderAccessoryChips() {
@@ -2552,7 +2379,7 @@ function updateDetailBuildSummary() {
         ? (getProductBodyColors(product).find(c => c.name === detailBuild.body) || {}).hex
         : null;
     const pill = (label, value, hex) => value ? `
-        <span class="build-chip"><span class="detail-trim-dot" style="background:${hex}"></span><span class="text-mute">${label}</span> <span class="text-ink font-medium">${value}</span></span>` : '';
+        <span class="build-chip"><span class="detail-trim-dot" style="background:${hex}"></span><span class="text-ink-2">${label}</span> <span class="text-ink font-medium">${value}</span></span>` : '';
     summary.innerHTML = pill('Body', detailBuild.body, bodyHex)
         + pill('Seat', detailBuild.seat, getTrimHex('seat', detailBuild.seat))
         + pill('Canopy', detailBuild.canopy, getTrimHex('canopy', detailBuild.canopy));
@@ -2691,7 +2518,7 @@ function requestQuoteInColor() {
 
 function scrollToDetailSection(id) {
     const target = document.getElementById(id);
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (target) target.scrollIntoView({ behavior: scrollBehavior(), block: 'start' });
 }
 
 // Highlights the sticky tab for the section currently in view
@@ -2968,7 +2795,7 @@ function renderProductDetailsPage() {
                     </div>
                 </div>
                 <div class="lg:col-span-7 order-1 lg:order-2">
-                    <div class="aspect-[4/3] flex items-center justify-center">
+                    <div class="aspect-[4/3] overflow-hidden flex items-center justify-center">
                         <img id="detail-main-img" src="${product.image}" alt="${product.name}" fetchpriority="high" class="max-h-full w-auto object-contain">
                     </div>
                     ${product.gallery.length > 1 ? `
@@ -3026,7 +2853,7 @@ function renderProductDetailsPage() {
                 <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-start">
                     <div class="lg:col-span-7 lg:sticky lg:top-36">
                         <div class="relative bg-stone px-4 sm:px-8 py-8">
-                            <div class="relative aspect-[4/3] flex items-center justify-center">
+                            <div class="relative aspect-[4/3] overflow-hidden flex items-center justify-center">
                                 <img id="detail-color-img" src="${startColor && startColor.image ? startColor.image : product.image}" alt="${product.name} color preview" class="w-full h-full object-contain">
                             </div>
                             <p id="detail-color-photo-note" class="${startColor && !startColor.image ? '' : 'hidden'} text-sm text-ink-2 mt-2">Photo shows a standard finish</p>
@@ -3173,20 +3000,21 @@ function renderSegmentModelCard(segmentId, subId, modelKey) {
     const isReman = segmentId === 'remanufactured';
 
     return `
-        <div id="${modelAnchorId(segmentId, subId, modelKey)}" class="container-light-beam group relative rounded-2xl bg-brand-card border border-brand-border p-4 sm:p-5 flex flex-col">
-            ${model.badge ? `<span class="absolute top-4 left-4 z-20 px-2.5 py-1 rounded-full bg-brand-olive text-slate-900 text-[10px] font-bold uppercase tracking-wider">${model.badge}</span>` : ''}
-            <div class="h-52 sm:h-60 rounded-xl bg-white flex items-center justify-center overflow-hidden">
+        <div id="${modelAnchorId(segmentId, subId, modelKey)}" class="flex flex-col scroll-mt-40">
+            <div class="${product ? 'media-zoom' : ''} relative overflow-hidden bg-stone aspect-[4/3] flex items-center justify-center p-6">
                 ${model.image
-                    ? `<img src="${model.image}" alt="${model.name}" loading="lazy" class="product-card-img cart-img-fill">`
-                    : `<div class="flex flex-col items-center gap-2 text-slate-400"><i data-lucide="image" class="w-8 h-8"></i><span class="text-[11px] font-medium">Photo coming soon</span></div>`}
+                    ? `<img src="${model.image}" alt="${model.name}" loading="lazy" decoding="async" class="max-h-full w-auto object-contain">`
+                    : '<span class="text-sm text-ink-2">Photo to follow</span>'}
             </div>
-            <h4 class="mt-4 text-base sm:text-lg font-bold text-slate-900 tracking-tight group-hover:text-brand-olive transition-colors">${model.name}</h4>
-            ${product ? `<p class="text-xs text-slate-500 mt-1 line-clamp-2">${product.tagline}</p>` : ''}
-            ${product && product.buildSet ? `<p class="text-[11px] font-semibold text-brand-oliveHover mt-1">${BUILD_SETS[product.buildSet].builds.map(b => b.name).join(' · ')}</p>` : ''}
-            ${isReman ? '<p class="text-[11px] text-slate-500 mt-1">Ask for current units, rebuild scope and warranty.</p>' : ''}
-            <div class="mt-auto pt-4 grid ${product ? 'grid-cols-2' : 'grid-cols-1'} gap-2 relative z-30">
-                ${product ? `<button onclick="navigateTo('product-details', '${product.slug}')" class="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-900 text-xs font-semibold transition-colors">${product.buildSet ? 'Build & Price' : 'View Details'}</button>` : ''}
-                <button onclick="openQuoteModal('${quoteRef}')" class="py-2 px-3 rounded-xl bg-brand-olive hover:bg-brand-oliveHover text-slate-900 text-xs font-bold transition-colors btn-shimmer">${isReman ? 'Check Availability' : 'Request a Quote'}</button>
+            <div class="pt-5 flex flex-col gap-2 flex-1">
+                <h3 class="type-md text-ink">${model.name}${model.badge ? ` <span class="font-sans text-sm text-green-text align-middle">${model.badge}</span>` : ''}</h3>
+                ${product ? `<p class="text-[0.9375rem]">${product.tagline}</p>` : ''}
+                ${product && product.buildSet ? `<p class="text-sm text-mute">${BUILD_SETS[product.buildSet].builds.map(b => b.name).join(' · ')}</p>` : ''}
+                ${isReman ? '<p class="text-sm text-mute">Ask for current units, rebuild scope and warranty.</p>' : ''}
+                <div class="mt-auto pt-3 flex flex-wrap items-center gap-x-6 gap-y-2">
+                    ${product ? `<a href="${routeHref('product-details', product.slug)}" data-route="product-details" data-slug="${product.slug}" class="link text-sm">${product.buildSet ? 'Build and price' : 'See details'}</a>` : ''}
+                    <button type="button" onclick="openQuoteModal('${quoteRef}')" class="link text-sm">${isReman ? 'Check availability' : 'Get a quote'}</button>
+                </div>
             </div>
         </div>
     `;
@@ -3195,87 +3023,80 @@ function renderSegmentModelCard(segmentId, subId, modelKey) {
 // Business enquiry prompt (Guest Transportation, Fit-to-Task): leads to the fleet proposal form
 function renderEnquiryPrompt(text) {
     return `
-        <div class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-5">
-            <p class="text-lg sm:text-xl font-bold tracking-tight max-w-2xl">${text}</p>
-            <button onclick="navigateTo('solutions')" class="flex-shrink-0 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Request a Fleet Proposal</button>
+        <div class="bg-ink text-paper p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <p class="type-md max-w-2xl">${text}</p>
+            <a href="${routeHref('solutions')}" data-route="solutions" class="btn btn-primary flex-shrink-0">Request a fleet proposal</a>
         </div>`;
 }
 
 function renderSegmentPage() {
     const segment = NAV_SEGMENTS.find(s => s.id === currentSlug) || NAV_SEGMENTS[0];
     const buildSet = BUILD_SETS[segment.buildSet];
+    const photo = HOME_USES[segment.id];
+    const jumpLinks = [
+        ...(segment.subcategories.length > 1 ? segment.subcategories.map(sub => ({ label: sub.label, anchor: sub.id })) : []),
+        ...(segment.links || []).map(l => ({ label: l.label, anchor: l.anchor }))
+    ];
 
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-16 sm:space-y-20">
-        <!-- Pillar header -->
-        <section class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-3xl bg-gradient-to-r from-brand-card via-white to-white border border-brand-border p-6 sm:p-10 overflow-hidden">
-            <div class="lg:col-span-7 space-y-4">
-                <span class="text-brand-olive text-sm sm:text-base font-semibold">${segment.label}</span>
-                <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">${segment.tagline}</h1>
-                <p class="text-slate-500 text-base sm:text-lg leading-relaxed max-w-xl">${segment.description}</p>
-                <div class="flex flex-wrap gap-2 pt-2">
-                    ${segment.subcategories.length > 1 ? segment.subcategories.map(sub => `
-                        <button onclick="openSegment('${segment.id}', '${segment.id}-${sub.id}')" class="px-4 py-2 rounded-full bg-white border border-brand-border hover:border-brand-olive text-slate-700 text-xs font-semibold transition-colors">${sub.label}</button>
-                    `).join('') : ''}
-                    ${(segment.links || []).map(l => `
-                        <button onclick="openSegment('${segment.id}', '${segment.id}-${l.anchor}')" class="px-4 py-2 rounded-full bg-white border border-brand-border hover:border-brand-olive text-slate-700 text-xs font-semibold transition-colors">${l.label}</button>
-                    `).join('')}
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <p class="text-sm text-mute">${segment.label}</p>
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mt-4">
+                <h1 class="type-xl text-ink lg:col-span-7">${segment.tagline}</h1>
+                <div class="lg:col-span-5 space-y-6">
+                    <p class="measure">${segment.description}</p>
+                    ${jumpLinks.length ? `<ul class="flex flex-wrap gap-x-6 gap-y-2">${jumpLinks.map(l => `<li><button type="button" onclick="openSegment('${segment.id}', '${segment.id}-${l.anchor}')" class="link text-sm">${l.label}</button></li>`).join('')}</ul>` : ''}
                 </div>
             </div>
-            <div class="lg:col-span-5 h-56 sm:h-72 flex items-center justify-center">
-                <img src="${segment.image}" alt="${segment.label}" class="product-card-img max-h-full object-contain drop-shadow-[0_15px_25px_rgba(0,0,0,0.18)]">
+            <div class="mt-12 ${photo ? 'aspect-[16/9] md:aspect-[21/9] overflow-hidden' : 'bg-stone overflow-hidden aspect-[16/9] md:aspect-[21/9] flex items-center justify-center p-8'}">
+                <img src="${photo ? photo.image : segment.image}" alt="${photo ? photo.alt : segment.label}" fetchpriority="high" class="${photo ? 'w-full h-full object-cover' : 'max-h-full w-auto object-contain'}">
             </div>
         </section>
 
-        <!-- Subcategories -->
         ${segment.subcategories.map(sub => `
-            <section id="${segment.id}-${sub.id}" class="space-y-8 scroll-mt-40">
-                <div class="space-y-2">
-                    <div class="flex items-center gap-4">
-                        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${sub.label}</h2>
-                        <div class="flex-1 h-px bg-brand-border"></div>
-                    </div>
-                    ${sub.intro ? `<p class="text-slate-500 text-base">${sub.intro}</p>` : ''}
+            <section id="${segment.id}-${sub.id}" class="home-section scroll-mt-20 max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-line pb-6 mb-10">
+                    <h2 class="type-lg text-ink">${sub.label}</h2>
+                    ${sub.intro ? `<p class="measure md:text-right md:max-w-md">${sub.intro}</p>` : ''}
                 </div>
                 ${sub.groups.map(group => `
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-${Math.min(4, Math.max(3, group.items.length))} gap-4 sm:gap-6">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
                         ${group.items.map(key => renderSegmentModelCard(segment.id, sub.id, key)).join('')}
                     </div>
                 `).join('')}
-                ${sub.enquiry ? renderEnquiryPrompt(sub.enquiry) : ''}
+                ${sub.enquiry ? `<div class="mt-14">${renderEnquiryPrompt(sub.enquiry)}</div>` : ''}
             </section>
         `).join('')}
 
         ${buildSet ? `
-            <!-- Compare builds -->
-            <section id="${segment.id}-compare" class="space-y-6 scroll-mt-40">
-                <div class="space-y-2">
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Compare ${buildSet.builds.map(b => b.name).join(' / ')}</h2>
-                    <p class="text-slate-500 text-base">${segment.id === 'golfer'
-                        ? 'Golfer → Scratch → Pro applies across Tempo 2, Tempo 2+2 and Tempo 4. Shown here for Tempo 2 and Tempo 4; Tempo 2+2 builds are on its page.'
+            <section id="${segment.id}-compare" class="home-section pt-0 scroll-mt-20 max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <div class="grid lg:grid-cols-12 gap-6 lg:gap-12 items-end mb-10">
+                    <h2 class="type-lg text-ink lg:col-span-7">Compare ${buildSet.builds.map(b => b.name).join(', ')}.</h2>
+                    <p class="measure lg:col-span-5">${segment.id === 'golfer'
+                        ? 'Golfer, Scratch and Pro apply across Tempo 2, Tempo 2+2 and Tempo 4. Shown for Tempo 2 and Tempo 4; Tempo 2+2 builds are on its page.'
                         : 'Shown for every lifestyle model. Exact inclusions per model are confirmed in your quote.'}</p>
                 </div>
                 ${renderBuildCompareTable(buildSet)}
-                ${buildSet.confirmed ? '' : '<p class="text-[11px] text-slate-400">Build names and package contents are proposed and may change.</p>'}
+                ${buildSet.confirmed ? '' : '<p class="text-sm text-mute mt-4">Build names and package contents are proposed and may change.</p>'}
             </section>
         ` : ''}
 
         ${segment.id === 'lifestyle' ? `
-            <!-- Lifted packages -->
-            <section id="lifestyle-lifted" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-10 scroll-mt-40">
-                <div class="lg:col-span-6 space-y-4">
-                    <span class="text-brand-olive text-sm font-semibold">Lifted Package</span>
-                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">Ready for rougher ground.</h2>
-                    <p class="text-slate-600 text-base leading-relaxed">A lift kit with optional bull bar, nerf bars / side steps and larger wheel choices (10-, 12- or 14-inch rims), with tires selected for the surface you drive on.</p>
-                    <p class="text-xs text-slate-500">Available only for approved model and component combinations. Private-use configurations do not imply approval for public-road use.</p>
-                    <button onclick="navigateTo('product-details', 'lifestyle-tempo-2-2')" class="bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-full text-sm transition-all btn-shimmer">Build a lifted Tempo 2+2</button>
-                </div>
-                <div class="lg:col-span-6 h-64 sm:h-80 flex items-center justify-center">
-                    <img src="image/Products/Tempo 2+2 - Lifted.png" alt="Tempo 2+2 with Lifted Package" class="max-h-full object-contain drop-shadow-[0_20px_25px_rgba(0,0,0,0.18)]">
+            <section id="lifestyle-lifted" class="bg-stone scroll-mt-20">
+                <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+                    <div class="lg:col-span-5 space-y-6">
+                        <p class="text-sm text-ink-2">Lifted package</p>
+                        <h2 class="type-xl text-ink">Ready for rougher ground.</h2>
+                        <p class="measure text-ink-2">A lift kit with optional bull bar, nerf bars or side steps, and 10-, 12- or 14-inch rims, with tires chosen for the surface you drive on.</p>
+                        <p class="text-sm text-ink-2">Offered only for approved model and component combinations. Private-use configurations are not approved for public roads.</p>
+                        <a href="${routeHref('product-details', 'lifestyle-tempo-2-2')}" data-route="product-details" data-slug="lifestyle-tempo-2-2" class="btn btn-primary">Build a lifted Tempo 2+2</a>
+                    </div>
+                    <div class="lg:col-span-7">
+                        <img src="image/Products/Tempo 2+2 - Lifted.png" alt="Tempo 2+2 with the lifted package" loading="lazy" class="w-full aspect-[4/3] object-contain">
+                    </div>
                 </div>
             </section>
         ` : ''}
-    </div>
     `;
 }
 
@@ -3283,423 +3104,327 @@ function renderSegmentPage() {
 function handleFleetProposalSubmit(e) {
     e.preventDefault();
     e.target.reset();
-    showToast('Thanks! Our fleet team will contact you to prepare your proposal.');
+    showToast("Request sent. Our fleet team will contact you to prepare your proposal.");
 }
 
 function renderSolutionsPage() {
     const services = [
-        { icon: 'clipboard-list', title: 'Fleet selection', text: 'Choose models and quantities around your utilization, routes and operating hours.' },
-        { icon: 'wrench', title: 'Service planning', text: 'Preventive maintenance, parts and charging plans to keep the fleet running.' },
-        { icon: 'refresh-cw', title: 'Replacement planning', text: 'Plan fleet renewals and trade-ins before downtime affects your operation.' }
+        { title: 'Fleet selection', text: 'Models and quantities chosen around your utilization, routes and operating hours.' },
+        { title: 'Service planning', text: 'Preventive maintenance, parts and charging plans that keep the fleet running.' },
+        { title: 'Replacement planning', text: 'Renewals and trade-ins scheduled before downtime reaches your operation.' }
     ];
-    const input = 'w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive';
 
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-16 sm:space-y-20">
-        <div class="text-center max-w-3xl mx-auto space-y-4 reveal">
-            <span class="text-brand-olive text-sm sm:text-base font-semibold">Fleet Solutions</span>
-            <h1 class="text-4xl sm:text-6xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Fleets for golf courses and commercial operations.</h1>
-            <p class="text-slate-500 text-lg sm:text-xl leading-relaxed">Tell us about your operation and we'll recommend the right vehicles, service plan and replacement schedule.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 reveal">
-            ${services.map(s => `
-                <div class="rounded-3xl bg-brand-card border border-brand-border p-6 sm:p-8 space-y-3">
-                    <div class="p-3 rounded-2xl bg-brand-olive/10 text-brand-olive w-fit"><i data-lucide="${s.icon}" class="w-6 h-6"></i></div>
-                    <h2 class="text-2xl font-bold text-slate-900 tracking-tight">${s.title}</h2>
-                    <p class="text-slate-600 leading-relaxed">${s.text}</p>
-                </div>
-            `).join('')}
-        </div>
-
-        <section id="fleet-proposal" class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start reveal scroll-mt-28">
-            <div class="lg:col-span-5 space-y-4">
-                <h2 class="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tighter leading-[1.05]">Request a Fleet Proposal.</h2>
-                <p class="text-slate-500 text-lg leading-relaxed">Share your unit quantities, utilization and service needs. Our team will prepare a proposal for your property.</p>
-                <p class="text-xs text-slate-400">Financing or payment options are presented only when approved.</p>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <p class="text-sm text-mute">Fleet solutions</p>
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mt-4">
+                <h1 class="type-xl text-ink lg:col-span-7">Fleets for courses, resorts and sites.</h1>
+                <p class="measure lg:col-span-5">Tell us how your operation runs. We'll recommend the vehicles, the service plan and the replacement schedule.</p>
             </div>
-            <form onsubmit="handleFleetProposalSubmit(event)" class="lg:col-span-7 rounded-3xl bg-white border border-brand-border p-6 sm:p-8 shadow-xl grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
-                <div><label class="block font-medium text-slate-600 mb-1">Company / Property *</label><input required type="text" placeholder="Company or property name" class="${input}"></div>
-                <div><label class="block font-medium text-slate-600 mb-1">Contact Person *</label><input required type="text" placeholder="Full name and position" class="${input}"></div>
-                <div><label class="block font-medium text-slate-600 mb-1">Email Address *</label><input required type="email" placeholder="name@company.com" class="${input}"></div>
-                <div><label class="block font-medium text-slate-600 mb-1">Mobile Number *</label><input required type="tel" placeholder="+63 900 000 0000" class="${input}"></div>
-                <div><label class="block font-medium text-slate-600 mb-1">Operation Type *</label>
-                    <select required class="${input}">
-                        <option value="">Select one</option>
-                        <option>Golf course</option>
-                        <option>Resort / hotel</option>
-                        <option>Commercial / industrial property</option>
-                        <option>Township / estate</option>
-                        <option>Other</option>
-                    </select>
-                </div>
-                <div><label class="block font-medium text-slate-600 mb-1">Estimated Units</label><input type="number" min="1" placeholder="e.g. 20" class="${input}"></div>
-                <div class="sm:col-span-2"><label class="block font-medium text-slate-600 mb-1">I need help with</label>
-                    <div class="flex flex-wrap gap-2 pt-1">
-                        ${['Fleet selection', 'Service planning', 'Replacement planning', 'Fit-to-task builds'].map(o => `<label class="inline-flex items-center gap-2 px-3 py-2 rounded-full border border-brand-border text-slate-700 cursor-pointer"><input type="checkbox" class="accent-[#749E35]"> ${o}</label>`).join('')}
-                    </div>
-                </div>
-                <div class="sm:col-span-2"><label class="block font-medium text-slate-600 mb-1">Passenger demand, routes, terrain and operating hours</label><textarea rows="3" placeholder="Tell us how the fleet will be used" class="${input}"></textarea></div>
-                <button type="submit" class="sm:col-span-2 w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-sm btn-shimmer">Request a Fleet Proposal</button>
-            </form>
+            <div class="mt-12 aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+                <img src="image/Banners/industrial.jpg" alt="Utility carts at an industrial site" fetchpriority="high" class="w-full h-full object-cover">
+            </div>
         </section>
-    </div>
+
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            <ol class="grid md:grid-cols-3 gap-x-8 border-t border-line">
+                ${services.map((s, i) => `
+                    <li class="pt-6 pb-10 border-b border-line md:border-b-0 space-y-3">
+                        <p class="text-sm text-mute">0${i + 1}</p>
+                        <h2 class="type-md text-ink">${s.title}</h2>
+                        <p class="measure">${s.text}</p>
+                    </li>
+                `).join('')}
+            </ol>
+        </section>
+
+        <section id="fleet-proposal" class="home-section bg-stone scroll-mt-20" aria-labelledby="fleet-proposal-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 space-y-5">
+                    <h2 id="fleet-proposal-title" class="type-xl text-ink">Request a fleet proposal.</h2>
+                    <p class="measure text-ink-2">Share unit numbers, how the fleet will be used and what you need help with. We'll prepare a proposal for your property.</p>
+                    <p class="text-sm text-ink-2">Financing or payment options are presented only when approved.</p>
+                </div>
+                <form onsubmit="handleFleetProposalSubmit(event)" class="lg:col-span-7 lg:col-start-6 grid sm:grid-cols-2 gap-x-6 gap-y-5">
+                    <div class="field"><label for="fp-company">Company or property</label><input id="fp-company" required type="text" autocomplete="organization"></div>
+                    <div class="field"><label for="fp-contact">Contact person and position</label><input id="fp-contact" required type="text" autocomplete="name"></div>
+                    <div class="field"><label for="fp-email">Email</label><input id="fp-email" required type="email" autocomplete="email"></div>
+                    <div class="field"><label for="fp-phone">Mobile number</label><input id="fp-phone" required type="tel" autocomplete="tel" placeholder="+63 900 000 0000"></div>
+                    <div class="field"><label for="fp-type">Operation</label>
+                        <select id="fp-type" required>
+                            <option value="">Select one</option>
+                            <option>Golf course</option>
+                            <option>Resort or hotel</option>
+                            <option>Commercial or industrial property</option>
+                            <option>Township or estate</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field"><label for="fp-units">Estimated units</label><input id="fp-units" type="number" min="1" placeholder="20"></div>
+                    <fieldset class="sm:col-span-2">
+                        <legend class="text-sm font-medium text-ink mb-3">I need help with</legend>
+                        <div class="flex flex-wrap gap-2">
+                            ${['Fleet selection', 'Service planning', 'Replacement planning', 'Fit-to-task builds'].map(o => `<label class="detail-trim cursor-pointer !pl-3"><input type="checkbox" class="w-4 h-4 accent-[#151714]"> ${o}</label>`).join('')}
+                        </div>
+                    </fieldset>
+                    <div class="field sm:col-span-2"><label for="fp-notes">Passenger demand, routes, terrain and operating hours</label><textarea id="fp-notes" rows="4"></textarea></div>
+                    <div class="sm:col-span-2"><button type="submit" class="btn btn-primary">Send request</button></div>
+                </form>
+            </div>
+        </section>
     `;
 }
 
+function handleServiceRequestSubmit(e) {
+    e.preventDefault();
+    e.target.reset();
+    showToast(`Request sent. Your reference is SRV-${Math.floor(1000 + Math.random() * 9000)}.`);
+}
+
 function renderServicePage() {
-    const pmItems = [
-        {
-            num: "01",
-            title: "Performance Check",
-            desc: "Assessing the vehicle's overall functioning, including engine power, responsiveness, and efficiency.",
-            icon: "image/Icons/engineering.png"
-        },
-        {
-            num: "02",
-            title: "Brake Check",
-            desc: "Inspection of brake components to ensure proper operation and responsiveness for safe stopping.",
-            icon: "image/Icons/brake.png"
-        },
-        {
-            num: "03",
-            title: "Suspension Check",
-            desc: "Evaluating the system that supports the vehicle, including shocks and struts, for stability and smoothness.",
-            icon: "image/Icons/suspension.png"
-        },
-        {
-            num: "04",
-            title: "Battery Check",
-            desc: "Verifying charge, terminal connections, and overall condition for electrical reliability.",
-            icon: "image/Icons/car-battery.png"
-        },
-        {
-            num: "05",
-            title: "Wheel Alignment Check",
-            desc: "Adjusting wheel angles to ensure parallel tracking and prevent uneven tire wear.",
-            icon: "image/Icons/car-suspension.png"
-        },
-        {
-            num: "06",
-            title: "Tires & Wheel Check",
-            desc: "Inspection of tire condition, tread depth, and rim integrity for optimal safety.",
-            icon: "image/Icons/car-wheel (1).png"
-        },
-        {
-            num: "07",
-            title: "Lubrication Service",
-            desc: "Applying specialized lubricants to drive components to minimize friction and wear.",
-            icon: "image/Icons/engine-oil.png"
-        }
+    const checks = [
+        { title: 'Performance', desc: 'Overall power, responsiveness and efficiency.' },
+        { title: 'Brakes', desc: 'Brake components inspected for safe, responsive stopping.' },
+        { title: 'Suspension', desc: 'Shocks and struts checked for stability and a smooth ride.' },
+        { title: 'Battery', desc: 'Charge, terminal connections and overall condition.' },
+        { title: 'Wheel alignment', desc: 'Wheel angles set for straight tracking and even tire wear.' },
+        { title: 'Tires and wheels', desc: 'Tread depth, tire condition and rim integrity.' },
+        { title: 'Lubrication', desc: 'Drive components lubricated to reduce friction and wear.' }
     ];
 
     return `
-    <!-- Header banner (full width, slides under the fixed header like the homepage hero) -->
-    <section class="relative sm:-mt-[65px] bg-slate-900 overflow-hidden">
-        <img src="image/Hero/hero-3.webp" alt="Golfcarts.ph service technician working on a Club Car" fetchpriority="high" class="w-full aspect-[16/9] max-h-[78vh] object-cover">
-        <div class="hidden sm:block absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/45 to-transparent pointer-events-none"></div>
-    </section>
+        <section class="relative">
+            <img src="image/Hero/hero-3.webp" alt="Golfcarts.ph technician working on a cart" fetchpriority="high" class="w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] object-cover">
+        </section>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-14 pb-8 sm:pb-12 space-y-14 sm:space-y-20">
-        <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4 reveal">
-            <span class="text-brand-olive text-xs font-semibold uppercase tracking-widest">After-Sales Excellence</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Service &amp; Support</h1>
-            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                We provide mobile technician dispatch, original factory spare parts, and remote telemetry battery health monitoring.
-            </p>
-            <div class="flex flex-wrap justify-center gap-3 pt-2">
-                <button onclick="document.getElementById('service-request').scrollIntoView({ behavior: 'smooth' })" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-sm transition-all btn-shimmer">
-                    <i data-lucide="wrench" class="w-4 h-4"></i> Book Service
-                </button>
-                <button onclick="goToHomeSection('home-branches')" class="inline-flex items-center gap-2 bg-white hover:bg-slate-100 text-slate-900 font-semibold px-6 py-3 rounded-xl border border-brand-border text-sm transition-all">
-                    <i data-lucide="map-pin" class="w-4 h-4"></i> Find a Branch
-                </button>
-            </div>
-        </div>
-
-        <div class="space-y-8 sm:space-y-10">
-            <div class="text-center max-w-2xl mx-auto space-y-2">
-                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive text-xs font-bold uppercase tracking-wider">
-                    <i data-lucide="shield-check" class="w-4 h-4"></i>
-                    <span>7-Point Quality Guarantee</span>
-                </div>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">Comprehensive Preventive Maintenance</h2>
-                <p class="text-slate-500 text-xs sm:text-sm">Our rigorous inspection routine engineered to maximize fleet uptime and longevity.</p>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                ${pmItems.map((item, idx) => `
-                    <div class="container-light-beam group relative rounded-2xl bg-brand-card border border-brand-border p-6 transition-all duration-300 hover:border-brand-olive/60 hover:-translate-y-1.5 hover:shadow-2xl hover:shadow-brand-olive/10 flex flex-col justify-between overflow-hidden ${
-                        idx === 6 ? 'sm:col-span-2 lg:col-span-2' : ''
-                    }">
-                        <span class="absolute top-3 right-4 text-3xl font-black text-slate-300/40 group-hover:text-brand-olive/20 transition-colors pointer-events-none">
-                            ${item.num}
-                        </span>
-
-                        <div class="space-y-4 z-10 relative">
-                            <div class="w-14 h-14 rounded-2xl bg-brand-olive/10 border border-brand-olive/25 group-hover:bg-brand-olive/20 group-hover:border-brand-olive/50 flex items-center justify-center p-3 transition-all duration-300">
-                                <img src="${item.icon}" alt="" class="w-full h-full object-contain opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all">
-                            </div>
-
-                            <div class="space-y-1.5">
-                                <h4 class="font-bold text-slate-900 text-base sm:text-lg group-hover:text-brand-olive transition-colors">
-                                    ${item.title}
-                                </h4>
-                                <p class="text-slate-500 text-xs leading-relaxed">
-                                    ${item.desc}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="mt-6 w-full h-0.5 bg-slate-100 group-hover:bg-gradient-to-r group-hover:from-brand-olive group-hover:to-transparent transition-all"></div>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+                        <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mt-4">
+                <h1 class="type-xl text-ink lg:col-span-7">Service, parts and support.</h1>
+                <div class="lg:col-span-5 space-y-6">
+                    <p class="measure">Preventive maintenance, repairs, original parts and battery checks from our service team, at our branches or on site.</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button type="button" onclick="scrollToDetailSection('service-request')" class="btn btn-primary">Book a service</button>
+                        <button type="button" onclick="goToHomeSection('home-branches')" class="btn btn-outline">Find a branch</button>
                     </div>
-                `).join('')}
+                </div>
             </div>
-        </div>
+        </section>
 
-        <div id="service-request" class="container-light-beam p-6 sm:p-12 rounded-3xl bg-brand-card border border-brand-border max-w-3xl mx-auto shadow-2xl scroll-mt-28">
-            <h3 class="text-xl sm:text-2xl font-bold text-slate-900 mb-6 text-center z-10 relative">Book Service</h3>
-            <form onsubmit="event.preventDefault(); showToast('Service Request Submitted! Ref: #SRV-9821');" class="space-y-4 text-xs z-10 relative">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div><label class="block mb-1 text-slate-600">Name</label><input required type="text" placeholder="John Doe" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
-                    <div><label class="block mb-1 text-slate-600">Organization</label><input required type="text" placeholder="Club or Resort Name" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-10 lg:gap-12">
+            <div class="lg:col-span-4 space-y-4">
+                <h2 class="type-lg text-ink">Seven-point preventive maintenance.</h2>
+                <p class="measure">Every scheduled service covers the same seven checks, to keep carts and fleets on the road for longer.</p>
+            </div>
+            <ol class="lg:col-span-8 border-b border-line">
+                ${checks.map((c, i) => `
+                    <li class="grid grid-cols-[3rem_1fr] md:grid-cols-[3rem_14rem_1fr] gap-x-4 gap-y-1 py-6 border-t border-line">
+                        <span class="text-sm text-mute pt-1">0${i + 1}</span>
+                        <span class="type-md text-ink">${c.title}</span>
+                        <span class="col-start-2 md:col-start-3 md:pt-1">${c.desc}</span>
+                    </li>
+                `).join('')}
+            </ol>
+        </section>
+
+        <section id="service-request" class="home-section bg-stone scroll-mt-20" aria-labelledby="service-request-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 space-y-5">
+                    <h2 id="service-request-title" class="type-xl text-ink">Book a service.</h2>
+                    <p class="measure text-ink-2">Tell us what the cart needs. We'll confirm a schedule with you.</p>
                 </div>
-                <div><label class="block mb-1 text-slate-600">Service Required</label>
-                    <select class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                        <option>Comprehensive Preventive Maintenance (7-Point Check)</option>
-                        <option>On-Site Technician Repair</option>
-                        <option>Request Parts</option>
-                        <option>Lithium Battery Health Check</option>
-                        <option>Maintenance &amp; Charging Guidance</option>
-                        <option>Warranty Enquiry</option>
-                    </select>
-                </div>
-                <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-3.5 rounded-xl transition-all shadow-lg text-xs sm:text-sm btn-shimmer">Submit Request</button>
-            </form>
-        </div>
-    </div>
+                <form onsubmit="handleServiceRequestSubmit(event)" class="lg:col-span-7 lg:col-start-6 grid sm:grid-cols-2 gap-x-6 gap-y-5">
+                    <div class="field"><label for="sr-name">Name</label><input id="sr-name" required type="text" autocomplete="name"></div>
+                    <div class="field"><label for="sr-org">Club, resort or company</label><input id="sr-org" required type="text" autocomplete="organization"></div>
+                    <div class="field"><label for="sr-phone">Mobile number</label><input id="sr-phone" required type="tel" autocomplete="tel" placeholder="+63 900 000 0000"></div>
+                    <div class="field"><label for="sr-branch">Nearest branch</label>
+                        <select id="sr-branch">${BRANCHES.map(b => `<option>${b.name}</option>`).join('')}</select>
+                    </div>
+                    <div class="field sm:col-span-2"><label for="sr-type">Service</label>
+                        <select id="sr-type">
+                            <option>Preventive maintenance (seven-point check)</option>
+                            <option>On-site technician repair</option>
+                            <option>Parts request</option>
+                            <option>Lithium battery health check</option>
+                            <option>Maintenance and charging advice</option>
+                            <option>Warranty enquiry</option>
+                        </select>
+                    </div>
+                    <div class="sm:col-span-2"><button type="submit" class="btn btn-primary">Send request</button></div>
+                </form>
+            </div>
+        </section>
     `;
 }
 
 function renderBlogsPage() {
+    const posts = [...BLOGS_DATA].sort((a, b) => new Date(b.date) - new Date(a.date));
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-16">
-        <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">News & Insights</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Golfcarts.ph Blog</h1>
-            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                Buying guides, maintenance tips, and stories about low-speed electric vehicles.
-            </p>
-        </div>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end">
+                <h1 class="type-xl text-ink lg:col-span-7">Notes from the fairway.</h1>
+                <p class="measure lg:col-span-5">Buying guides, maintenance tips and stories about low-speed electric vehicles.</p>
+            </div>
+        </section>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            ${BLOGS_DATA.map(post => `
-                <article onclick="navigateTo('blog-details', '${post.slug}')" class="container-light-beam group cursor-pointer flex flex-col rounded-3xl bg-brand-card border border-brand-border overflow-hidden shadow-xl hover:border-brand-olive/50 transition-all">
-                    <div class="h-48 sm:h-56 bg-white p-4 flex items-center justify-center overflow-hidden">
-                        <img src="${post.image}" alt="${post.title}" class="product-card-img max-h-full object-contain group-hover:scale-105 transition-transform duration-500">
-                    </div>
-                    <div class="flex flex-col flex-1 p-5 sm:p-6 space-y-3">
-                        <div class="flex items-center justify-between text-xs">
-                            <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
-                            <span class="text-slate-500">${formatBlogDate(post.date)}</span>
-                        </div>
-                        <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 group-hover:text-brand-olive transition-colors">${post.title}</h2>
-                        <p class="text-slate-600 text-xs sm:text-sm leading-relaxed flex-1">${post.excerpt}</p>
-                        <span class="inline-flex items-center gap-1 text-brand-olive text-xs sm:text-sm font-bold">
-                            Read More <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                        </span>
-                    </div>
-                </article>
-            `).join('')}
-        </div>
-    </div>
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                ${posts.map(post => `
+                    <li>
+                        <a href="${routeHref('blog-details', post.slug)}" data-route="blog-details" data-slug="${post.slug}" class="group block">
+                            <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6">
+                                <img src="${post.image}" alt="" loading="lazy" decoding="async" class="max-h-full w-auto object-contain">
+                            </div>
+                            <p class="text-sm text-mute mt-5">${post.category} · <time datetime="${post.date}">${formatBlogDate(post.date)}</time></p>
+                            <h2 class="type-md text-ink mt-2 group-hover:underline decoration-1 underline-offset-4">${post.title}</h2>
+                            <p class="mt-3 measure">${post.excerpt}</p>
+                        </a>
+                    </li>
+                `).join('')}
+            </ul>
+        </section>
     `;
 }
 
 function renderBlogDetailsPage() {
     const post = BLOGS_DATA.find(p => p.slug === currentSlug);
     if (!post) return renderBlogsPage();
+    const more = BLOGS_DATA.filter(p => p.slug !== post.slug).slice(0, 2);
 
     return `
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
-        <button onclick="navigateTo('blogs')" class="inline-flex items-center gap-2 text-slate-600 hover:text-brand-olive text-xs sm:text-sm font-semibold transition-colors">
-            <i data-lucide="arrow-left" class="w-4 h-4"></i> Back to Blogs
-        </button>
-
-        <div class="space-y-3">
-            <div class="flex items-center gap-3 text-xs">
-                <span class="px-2.5 py-1 rounded-full bg-brand-olive/10 border border-brand-olive/30 text-brand-olive font-bold uppercase tracking-wider">${post.category}</span>
-                <span class="text-slate-500">${formatBlogDate(post.date)}</span>
+        <article class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-12 lg:pt-20">
+            <a href="${routeHref('blogs')}" data-route="blogs" class="text-sm text-ink-2 hover:text-ink">Blog</a>
+            <header class="mt-8 max-w-4xl">
+                <p class="text-sm text-mute">${post.category} · <time datetime="${post.date}">${formatBlogDate(post.date)}</time></p>
+                <h1 class="type-xl text-ink mt-4">${post.title}</h1>
+            </header>
+            <div class="mt-12 bg-stone overflow-hidden aspect-[16/9] md:aspect-[21/9] flex items-center justify-center p-8">
+                <img src="${post.image}" alt="" fetchpriority="high" class="max-h-full w-auto object-contain">
             </div>
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">${post.title}</h1>
-        </div>
+            <div class="measure mx-auto mt-16 space-y-6 text-lg leading-[1.7]">
+                ${post.content.map(p => `<p>${p}</p>`).join('')}
+            </div>
+            <div class="measure mx-auto mt-16 border-t border-line pt-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <p class="type-md text-ink">Looking for the right cart?</p>
+                <button type="button" onclick="openQuoteModal()" class="btn btn-primary">Get a quote</button>
+            </div>
+        </article>
 
-        <div class="rounded-3xl bg-white border border-brand-border h-64 sm:h-96 p-6 flex items-center justify-center">
-            <img src="${post.image}" alt="${post.title}" class="max-h-full object-contain">
-        </div>
-
-        <div class="space-y-4 text-slate-600 text-sm sm:text-base leading-relaxed">
-            ${post.content.map(p => `<p>${p}</p>`).join('')}
-        </div>
-
-        <div class="container-light-beam flex flex-col sm:flex-row items-center justify-between gap-4 p-6 rounded-2xl bg-brand-card border border-brand-border">
-            <p class="text-slate-900 font-bold text-sm sm:text-base">Looking for the right cart?</p>
-            <button onclick="openQuoteModal()" class="inline-flex items-center gap-2 bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold px-6 py-3 rounded-xl shadow-lg text-xs sm:text-sm btn-shimmer">
-                <span>Request a Quote</span>
-            </button>
-        </div>
-    </div>
+        ${more.length ? `
+            <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 class="type-lg text-ink mb-10">Keep reading.</h2>
+                <ul class="grid md:grid-cols-2 gap-x-8 gap-y-12 border-t border-line">
+                    ${more.map(p => `
+                        <li class="pt-6">
+                            <a href="${routeHref('blog-details', p.slug)}" data-route="blog-details" data-slug="${p.slug}" class="group block">
+                                <p class="text-sm text-mute">${p.category}</p>
+                                <p class="type-md text-ink mt-2 group-hover:underline decoration-1 underline-offset-4">${p.title}</p>
+                            </a>
+                        </li>
+                    `).join('')}
+                </ul>
+            </section>
+        ` : ''}
     `;
 }
 
 function renderAboutPage() {
+    const pillars = [
+        { title: 'Who we are', text: 'Golfcarts.ph sells golf carts and electric utility vehicles across the Philippines, and goes further than most on customization and service, so your cart stands out.' },
+        { title: 'What we do', text: 'We fit the right cart to the job, drawing on a range of suppliers whose products you can trust.' },
+        { title: 'Why we do it', text: 'To take the golf cart beyond the course: out in the open with friends and family, on electric power, in the places you like best.' }
+    ];
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-12 sm:space-y-20">
-        
-        <!-- About Page Header Banner -->
-        <div class="text-center max-w-3xl mx-auto space-y-2 sm:space-y-3">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Low-Speed Electric Vehicles</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">About Golfcarts.ph</h1>
-            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                Low-speed electric vehicles for private roads: golf courses, resorts, gated villages, estates and industrial sites.
-            </p>
-        </div>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <p class="text-sm text-mute">About Golfcarts.ph</p>
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mt-4">
+                <h1 class="type-xl text-ink lg:col-span-7">Low-speed electric vehicles for private roads.</h1>
+                <p class="measure lg:col-span-5">Golf courses, resorts, gated villages, estates and industrial sites. Sold, customized and serviced by SJK Guahan Inc.</p>
+            </div>
+            <div class="mt-12 aspect-[16/9] md:aspect-[21/9] overflow-hidden">
+                <img src="image/4.png" alt="A fleet of green Tempo carts lined up at a golf course" width="1920" height="1080" fetchpriority="high" class="w-full h-full object-cover">
+            </div>
+        </section>
 
-        <!-- Section 1: Brand Story & SJK Guahan Overview -->
-        <div class="container-light-beam grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center bg-brand-card border border-brand-border rounded-3xl p-6 sm:p-12 shadow-2xl">
-            <div class="lg:col-span-5 flex justify-center">
-                <div class="relative w-full max-w-md h-64 sm:h-80 rounded-2xl bg-gradient-to-br from-brand-olive/20 via-brand-dark to-white border border-brand-border p-6 flex items-center justify-center overflow-hidden group">
-                    <div class="absolute inset-0 bg-[radial-gradient(#749E35_1px,transparent_1px)] [background-size:16px_16px] opacity-10"></div>
-                    <img src="image/Products/CA500.png" alt="Carryall 500 Utility Cart" class="product-card-img max-h-full max-w-full object-contain filter drop-shadow-[0_15px_25px_rgba(0,0,0,0.18)] transform group-hover:scale-105 transition-transform duration-500">
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-10 lg:gap-12">
+            <h2 class="type-lg text-ink lg:col-span-4">Part of the SJK Guahan group.</h2>
+            <div class="lg:col-span-7 lg:col-start-6 space-y-6 text-lg leading-[1.7] measure">
+                <p>Golfcarts.ph is part of the SJK Guahan group, which focuses on service backed by durable, reliable products. The brand is rooted in the outdoors and the lifestyle that comes with it, and our mission is to make time outdoors more enjoyable with products you can afford and trust.</p>
+                <p>SJK Guahan is a 50/50 joint venture between two groups, from the Philippines and Guam, that began by bringing Club Car golf carts into the country. As we grew into golf courses, we added mowers through a partnership with Textron's Jacobsen line.</p>
+            </div>
+        </section>
+
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+            <ul class="grid md:grid-cols-3 gap-x-8 border-t border-line">
+                ${pillars.map(p => `
+                    <li class="pt-6 pb-10 border-b border-line md:border-b-0 space-y-3">
+                        <h3 class="type-md text-ink">${p.title}</h3>
+                        <p class="measure">${p.text}</p>
+                    </li>
+                `).join('')}
+            </ul>
+        </section>
+
+        <section class="home-section bg-stone mt-24 lg:mt-32" aria-labelledby="about-voices-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <h2 id="about-voices-title" class="type-lg text-ink mb-12">From our customers.</h2>
+                <div class="grid md:grid-cols-2 gap-x-12 gap-y-12">
+                    ${TESTIMONIALS_DATA.map(t => `
+                        <figure class="border-t border-ink pt-6">
+                            <blockquote class="type-md text-ink">“${t.quote}”</blockquote>
+                            <figcaption class="mt-5 text-sm text-ink-2">${t.author}</figcaption>
+                        </figure>
+                    `).join('')}
                 </div>
             </div>
+        </section>
 
-            <div class="lg:col-span-7 space-y-4 sm:space-y-6 z-10 relative">
-                <div class="space-y-4 text-slate-600 text-xs sm:text-base leading-relaxed">
-                    <p>
-                        <strong class="text-slate-900 font-bold">Golf Carts PH</strong> falls under the <strong class="text-brand-olive font-bold">SJK Guahan group</strong>, whose focus is on providing superior service through durable and reliable products. Our brand has a strong connection with the outdoors and the lifestyle that comes with it. Our mission in SJK Guahan is to continue to find ways to enhance the enjoyment of being outdoors through products you can afford and trust.
-                    </p>
-                    <p>
-                        SJK Guahan is a 50/50 joint venture between two groups from the Philippines and Guam that started by bringing Clubcar golf carts into the country. As we expanded into golf courses, we sought mowers and partnered with Textron's <em class="text-slate-900">Jacobsen</em> mower lineup.
-                    </p>
-                </div>
-
-                <div class="pt-2 border-t border-brand-border/80 flex items-center justify-between">
-                    <span class="text-brand-olive font-mono font-bold tracking-widest text-xs uppercase">SJK GUAHAN INC</span>
-                    <span class="text-xs text-brand-slate font-medium">Official Distributor</span>
-                </div>
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <h2 class="type-xl text-ink">Come and drive one.</h2>
+            <div class="flex flex-wrap gap-3">
+                <a href="${routeHref('contact')}" data-route="contact" class="btn btn-primary">Visit a branch</a>
+                <a href="${routeHref('products')}" data-route="products" class="btn btn-outline">See every cart</a>
             </div>
-        </div>
-
-        <!-- Section 2: Three Pillars -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-            <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-4 hover:border-brand-olive/50 transition-all duration-300 shadow-xl group">
-                <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
-                    <i data-lucide="users" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHO WE ARE</h3>
-                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                    We are the name for golfcarts and electric utility vehicles in the Philippines. We focus on selling vehicles that suit our customers' requirements and go beyond and over when it comes to customization and service to make your buggy stand out.
-                </p>
-            </div>
-
-            <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-4 hover:border-brand-olive/50 transition-all duration-300 shadow-xl group">
-                <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
-                    <i data-lucide="wrench" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHAT WE DO</h3>
-                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                    We customize the right cart for your very needs. We have a range of suppliers that can provide quality products you can trust when it comes to mobility.
-                </p>
-            </div>
-
-            <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-4 hover:border-brand-olive/50 transition-all duration-300 shadow-xl group">
-                <div class="w-12 h-12 rounded-2xl bg-brand-olive/10 border border-brand-olive/30 text-brand-olive flex items-center justify-center font-bold text-lg group-hover:scale-110 transition-transform">
-                    <i data-lucide="heart" class="w-6 h-6"></i>
-                </div>
-                <h3 class="text-lg sm:text-xl font-bold text-slate-900 uppercase tracking-wider">WHY WE DO IT</h3>
-                <p class="text-slate-500 text-xs sm:text-sm leading-relaxed">
-                    We want to break free from the traditional golfcart and showcase how fun and exciting it can be with friends and family to take these carts out in the open. Through our products we want to push for electric and green energy vehicles which you can enjoy in your favorite places.
-                </p>
-            </div>
-        </div>
-
-        <!-- Section 3: Interactive Testimonials Carousel -->
-        <div class="container-light-beam bg-gradient-to-r from-brand-card via-slate-50 to-brand-card border border-brand-border rounded-3xl p-6 sm:p-12 shadow-2xl relative overflow-hidden">
-            <div class="text-center space-y-6 sm:space-y-8 max-w-4xl mx-auto z-10 relative">
-                <h2 class="text-xl sm:text-3xl font-extrabold text-brand-olive uppercase tracking-widest">
-                    OUR TESTIMONIALS
-                </h2>
-
-                <div class="min-h-[100px] flex flex-col items-center justify-center space-y-3 px-4 sm:px-8">
-                    <p id="testimonial-quote-text" class="text-slate-700 text-sm sm:text-lg italic leading-relaxed font-light">
-                        "${TESTIMONIALS_DATA[currentTestimonialIndex].quote}"
-                    </p>
-                    <span id="testimonial-author-text" class="text-slate-900 font-bold text-xs sm:text-sm tracking-wide">
-                        ${TESTIMONIALS_DATA[currentTestimonialIndex].author}
-                    </span>
-                </div>
-
-                <div class="flex items-center justify-center gap-4 sm:gap-6 pt-2">
-                    <button onclick="prevTestimonial()" class="p-2.5 sm:p-3 rounded-full bg-white border border-brand-border text-slate-600 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Previous Testimonial">
-                        <i data-lucide="chevron-left" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                    </button>
-                    <button onclick="nextTestimonial()" class="p-3 rounded-full bg-white border border-brand-border text-slate-600 hover:text-brand-olive hover:border-brand-olive transition-all shadow-lg" aria-label="Next Testimonial">
-                        <i data-lucide="chevron-right" class="w-5 h-5 sm:w-6 sm:h-6"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-    </div>
+        </section>
     `;
+}
+
+function handleContactSubmit(e) {
+    e.preventDefault();
+    e.target.reset();
+    showToast(`Message sent. Your reference is QT-${Math.floor(100000 + Math.random() * 900000)}.`);
 }
 
 function renderContactPage() {
     return `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8 sm:space-y-12">
-        <div class="text-center max-w-3xl mx-auto space-y-3 sm:space-y-4">
-            <span class="text-brand-olive text-xs font-semibold tracking-widest uppercase">Get in Touch</span>
-            <h1 class="text-3xl sm:text-5xl font-extrabold text-slate-900 tracking-tight">Request a Custom Quote</h1>
-            <p class="text-slate-500 text-xs sm:text-base leading-relaxed">
-                Contact our sales specialists for volume fleet packages, individual purchases, or dealer partner opportunities.
-            </p>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
-            <div class="lg:col-span-5 space-y-6">
-                <div class="container-light-beam p-6 sm:p-8 rounded-3xl bg-brand-card border border-brand-border space-y-6">
-                    <h3 class="text-lg sm:text-xl font-bold text-slate-900 z-10 relative">Experience Center</h3>
-                    <div class="space-y-4 text-xs z-10 relative">
-                        <div class="flex items-start gap-3"><i data-lucide="map-pin" class="w-5 h-5 text-brand-olive flex-shrink-0"></i><span>1877 Honda Cars Manila Building, Paz M. Guazon St., Paco, Manila</span></div>
-                        <div class="flex items-start gap-3"><i data-lucide="phone" class="w-5 h-5 text-brand-olive flex-shrink-0"></i><span>+63 (999) 997-7688</span></div>
-                        <div class="flex items-start gap-3"><i data-lucide="mail" class="w-5 h-5 text-brand-olive flex-shrink-0"></i><span>info@golfcarts.ph</span></div>
-                    </div>
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-16 lg:pt-24">
+            <p class="text-sm text-mute">Contact</p>
+            <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mt-4">
+                <h1 class="type-xl text-ink lg:col-span-7">Talk to us.</h1>
+                <div class="lg:col-span-5 space-y-2">
+                    <p class="measure">Individual purchases, fleets, service or dealer partnerships.</p>
+                    <p><a href="mailto:info@golfcarts.ph" class="link">info@golfcarts.ph</a> · <a href="tel:+63277455089" class="link">(02) 7745-5089</a></p>
                 </div>
             </div>
+        </section>
 
-            <div class="lg:col-span-7">
-                <div class="container-light-beam p-6 sm:p-10 rounded-3xl bg-brand-card border border-brand-border">
-                    <form onsubmit="event.preventDefault(); const ref='QT-'+Math.floor(100000+Math.random()*900000); showToast('Quote Submitted! Ref: #'+ref);" class="space-y-4 text-xs z-10 relative">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block mb-1 text-slate-600">Full Name *</label><input required type="text" placeholder="Jane Smith" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
-                            <div><label class="block mb-1 text-slate-600">Company Name</label><input type="text" placeholder="Ocean Club LLC" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
-                        </div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="block mb-1 text-slate-600">Email *</label><input required type="email" placeholder="jane@example.com" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
-                            <div><label class="block mb-1 text-slate-600">Phone *</label><input required type="tel" placeholder="+63 (900) 000-0000" class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></div>
-                        </div>
-                        <div><label class="block mb-1 text-slate-600">Vehicle Model</label>
-                            <select class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive">
-                                ${PRODUCTS_DATA.map(p => `<option>${p.name}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div><label class="block mb-1 text-slate-600">Message / Custom Requirements</label><textarea rows="4" placeholder="Mention preferred colors, custom accessories, or fleet size..." class="w-full bg-white border border-brand-border rounded-xl p-3 text-slate-900 focus:outline-none focus:border-brand-olive"></textarea></div>
-                        <button type="submit" class="w-full bg-brand-olive hover:bg-brand-oliveHover text-slate-900 font-bold py-4 rounded-xl shadow-xl text-xs sm:text-sm btn-shimmer">Submit Quote Request</button>
-                    </form>
+        <section class="home-section max-w-site mx-auto px-5 sm:px-8 lg:px-12 grid lg:grid-cols-12 gap-12" aria-labelledby="contact-form-title">
+            <h2 id="contact-form-title" class="type-lg text-ink lg:col-span-4">Send a message.</h2>
+            <form onsubmit="handleContactSubmit(event)" class="lg:col-span-7 lg:col-start-6 grid sm:grid-cols-2 gap-x-6 gap-y-5">
+                <div class="field"><label for="ct-name">Full name</label><input id="ct-name" required type="text" autocomplete="name"></div>
+                <div class="field"><label for="ct-company">Company (optional)</label><input id="ct-company" type="text" autocomplete="organization"></div>
+                <div class="field"><label for="ct-email">Email</label><input id="ct-email" required type="email" autocomplete="email"></div>
+                <div class="field"><label for="ct-phone">Phone</label><input id="ct-phone" required type="tel" autocomplete="tel" placeholder="+63 900 000 0000"></div>
+                <div class="field sm:col-span-2"><label for="ct-model">Model (optional)</label>
+                    <select id="ct-model">
+                        <option value="">No model in mind yet</option>
+                        ${PRODUCTS_DATA.filter(p => p.category !== 'Accessories').map(p => `<option value="${p.slug}">${p.name} (${categoryLabel(p.category)})</option>`).join('')}
+                    </select>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="field sm:col-span-2"><label for="ct-message">Message</label><textarea id="ct-message" rows="5" placeholder="Colors, accessories, fleet size, delivery location"></textarea></div>
+                <div class="sm:col-span-2"><button type="submit" class="btn btn-primary">Send message</button></div>
+            </form>
+        </section>
+
+        ${renderHomeBranches().replace('id="home-branches"', 'id="contact-branches"').replace('class="rise home-section', 'class="home-section pt-0 border-t-0')}
     `;
 }

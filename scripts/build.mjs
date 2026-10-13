@@ -1,7 +1,8 @@
 // Builds the static site into dist/:
 //   1. compiles src/styles (tokens + Tailwind) into css/site.css
-//   2. copies scripts, legacy styles, images, video and self-hosted fonts
-//   3. pre-renders every page to real HTML with JSDOM, running the same app.js the browser runs, so each
+//   2. copies scripts, images, video and self-hosted fonts
+//   3. writes a WebP copy of every photo (max 1920px wide) and points the built pages at it
+//   4. pre-renders every page to real HTML with JSDOM, running the same app.js the browser runs, so each
 //      URL has its content, title, description, canonical link, Open Graph tags and structured data
 //      before any JavaScript loads. In the browser, app.js re-renders in place and the configurator runs.
 //
@@ -13,7 +14,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
+import { createHash } from 'node:crypto';
 import { JSDOM, VirtualConsole } from 'jsdom';
+import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
@@ -40,7 +43,7 @@ function escapeAttr(value) {
 // ---- 1. Clean and copy ----
 fs.rmSync(dist, { recursive: true, force: true });
 fs.mkdirSync(dist, { recursive: true });
-for (const f of ['app.js', 'recolor.js', 'styles.css', '.nojekyll', 'image', 'video']) copy(f);
+for (const f of ['app.js', 'recolor.js', '.nojekyll', 'image', 'video']) copy(f);
 
 const fontFiles = {
     '@fontsource-variable/newsreader/files/newsreader-latin-opsz-normal.woff2': 'newsreader-latin-opsz-normal.woff2',
@@ -54,10 +57,62 @@ for (const [from, to] of Object.entries(fontFiles)) fs.copyFileSync(rel(`node_mo
 execFileSync(process.execPath, [rel('node_modules/tailwindcss/lib/cli.js'), '-c', rel('tailwind.config.js'),
     '-i', rel('src/styles/site.css'), '-o', out('css/site.css'), '--minify'], { stdio: 'inherit', cwd: root });
 
-// ---- 3. Pre-render ----
-const template = fs.readFileSync(rel('index.html'), 'utf8').replace('<base href="/">', `<base href="${base}">`);
+// ---- 3. Images ----
+// Each PNG / JPG gets a WebP copy beside it ("x.png" -> "x.png.webp"), resized to at most 1920px wide.
+// The built app.js and HTML point at the copies. The originals stay: recolor.js reads their pixels for
+// the color preview, and Open Graph images use them. Conversions are cached between builds.
+const cacheDir = rel('node_modules/.cache/images');
+fs.mkdirSync(cacheDir, { recursive: true });
+
+function listFiles(dir) {
+    return fs.readdirSync(dir, { withFileTypes: true })
+        .flatMap(d => (d.isDirectory() ? listFiles(path.join(dir, d.name)) : [path.join(dir, d.name)]));
+}
+
+async function convertImages() {
+    const files = listFiles(out('image')).filter(f => /\.(png|jpe?g)$/i.test(f));
+    const map = new Map();
+    let saved = 0;
+    let next = 0;
+    async function worker() {
+        while (next < files.length) {
+            const file = files[next++];
+            const stat = fs.statSync(file);
+            const key = createHash('sha1').update(`${path.relative(dist, file)}|${stat.size}|${stat.mtimeMs}|v1`).digest('hex');
+            const cached = path.join(cacheDir, `${key}.webp`);
+            if (!fs.existsSync(cached)) {
+                await sharp(file).resize({ width: 1920, withoutEnlargement: true })
+                    .webp({ quality: 80, alphaQuality: 90, effort: 5 }).toFile(cached);
+            }
+            // Keep the original when WebP would not be smaller (some small logos)
+            if (fs.statSync(cached).size >= stat.size) continue;
+            fs.copyFileSync(cached, `${file}.webp`);
+            saved += stat.size - fs.statSync(cached).size;
+            const webPath = path.relative(dist, file).split(path.sep).join('/');
+            map.set(webPath, `${webPath}.webp`);
+        }
+    }
+    await Promise.all(Array.from({ length: 6 }, worker));
+    console.log(`Images: ${map.size} of ${files.length} converted to WebP, ${(saved / 1048576).toFixed(1)} MB smaller`);
+    return map;
+}
+
+const webpMap = await convertImages();
+// Points every image path that has a WebP copy at the copy; the client logo paths are built from a template
+function useWebp(text) {
+    let result = text.replace(/image\/[^'"`<>()]*?\.(?:png|jpe?g)/gi, m => webpMap.get(m) || m);
+    const logos = [...webpMap.keys()].filter(k => k.startsWith('image/clientlogo/'));
+    if (logos.length && logos.length === listFiles(out('image/clientlogo')).filter(f => /\.jpe?g$/i.test(f)).length) {
+        result = result.replace('image/clientlogo/Logo ${i + 1}.jpg`', 'image/clientlogo/Logo ${i + 1}.jpg.webp`');
+    }
+    return result;
+}
+
+// ---- 4. Pre-render ----
+const template = useWebp(fs.readFileSync(rel('index.html'), 'utf8')).replace('<base href="/">', `<base href="${base}">`);
 if (!template.includes(`<base href="${base}">`)) throw new Error('index.html must contain <base href="/">');
-const appSource = fs.readFileSync(rel('app.js'), 'utf8');
+const appSource = useWebp(fs.readFileSync(rel('app.js'), 'utf8'));
+fs.writeFileSync(out('app.js'), appSource);
 const recolorSource = fs.readFileSync(rel('recolor.js'), 'utf8');
 
 // Street addresses for structured data (display addresses live in BRANCHES in app.js)
@@ -148,7 +203,8 @@ async function writePage(page, slug, file, { noindex = false } = {}) {
     // Scroll reveals start hidden; pre-rendered pages show everything so they read without JavaScript
     window.document.querySelectorAll('.rise, .reveal').forEach(el => el.classList.add('is-visible'));
     const url = siteUrl + routePath;
-    const image = siteUrl + encodeURI(meta.image || 'image/Hero/hero-poster.jpg');
+    // Open Graph images use the originals: WebP previews are not supported everywhere
+    const image = siteUrl + encodeURI((meta.image || 'image/Hero/hero-poster.jpg').replace(/\.(png|jpe?g)\.webp$/i, '.$1'));
     const jsonLd = ['home', 'contact', 'about'].includes(page) ? branchJsonLd : null;
     let html = dom.serialize().replace(/<!-- SEO:HEAD[\s\S]*?-->/, seoHead({ meta, url, image, jsonLd, noindex }));
     window.close();
