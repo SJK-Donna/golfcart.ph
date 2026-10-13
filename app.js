@@ -2722,7 +2722,7 @@ const TRIM_COLOR_HEX = {
     'Premium Black and Grey': 'linear-gradient(135deg, #2D2E2E 50%, #9A9693 50%)',
     'Modern Premium Grey': '#ABABAB',
     // Elite and Classic Premium seats
-    'Elite Bright White': 'linear-gradient(135deg, #E4E5E8 60%, #1A1B1D 60%)',
+    'Elite Bright White': '#E4E5E8', // the seat is white all over; the black in the photo is the cart base
     'Premium Light Beige': '#D0BEA8', 'Premium Off White': '#E6E2DA', 'Premium Black': '#2E2D2D', 'Premium Grey': '#C1C1C1',
     'Premium Camello & Light Beige': 'linear-gradient(135deg, #AA7E5A 50%, #D7BBA2 50%)',
     'Premium Camello & Off White': 'linear-gradient(135deg, #AC7D58 50%, #E3DAD0 50%)',
@@ -2751,7 +2751,8 @@ const CANOPY_COLOR_HEX = {
     'White Long Canopy': '#E8E8E5', 'Beige Long Canopy': '#C8BBA2', 'Black Long Canopy': '#2E302F'
 };
 
-// Striped seats: the live preview paints these as vertical bands across the seat instead of one colour.
+// Striped and two-tone seats: the live preview paints these as vertical bands across the seat instead of
+// one colour (on photos with a single bench seat).
 // Read left to right off the Tsunami seat photos: black bolster, colour panel, silver stripe, black centre,
 // then the same mirrored. `to` is where each band ends, as a fraction of the seat's width.
 function tsunamiBands(panel, silver, black) {
@@ -2760,10 +2761,25 @@ function tsunamiBands(panel, silver, black) {
         { hex: silver, to: 0.7 }, { hex: panel, to: 0.88 }, { hex: black, to: 1 }
     ];
 }
+// Two-tone premium seats (see the seat photos): each half of the bench has a centre panel in one colour,
+// framed by outer bolsters in the other.
+function twoToneBands(outer, center) {
+    return [
+        { hex: outer, to: 0.1 }, { hex: center, to: 0.42 }, { hex: outer, to: 0.58 },
+        { hex: center, to: 0.9 }, { hex: outer, to: 1 }
+    ];
+}
 const SEAT_PATTERNS = {
     'Tsunami Silver Red & Black': tsunamiBands('#B83F33', '#B5B3AC', '#36352F'),
     'Tsunami Silver Grey & Black': tsunamiBands('#78766F', '#BDB9B0', '#2B2A27'),
-    'Tsunami Silver Blue & Black': tsunamiBands('#3A3D72', '#B8B4AC', '#363533')
+    'Tsunami Silver Blue & Black': tsunamiBands('#3A3D72', '#B8B4AC', '#363533'),
+    'Premium Black and Grey': twoToneBands('#2D2E2E', '#9A9693'),
+    'Premium Black and Grey (Special Promo)': twoToneBands('#2A2A2A', '#8C8C8C'),
+    'Premium Camello & Light Beige': twoToneBands('#AA7E5A', '#D7BBA2'),
+    'Premium Camello & Off White': twoToneBands('#AC7D58', '#E3DAD0'),
+    'Premium Light Beige & Off White': twoToneBands('#D0BEA8', '#E6E2DA'), // no photo; same layout assumed
+    'High-Back Sport Black Carbon Fiber with Silver Inlay': twoToneBands('#2A2928', '#C1BFBC'),
+    'High-Back Luxury Honey Beige with Black Inlay': twoToneBands('#CF955A', '#1C1B1D')
 };
 
 // Swatch value for a seat or canopy option
