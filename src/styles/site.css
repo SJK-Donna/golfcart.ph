@@ -137,7 +137,7 @@
         display: inline-flex;
         align-items: center;
         gap: 0.3rem;
-        padding: 0.5rem 0.6rem;
+        padding: 0.5rem 0.5rem;
         font-size: 0.875rem;
         font-weight: 500;
         color: var(--ink-2);
@@ -151,6 +151,20 @@
         text-decoration: underline;
         text-decoration-thickness: 1px;
         text-underline-offset: 0.45em;
+    }
+    .header-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: var(--radius);
+        color: var(--ink);
+        transition: background-color 0.25s var(--ease);
+    }
+    .header-icon:hover,
+    .header-icon[aria-current='page'] {
+        background: var(--stone);
     }
     .nav-chevron {
         transition: transform 0.25s var(--ease);

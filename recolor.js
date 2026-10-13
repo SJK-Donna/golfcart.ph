@@ -10,6 +10,10 @@
 // green) so it separates cleanly from seats, canopy, tires and glass. `seat` / `canopy` are optional:
 //   hue: [from, to] degrees, sat: [min, max], light: [min, max], box: [top, bottom] as fractions of the cart's height,
 //   x: [left, right] (optional) as fractions of the photo's width. A region can also be a list of rules (any match).
+// `bodyBox` (optional, default [0.18, 1]): the band of the cart's height where body paint can be. It keeps the
+// roof out of the body, since a canopy with trim near the paint color would otherwise repaint with the body.
+// `bodyMinSat` (optional, default 0.28): the least saturation a mid-tone pixel needs to count as body. Lower it
+// only on photos whose seats are white or grey, to pick up the paint's pale reflections.
 // Tempo 2-seaters share the red Base+ photo: its beige seats and canopy separate cleanly from the paint,
 // so all three regions follow the picker (the dark green / black photos can't be repainted reliably).
 // `seatStripes: true` marks photos showing a single bench seat, where patterned seats (Tsunami) can be
@@ -36,8 +40,10 @@ const COLOR_PREVIEW = {
     },
     'golfer-tempo-2': TEMPO_TWO_SEAT_PREVIEW,
     'lifestyle-tempo-2': TEMPO_TWO_SEAT_PREVIEW,
-    'lifestyle-tempo-2-2': { base: 'image/Products/Tempo 2+2 - Family - Sangria Red.png' },
-    'transporter-400': { base: 'image/Products/Transporter 4.png' },
+    // White seats and a tan roof (kept out by bodyBox), so the paint's pale pink reflections can safely count as body
+    'lifestyle-tempo-2-2': { base: 'image/Products/Tempo 2+2 - Family - Sangria Red.png', bodyMinSat: 0.12, bodyBox: [0.3, 1] },
+    // No roof in this photo: the top of the front cowl is the highest paint, so the body can reach the top
+    'transporter-400': { base: 'image/Products/Transporter 4.png', bodyBox: [0, 1] },
     'carryall-500': { base: 'image/Products/CA500.png' }
 };
 
@@ -146,7 +152,7 @@ function analyzeRecolorBase(imageData, w, h) {
     return { imageData, w, h, hue, sat, light, top, bottom, bodyHue: best * 10 + 5 };
 }
 
-// Builds a mask for one region and returns its pixel indexes, average lightness and horizontal extent
+// Builds a mask for one region and returns its pixel indexes, typical (median) lightness and horizontal extent
 function collectRegion(base, test) {
     const idx = [];
     let sumL = 0;
@@ -164,7 +170,11 @@ function collectRegion(base, test) {
         }
     }
     const [minX, maxX] = percentileSpan(xs, base.w);
-    return { idx, meanL: idx.length ? sumL / idx.length : 0.5, minX, maxX };
+    // The median, not the mean: glossy highlights skew the mean upward, which made repaints come out darker
+    // than the swatch on most of the panel
+    const ls = idx.map(i => base.light[i]).sort((p, q) => p - q);
+    const midL = ls.length ? ls[Math.floor(ls.length / 2)] : 0.5;
+    return { idx, meanL: idx.length ? sumL / idx.length : 0.5, midL, minX, maxX };
 }
 
 // Horizontal span from the 3rd to 97th percentile, so a few stray matching pixels elsewhere on the cart
@@ -227,8 +237,12 @@ function paintRegion(out, base, region, target, xGradient, bands) {
             ts = a[1] + (b[1] - a[1]) * t;
             tl = a[2] + (b[2] - a[2]) * t;
         }
-        const l = Math.max(0.02, Math.min(0.98, tl + (base.light[i] - region.meanL) * contrast));
-        const [r, g, b] = hslToRgb(th, ts, l);
+        const l = Math.max(0.02, Math.min(0.98, tl + (base.light[i] - region.midL) * contrast));
+        // Keep the swatch's colorfulness (chroma) through the shading. A fixed HSL saturation would grey out
+        // every pixel lighter or darker than the swatch, so the panel read duller than the chosen color.
+        const chroma = ts * (1 - Math.abs(2 * tl - 1));
+        const s = Math.min(1, chroma / Math.max(0.001, 1 - Math.abs(2 * l - 1)));
+        const [r, g, b] = hslToRgb(th, s, l);
         out[i * 4] = r; out[i * 4 + 1] = g; out[i * 4 + 2] = b;
     }
 }
@@ -257,8 +271,10 @@ async function renderCartPreview(slug, choice) {
         // Body = pixels close to the dominant paint hue. A wider band would swallow tan seats on red carts.
         // Deep shadows on the paint are dull, so dark pixels count as body at lower saturation; neutral blacks
         // (frame, tires, saturation under 0.1) are still left alone.
-        const isBody = (hh, ss, ll) => hueDistance(hh, bodyHue) <= 22 && ll >= 0.02 && ll <= 0.9 &&
-            (ss >= 0.28 || (ss >= 0.1 && ll < 0.3));
+        const bodyBox = cfg.bodyBox || [0.18, 1];
+        const isBody = (hh, ss, ll, y) => y >= bodyBox[0] && y <= bodyBox[1] &&
+            hueDistance(hh, bodyHue) <= 22 && ll >= 0.02 && ll <= 0.9 &&
+            (ss >= (cfg.bodyMinSat || 0.28) || (ss >= 0.1 && ll < 0.3));
         // Seats / canopy never claim pixels near the paint hue (the paint's brownish shadows otherwise
         // pick up the seat color and show as specks on the panels)
         const notBody = rule => {

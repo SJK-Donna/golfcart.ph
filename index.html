@@ -37,16 +37,19 @@
             <!-- Main navigation: the four ways to buy, then fleet, parts and service (built from MAIN_NAV / NAV_SEGMENTS in app.js) -->
             <nav id="main-nav" aria-label="Main" class="hidden min-[1360px]:flex items-center"></nav>
 
-            <div class="hidden min-[1360px]:flex items-center gap-5 flex-shrink-0">
-                <a href="carts/" data-route="products" class="nav-link header-nav-link hidden min-[1600px]:inline-flex" data-page="products">All carts</a>
+            <div class="hidden min-[1360px]:flex items-center gap-3 flex-shrink-0">
+                <a href="carts/" data-route="products" class="nav-link header-icon" data-page="products" aria-label="All carts" title="All carts"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></a>
                 <button type="button" onclick="buildYourCart()" class="btn btn-primary min-h-[2.5rem] px-5 text-sm">Build your cart</button>
                 <img src="image/sjk_logo.png" alt="SJK Guahan" width="80" height="20" class="hidden min-[1600px]:block h-5 w-auto object-contain">
             </div>
 
-            <button id="mobile-menu-btn" type="button" class="min-[1360px]:hidden inline-flex items-center gap-2 h-10 px-3 -mr-3 text-ink text-sm font-medium" aria-controls="mobile-drawer" aria-expanded="false">
-                <span class="mobile-menu-label">Menu</span>
-                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
-            </button>
+            <div class="min-[1360px]:hidden flex items-center gap-1 -mr-3">
+                <a href="carts/" data-route="products" class="header-icon" aria-label="All carts" title="All carts"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg></a>
+                <button id="mobile-menu-btn" type="button" class="inline-flex items-center gap-2 h-10 px-3 text-ink text-sm font-medium" aria-controls="mobile-drawer" aria-expanded="false">
+                    <span class="mobile-menu-label">Menu</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18"/></svg>
+                </button>
+            </div>
         </div>
 
         <!-- Mobile menu -->
