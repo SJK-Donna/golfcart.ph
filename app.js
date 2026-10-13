@@ -953,7 +953,7 @@ const MAIN_NAV = [
     { segment: 'resort' },
     { segment: 'remanufactured' },
     { label: 'Fleet Solutions', href: 'fleet/', page: 'solutions' },
-    { label: 'Parts & Accessories', href: 'carts/?category=Accessories', action: "setCategoryAndNavigate('Accessories')" },
+    { label: 'Parts & Accessories', href: 'carts/?category=Accessories', action: "setCategoryAndNavigate('Accessories')", category: 'Accessories' },
     { label: 'Service & Support', href: 'service/', page: 'service' }
 ];
 
@@ -1195,6 +1195,8 @@ document.addEventListener('click', e => {
     const a = e.target.closest('a[data-route]');
     if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     e.preventDefault();
+    // Links to the cart list show every cart unless they name a category
+    if (a.dataset.route === 'products') productFilterCategory = a.dataset.category || 'All';
     navigateTo(a.dataset.route, a.dataset.slug || null);
 });
 
@@ -1249,11 +1251,14 @@ function toggleMobileMenu(open) {
 // Marks the header link for the current page (pillar pages and their carts mark their pillar)
 function updateNavState() {
     const pillarProduct = currentPage === 'product-details' && PRODUCTS_DATA.find(p => p.slug === currentSlug);
+    const listCategory = currentPage === 'products' && productFilterCategory !== 'All' ? productFilterCategory : null;
     const pillarSeg = currentPage === 'segment' ? currentSlug
-        : pillarProduct ? (NAV_SEGMENTS.find(s => s.category === pillarProduct.category) || {}).id : null;
-    const activePage = currentPage === 'blog-details' ? 'blogs' : pillarSeg ? null : currentPage === 'product-details' ? 'products' : currentPage;
+        : pillarProduct ? (NAV_SEGMENTS.find(s => s.category === pillarProduct.category) || {}).id
+        : listCategory ? (NAV_SEGMENTS.find(s => s.category === listCategory) || {}).id || null : null;
+    const activePage = currentPage === 'blog-details' ? 'blogs' : (pillarSeg || listCategory) ? null : currentPage === 'product-details' ? 'products' : currentPage;
     document.querySelectorAll('.nav-link').forEach(link => {
-        const active = (activePage && link.dataset.page === activePage) || (pillarSeg && link.dataset.segment === pillarSeg);
+        const active = (activePage && link.dataset.page === activePage) || (pillarSeg && link.dataset.segment === pillarSeg)
+            || (listCategory && link.dataset.category === listCategory);
         if (active) link.setAttribute('aria-current', 'page');
         else link.removeAttribute('aria-current');
     });
@@ -1300,6 +1305,7 @@ function setCategoryFilter(cat) {
     productFilterCategory = cat;
     history.replaceState({ page: 'products' }, '', siteBasePath() + routeToPath('products'));
     applyPageMeta('products');
+    updateNavState();
     renderApp();
 }
 
@@ -1380,7 +1386,7 @@ function renderMainNav() {
                     ${renderSegmentDropdown(seg)}
                 </div>`;
         }
-        return `<a href="${item.href}" ${item.page ? `data-route="${item.page}" data-page="${item.page}"` : `onclick="event.preventDefault(); ${item.action}"`} class="nav-link header-nav-link">${item.label}</a>`;
+        return `<a href="${item.href}" ${item.page ? `data-route="${item.page}" data-page="${item.page}"` : `onclick="event.preventDefault(); ${item.action}"`} ${item.category ? `data-category="${item.category}"` : ''} class="nav-link header-nav-link">${item.label}</a>`;
     }).join('');
 }
 
@@ -1959,7 +1965,6 @@ function renderProductGridItems(list) {
 }
 
 function renderProductsPage() {
-    const categories = ['All', ...Object.keys(CATEGORY_BANNERS)];
     const banner = CATEGORY_BANNERS[productFilterCategory];
     const filtered = filterProducts();
 
@@ -1970,19 +1975,15 @@ function renderProductsPage() {
                 <p class="measure lg:col-span-5">${banner ? banner.subheadline : 'Golf, lifestyle, resort and utility models, plus parts and accessories. Every cart can be built to order.'}</p>
             </div>
 
-            <div class="mt-12 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-line">
-                <nav aria-label="Cart categories" class="flex -ml-3 overflow-x-auto scrollbar-none">
-                    ${categories.map(cat => `
-                        <a href="${cat === 'All' ? 'carts/' : `carts/?category=${encodeURIComponent(cat)}`}" onclick="event.preventDefault(); setCategoryFilter('${cat}')"
-                           class="detail-tab ${productFilterCategory === cat ? 'detail-tab-active' : ''}" ${productFilterCategory === cat ? 'aria-current="page"' : ''}>${cat === 'All' ? 'All' : categoryLabel(cat)}</a>
-                    `).join('')}
-                </nav>
-                <div class="field md:w-72 pb-4">
+            <!-- Categories live in the header menu; this row only searches within the current list -->
+            <div class="mt-12 flex flex-col-reverse md:flex-row md:items-end justify-between gap-4 border-b border-line pb-4">
+                <p class="text-sm text-mute"><span id="product-count" aria-live="polite">${filtered.length} ${filtered.length === 1 ? 'result' : 'results'}</span>${productFilterCategory !== 'All'
+                    ? ` · <a href="carts/" data-route="products" data-category="All" class="link text-ink">See all carts</a>` : ''}</p>
+                <div class="field md:w-72">
                     <label for="product-search-input" class="sr-only">Search carts and accessories</label>
                     <input id="product-search-input" type="search" value="${productSearchQuery.replace(/"/g, '&quot;')}" placeholder="Search carts and accessories" class="!min-h-[2.75rem]">
                 </div>
             </div>
-            <p class="text-sm text-mute mt-4" id="product-count" aria-live="polite">${filtered.length} ${filtered.length === 1 ? 'result' : 'results'}</p>
         </section>
 
         ${banner && banner.photo ? `
@@ -2657,7 +2658,7 @@ function renderModelTile(p, { eager = false } = {}) {
     return `
         <a href="${routeHref('product-details', p.slug)}" data-route="product-details" data-slug="${p.slug}" class="group block h-full">
             <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
-                <img src="${p.image}" alt="${p.name}${isVehicle ? `, ${categoryLabel(p.category)}` : ''}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain">
+                <img src="${p.image}" alt="${p.name}${isVehicle ? `, ${categoryLabel(p.category)}` : ''}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain mix-blend-multiply">
             </div>
             <div class="pt-5 pb-2 pr-4">
                 <p class="${isVehicle ? 'type-lg' : 'type-md'} text-ink">${p.name}</p>
