@@ -140,6 +140,7 @@ function localBusinessJsonLd(branches) {
         image: `${siteUrl}image/GCPH_logo.png`,
         email: 'info@golfcarts.ph',
         ...(b.phones.length ? { telephone: b.phones[0] } : {}),
+        ...(b.lat ? { geo: { '@type': 'GeoCoordinates', latitude: b.lat, longitude: b.lon } } : {}),
         address: { '@type': 'PostalAddress', addressCountry: 'PH', ...BRANCH_ADDRESSES[b.name] }
     }));
     return JSON.stringify({ '@context': 'https://schema.org', '@graph': [org, ...locations] });

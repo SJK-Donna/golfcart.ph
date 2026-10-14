@@ -989,24 +989,30 @@ let homePreviewToken = 0;
 // The intro video ends on a white logo card at about 4.5s; the hero loops only the footage before it
 const HERO_LOOP_END = 4;
 
+// lat / lon from OpenStreetMap: Manila and Clark match the building; Cebu (Casuntingan) and Laguna
+// (Pulong Santa Cruz) match the neighbourhood, so the site shows them to 2 decimals (about 1 km)
 const BRANCHES = [
     {
         name: 'Manila Branch',
+        city: 'Manila', region: 'Metro Manila', lat: 14.5857, lon: 120.9947,
         address: '1877 Honda Cars Manila Building, Paz M. Guazon St. cor Pres. Quirino Ave. Paco, Manila, 1007 National Capital Region',
         phones: ['(02) 7745-5089', '(+63) 999 997 7688', '(+63) 917 631 2184']
     },
     {
         name: 'Cebu Branch',
+        city: 'Mandaue City', region: 'Cebu', lat: 10.3453, lon: 123.9305,
         address: 'Unit 301 Clotilde Commercial Center, ML Quezon Ave., Casuntingan, Mandaue City, 6014 Cebu',
         phones: ['(+63) 917 310 5239']
     },
     {
         name: 'Laguna Branch',
+        city: 'Santa Rosa', region: 'Laguna', lat: 14.2776, lon: 121.0835,
         address: 'Nissan Technopark, Purok 5 NMPI Rd, City of Santa Rosa, Laguna',
         phones: []
     },
     {
         name: 'Clark Branch',
+        city: 'Clark Freeport Zone', region: 'Pampanga', lat: 15.1742, lon: 120.5309,
         address: 'Unit 16E-F, Philexcel Business Park, M.A. Roxas Highway, Clark Freeport Zone, Pampanga',
         phones: []
     }
@@ -1534,6 +1540,7 @@ function renderApp() {
     const viewport = document.getElementById('app-viewport');
     if (!viewport) return;
     stopLogoGrid();
+    if (branchMap) { branchMap.stop(); branchMap = null; }
 
     if (currentPage === 'home') {
         viewport.innerHTML = renderHomePage();
@@ -1557,6 +1564,7 @@ function renderApp() {
         viewport.innerHTML = renderAboutPage();
     } else if (currentPage === 'contact') {
         viewport.innerHTML = renderContactPage();
+        initBranchMap();
     } else if (currentPage === 'not-found') {
         viewport.innerHTML = renderNotFoundPage();
     }
@@ -1934,7 +1942,7 @@ function renderHomeTrust() {
                     <h2 id="home-trust-title" class="type-lg text-ink">Running on courses, resorts and sites across the Philippines.</h2>
                     <dl class="grid grid-cols-2 gap-8 border-t border-line pt-8">
                         <div><dt class="text-sm text-mute">Clients</dt><dd class="type-xl text-ink mt-2">${CLIENT_LOGOS.length}+</dd></div>
-                        <div><dt class="text-sm text-mute">Branches</dt><dd class="type-xl text-ink mt-2">${BRANCHES.length}</dd></div>
+                        <div><dt class="text-sm text-mute">Branches</dt><dd class="mt-2"><a href="./#home-branches" onclick="event.preventDefault(); goToHomeSection('home-branches')" class="group inline-flex items-baseline gap-3"><span class="type-xl text-ink">${BRANCHES.length}</span><span class="link text-sm">See the map</span></a></dd></div>
                     </dl>
                 </div>
                 <div class="lg:col-span-8">
@@ -1987,26 +1995,244 @@ function renderHomeQuote() {
     `;
 }
 
-function renderHomeBranches() {
+// ==========================================
+// BRANCH MAP: a dot-matrix map of the Philippines with the four branches. Routes run from Manila to the
+// other branches; choosing a branch flies the camera to it. The coastline (image/map/philippines.svg) is
+// Natural Earth 1:10m data, projected with the same formula as branchMapPoint() so the pins line up.
+// Without JavaScript the branch list below the map carries everything.
+// ==========================================
+const BRANCH_MAP = {
+    lon0: 116, lat0: 21.5,
+    kx: 100 * Math.cos(12.5 * Math.PI / 180), ky: 100,
+    hub: 0,               // Manila: routes start here
+    focusWidth: 110,      // view width when flying to one branch (about 1.1 degrees: the city, its bay and nearby branches)
+    flyMs: 1400
+};
+let branchMap = null;
+
+// lat / lon -> map units (1 degree of latitude = 100 units)
+function branchMapPoint(b) {
+    return [(b.lon - BRANCH_MAP.lon0) * BRANCH_MAP.kx, (BRANCH_MAP.lat0 - b.lat) * BRANCH_MAP.ky];
+}
+
+function branchMapLatLon(x, y) {
+    return [BRANCH_MAP.lat0 - y / BRANCH_MAP.ky, x / BRANCH_MAP.kx + BRANCH_MAP.lon0];
+}
+
+function formatLatLon(lat, lon) {
+    return `${Math.abs(lat).toFixed(2)}°${lat >= 0 ? 'N' : 'S'} ${Math.abs(lon).toFixed(2)}°${lon >= 0 ? 'E' : 'W'}`;
+}
+
+// A view that fits every branch, with room around it, at the given width / height ratio
+function branchMapOverview(aspect) {
+    const pts = BRANCHES.map(branchMapPoint);
+    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]);
+    const cx = (Math.min(...xs) + Math.max(...xs)) / 2, cy = (Math.min(...ys) + Math.max(...ys)) / 2;
+    const w = (Math.max(...xs) - Math.min(...xs)) * 1.6, h = (Math.max(...ys) - Math.min(...ys)) * 1.35;
+    const width = Math.max(w, h * aspect);
+    return { cx, cy, w: width, h: width / aspect };
+}
+
+// Curved route from the hub to a branch: a quadratic curve bowed to one side
+function branchRoutePath(from, to) {
+    const [x1, y1] = from, [x2, y2] = to;
+    const mx = (x1 + x2) / 2, my = (y1 + y2) / 2, dx = x2 - x1, dy = y2 - y1;
+    return `M${x1.toFixed(1)} ${y1.toFixed(1)}Q${(mx - dy * 0.22).toFixed(1)} ${(my + dx * 0.22).toFixed(1)} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+}
+
+function renderBranchMap(sectionId = 'home-branches') {
+    const view = branchMapOverview(4 / 3);
+    const pts = BRANCHES.map(branchMapPoint);
+    const hub = pts[BRANCH_MAP.hub];
     return `
-        <section id="home-branches" class="rise home-section scroll-mt-20" aria-labelledby="home-branches-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
-                <h2 id="home-branches-title" class="type-xl text-ink mb-12 lg:mb-16">Four branches.</h2>
-                <ul class="border-b border-line">
-                    ${BRANCHES.map(b => `
-                        <li class="grid grid-cols-1 md:grid-cols-12 gap-x-8 gap-y-3 py-8 border-t border-line">
-                            <h3 class="type-md text-ink md:col-span-3">${b.name.replace(' Branch', '')}</h3>
-                            <p class="md:col-span-5 measure">${b.address}</p>
-                            <p class="md:col-span-2 text-sm space-y-1">${b.phones.length
-                                ? b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="block hover:text-ink">${ph}</a>`).join('')
-                                : `<a href="${routeHref('contact')}" data-route="contact" class="hover:text-ink">Contact us</a>`}</p>
-                            <p class="md:col-span-2 md:text-right"><a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}" target="_blank" rel="noopener" class="link text-sm">Get directions<span class="sr-only"> to the ${b.name} (opens Google Maps)</span></a></p>
-                        </li>
-                    `).join('')}
-                </ul>
+        <section id="${sectionId}" class="branch-map-section scroll-mt-16" aria-labelledby="${sectionId}-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 lg:mb-14">
+                    <h2 id="${sectionId}-title" class="type-xl text-paper">Four branches.</h2>
+                    <p class="measure text-[#B9BAB3]">Showrooms and service in Manila, Cebu, Laguna and Clark. Choose a branch to find it on the map.</p>
+                </div>
+                <div class="grid lg:grid-cols-12 gap-6 lg:gap-8">
+                    <div id="branch-map" class="branch-map lg:col-span-8">
+                        <svg id="branch-map-svg" viewBox="${(view.cx - view.w / 2).toFixed(1)} ${(view.cy - view.h / 2).toFixed(1)} ${view.w.toFixed(1)} ${view.h.toFixed(1)}"
+                             role="img" aria-label="Map of the Philippines showing the four Golfcarts.ph branches">
+                            <defs>
+                                <pattern id="branch-map-dots" width="6" height="6" patternUnits="userSpaceOnUse">
+                                    <circle cx="3" cy="3" r="1.1" fill="#4A4D45"></circle>
+                                </pattern>
+                            </defs>
+                            <g id="branch-map-land"></g>
+                            <g class="branch-map-routes">
+                                ${pts.map((p, i) => i === BRANCH_MAP.hub ? '' : `
+                                    <path id="branch-route-${i}" d="${branchRoutePath(hub, p)}" class="branch-route"></path>
+                                    <circle class="branch-packet" r="2.5">
+                                        <animateMotion dur="${3 + i * 0.6}s" repeatCount="indefinite"><mpath href="#branch-route-${i}"></mpath></animateMotion>
+                                    </circle>`).join('')}
+                            </g>
+                            <g class="branch-map-pins">
+                                ${BRANCHES.map((b, i) => `
+                                    <g class="branch-pin" data-branch="${i}" transform="translate(${pts[i][0].toFixed(1)} ${pts[i][1].toFixed(1)})">
+                                        <circle class="branch-pin-pulse" r="6"></circle>
+                                        <circle class="branch-pin-pulse branch-pin-pulse-late" r="6"></circle>
+                                        <circle class="branch-pin-core" r="5"></circle>
+                                        <text class="branch-pin-label" x="12" y="4">${b.name.replace(' Branch', '')}</text>
+                                    </g>`).join('')}
+                            </g>
+                        </svg>
+                        <div class="branch-map-grid" aria-hidden="true"></div>
+                        <div class="branch-map-sweep" aria-hidden="true"></div>
+                        <p class="branch-map-hud" aria-hidden="true"><span id="branch-map-readout">${formatLatLon(...branchMapLatLon(view.cx, view.cy))}</span><span id="branch-map-zoom">1.0×</span></p>
+                        <button type="button" id="branch-map-reset" class="branch-map-reset" hidden>Show all branches</button>
+                    </div>
+
+                    <ol class="branch-list lg:col-span-4" aria-label="Branches">
+                        ${BRANCHES.map((b, i) => `
+                            <li class="branch-item" data-branch="${i}">
+                                <button type="button" class="branch-item-select" data-branch="${i}" aria-pressed="false" aria-controls="branch-map">
+                                    <span class="flex items-baseline justify-between gap-4">
+                                        <span class="type-md text-paper">${b.name.replace(' Branch', '')}</span>
+                                        <span class="branch-coords">${formatLatLon(b.lat, b.lon)}</span>
+                                    </span>
+                                    <span class="block text-sm text-[#B9BAB3] mt-2">${b.address}</span>
+                                </button>
+                                <p class="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm mt-3">
+                                    ${b.phones.length
+                                        ? b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="text-paper hover:underline underline-offset-4">${ph}</a>`).join('')
+                                        : `<a href="${routeHref('contact')}" data-route="contact" class="text-paper hover:underline underline-offset-4">Contact us</a>`}
+                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}" target="_blank" rel="noopener" class="branch-directions">Get directions<span class="sr-only"> to the ${b.name} (opens Google Maps)</span></a>
+                                </p>
+                            </li>
+                        `).join('')}
+                    </ol>
+                </div>
             </div>
         </section>
     `;
+}
+
+// cubic-bezier(0.22, 1, 0.36, 1), the site's easing curve, as a function of time 0..1
+function branchMapEase(t) {
+    const p1x = 0.22, p1y = 1, p2x = 0.36, p2y = 1;
+    const bez = (a, b, s) => 3 * a * s * (1 - s) ** 2 + 3 * b * s * s * (1 - s) + s ** 3;
+    let s = t;
+    for (let i = 0; i < 6; i++) {
+        const x = bez(p1x, p2x, s) - t;
+        const dx = 3 * p1x * (1 - s) ** 2 + 6 * (p2x - p1x) * s * (1 - s) + 3 * (1 - p2x) * s * s;
+        if (Math.abs(dx) < 1e-6) break;
+        s = Math.min(1, Math.max(0, s - x / dx));
+    }
+    return bez(p1y, p2y, s);
+}
+
+function initBranchMap() {
+    if (branchMap) branchMap.stop();
+    branchMap = null;
+    const box = document.getElementById('branch-map');
+    const svg = document.getElementById('branch-map-svg');
+    // The camera needs a real browser; pre-rendered pages keep the static overview
+    if (!box || !svg || !('ResizeObserver' in window)) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) svg.querySelectorAll('animateMotion').forEach(a => a.remove());
+
+    const pins = [...svg.querySelectorAll('.branch-pin')];
+    const items = [...document.querySelectorAll('.branch-item')];
+    const pattern = svg.querySelector('#branch-map-dots');
+    const readout = document.getElementById('branch-map-readout');
+    const zoomLabel = document.getElementById('branch-map-zoom');
+    const reset = document.getElementById('branch-map-reset');
+    const pts = BRANCHES.map(branchMapPoint);
+    let overview = null, view = null, frame = 0, selected = null;
+
+    // Draws the camera: viewBox, plus pins, dots and packets kept at a constant size on screen
+    const draw = v => {
+        view = v;
+        svg.setAttribute('viewBox', `${v.cx - v.w / 2} ${v.cy - v.h / 2} ${v.w} ${v.h}`);
+        const unit = v.w / Math.max(1, box.clientWidth); // map units per screen pixel
+        pins.forEach((pin, i) => pin.setAttribute('transform', `translate(${pts[i][0]} ${pts[i][1]}) scale(${unit})`));
+        svg.querySelectorAll('.branch-packet').forEach(p => p.setAttribute('r', 2.5 * unit));
+        const dot = 7 * unit;
+        pattern.setAttribute('width', dot);
+        pattern.setAttribute('height', dot);
+        pattern.firstElementChild.setAttribute('cx', dot / 2);
+        pattern.firstElementChild.setAttribute('cy', dot / 2);
+        pattern.firstElementChild.setAttribute('r', 1.2 * unit);
+        readout.textContent = formatLatLon(...branchMapLatLon(v.cx, v.cy));
+        zoomLabel.textContent = `${(overview.w / v.w).toFixed(1)}×`;
+    };
+
+    // Smooth camera move: centre eases linearly, zoom eases on a log scale so it feels even
+    const flyTo = target => {
+        cancelAnimationFrame(frame);
+        if (reduceMotion) { draw(target); return; }
+        const from = { ...view }, start = performance.now();
+        const step = now => {
+            const t = Math.min(1, (now - start) / BRANCH_MAP.flyMs), e = branchMapEase(t);
+            const w = Math.exp(Math.log(from.w) + (Math.log(target.w) - Math.log(from.w)) * e);
+            draw({ cx: from.cx + (target.cx - from.cx) * e, cy: from.cy + (target.cy - from.cy) * e, w, h: w * (target.h / target.w) });
+            if (t < 1) frame = requestAnimationFrame(step);
+        };
+        frame = requestAnimationFrame(step);
+    };
+
+    const aspect = () => box.clientWidth / Math.max(1, box.clientHeight);
+    const focusView = i => ({ cx: pts[i][0], cy: pts[i][1], w: BRANCH_MAP.focusWidth, h: BRANCH_MAP.focusWidth / aspect() });
+
+    const select = i => {
+        selected = i;
+        items.forEach((li, k) => {
+            li.classList.toggle('is-selected', k === i);
+            li.querySelector('.branch-item-select').setAttribute('aria-pressed', String(k === i));
+        });
+        pins.forEach((pin, k) => pin.classList.toggle('is-selected', k === i));
+        reset.hidden = i === null;
+        flyTo(i === null ? overview : focusView(i));
+    };
+    const highlight = (i, on) => pins[i] && pins[i].classList.toggle('is-hovered', on);
+
+    const onClick = e => {
+        const btn = e.target.closest('.branch-item-select');
+        if (btn) select(selected === +btn.dataset.branch ? null : +btn.dataset.branch);
+        const pin = e.target.closest('.branch-pin');
+        if (pin) select(+pin.dataset.branch);
+        if (e.target.closest('#branch-map-reset')) select(null);
+    };
+    const onOver = e => { const li = e.target.closest('.branch-item'); if (li) highlight(+li.dataset.branch, true); };
+    const onOut = e => { const li = e.target.closest('.branch-item'); if (li) highlight(+li.dataset.branch, false); };
+    const section = box.closest('section');
+    section.addEventListener('click', onClick);
+    section.addEventListener('mouseover', onOver);
+    section.addEventListener('mouseout', onOut);
+
+    const layout = () => {
+        overview = branchMapOverview(aspect());
+        cancelAnimationFrame(frame);
+        draw(selected === null ? overview : focusView(selected));
+    };
+    layout();
+    const resized = new ResizeObserver(layout);
+    resized.observe(box);
+
+    // The coastline loads separately so pages without the map don't download it
+    if (window.fetch) {
+        fetch('image/map/philippines.svg').then(r => (r.ok ? r.text() : '')).then(text => {
+            const d = (text.match(/\sd="([^"]+)"/) || [])[1];
+            const land = document.getElementById('branch-map-land');
+            if (d && land) land.innerHTML = `<path class="branch-map-land" d="${d}"></path>`;
+        }).catch(() => {});
+    }
+
+    branchMap = {
+        stop() {
+            cancelAnimationFrame(frame);
+            resized.disconnect();
+            section.removeEventListener('click', onClick);
+            section.removeEventListener('mouseover', onOver);
+            section.removeEventListener('mouseout', onOut);
+        }
+    };
+}
+
+function renderHomeBranches() {
+    return renderBranchMap('home-branches');
 }
 
 function renderHomeFaq() {
@@ -2089,6 +2315,7 @@ function initHomePage() {
     sync();
     if (!reduceMotion) play();
     initLogoGrid();
+    initBranchMap();
 }
 
 function renderNotFoundPage() {
@@ -3630,6 +3857,6 @@ function renderContactPage() {
             </form>
         </section>
 
-        ${renderHomeBranches().replace('id="home-branches"', 'id="contact-branches"').replace('class="rise home-section', 'class="home-section pt-0 border-t-0')}
+        ${renderBranchMap('contact-branches')}
     `;
 }

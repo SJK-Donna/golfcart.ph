@@ -830,6 +830,185 @@
         height: 0.875rem;
     }
 
+    /* ---- Branch map (renderBranchMap / initBranchMap in app.js) ---- */
+    .branch-map-section {
+        background: var(--ink);
+        color: #B9BAB3;
+    }
+    .branch-map {
+        position: relative;
+        overflow: hidden;
+        aspect-ratio: 4 / 5;
+        background: #10120F;
+        border: 1px solid rgba(246, 246, 242, 0.12);
+    }
+    @media (min-width: 640px) {
+        .branch-map { aspect-ratio: 4 / 3; }
+    }
+    @media (min-width: 1024px) {
+        .branch-map { aspect-ratio: auto; min-height: 560px; }
+    }
+    .branch-map svg {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .branch-map-land {
+        fill: url(#branch-map-dots);
+        stroke: rgba(116, 158, 53, 0.45);
+        stroke-width: 1;
+        vector-effect: non-scaling-stroke;
+    }
+    .branch-route {
+        fill: none;
+        stroke: var(--green);
+        stroke-width: 1.25;
+        stroke-dasharray: 4 6;
+        vector-effect: non-scaling-stroke;
+        opacity: 0.8;
+        animation: branch-route-flow 1.6s linear infinite;
+    }
+    @keyframes branch-route-flow {
+        to { stroke-dashoffset: -20; }
+    }
+    .branch-packet {
+        fill: #C9E29B;
+    }
+    .branch-pin {
+        cursor: pointer;
+    }
+    .branch-pin-core {
+        fill: var(--green);
+        stroke: var(--ink);
+        stroke-width: 2;
+        transition: r 0.3s var(--ease);
+    }
+    .branch-pin.is-selected .branch-pin-core,
+    .branch-pin.is-hovered .branch-pin-core {
+        r: 7;
+    }
+    .branch-pin-pulse {
+        fill: none;
+        stroke: var(--green);
+        stroke-width: 1.5;
+        transform-box: fill-box;
+        transform-origin: center;
+        animation: branch-pulse 2.4s var(--ease) infinite;
+    }
+    .branch-pin-pulse-late {
+        animation-delay: 1.2s;
+    }
+    @keyframes branch-pulse {
+        from { transform: scale(1); opacity: 0.9; }
+        to { transform: scale(4.5); opacity: 0; }
+    }
+    .branch-pin-label {
+        fill: var(--paper);
+        font-family: var(--font-text);
+        font-size: 13px;
+        font-weight: 500;
+        paint-order: stroke;
+        stroke: #10120F;
+        stroke-width: 4px;
+        stroke-linejoin: round;
+    }
+    .branch-pin.is-selected .branch-pin-label {
+        fill: #C9E29B;
+    }
+    /* Overlays: fixed to the frame, so they stay put while the map moves underneath */
+    .branch-map-grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background-image:
+            linear-gradient(rgba(246, 246, 242, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(246, 246, 242, 0.05) 1px, transparent 1px);
+        background-size: 48px 48px;
+    }
+    .branch-map-sweep {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 160%;
+        aspect-ratio: 1;
+        translate: -50% -50%;
+        pointer-events: none;
+        background: conic-gradient(from 0deg, rgba(116, 158, 53, 0.16), rgba(116, 158, 53, 0) 70deg, rgba(116, 158, 53, 0) 360deg);
+        border-radius: 50%;
+        animation: branch-sweep 9s linear infinite;
+    }
+    @keyframes branch-sweep {
+        to { rotate: 360deg; }
+    }
+    .branch-map-hud {
+        position: absolute;
+        left: 1rem;
+        top: 1rem;
+        display: flex;
+        gap: 1rem;
+        font-size: 0.75rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+        color: rgba(246, 246, 242, 0.7);
+        pointer-events: none;
+    }
+    .branch-map-reset {
+        position: absolute;
+        right: 1rem;
+        bottom: 1rem;
+        min-height: 2.5rem;
+        padding: 0 1rem;
+        border: 1px solid rgba(246, 246, 242, 0.4);
+        border-radius: var(--radius);
+        background: var(--ink);
+        color: var(--paper);
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
+    }
+    .branch-map-reset:hover {
+        background: var(--paper);
+        color: var(--ink);
+    }
+    /* Branch list: a solid dark panel beside the map */
+    .branch-list {
+        background: #1C1E1A;
+        border: 1px solid rgba(246, 246, 242, 0.12);
+    }
+    .branch-item {
+        padding: 1.25rem 1.25rem 1.25rem 1.5rem;
+        border-left: 2px solid transparent;
+        transition: border-color 0.3s var(--ease), background-color 0.3s var(--ease);
+    }
+    .branch-item + .branch-item {
+        border-top: 1px solid rgba(246, 246, 242, 0.12);
+    }
+    .branch-item:hover,
+    .branch-item.is-selected {
+        background: #242722;
+    }
+    .branch-item.is-selected {
+        border-left-color: var(--green);
+    }
+    .branch-item-select {
+        display: block;
+        width: 100%;
+        text-align: left;
+    }
+    .branch-coords {
+        flex-shrink: 0;
+        font-size: 0.75rem;
+        font-variant-numeric: tabular-nums;
+        color: #C9E29B;
+    }
+    .branch-directions {
+        color: #C9E29B;
+        text-decoration: underline;
+        text-decoration-thickness: 1px;
+        text-underline-offset: 0.3em;
+    }
+
     /* ---- Media ---- */
     .media-zoom {
         overflow: hidden;
@@ -858,6 +1037,16 @@
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+    .branch-map-sweep {
+        display: none;
+    }
+    .branch-route,
+    .branch-pin-pulse {
+        animation: none;
+    }
+    .branch-pin-pulse {
+        opacity: 0;
     }
     .battery-bar,
     .battery-row {
