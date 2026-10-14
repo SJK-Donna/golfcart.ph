@@ -533,10 +533,20 @@
         opacity: 0.75;
         transition: opacity 0.3s var(--ease), filter 0.3s var(--ease);
     }
-    /* Animated logo layer: logos slide between the grid's cells (initLogoGrid in app.js) */
+    /* Animated logo layer (initLogoGrid in app.js): logos slide around the ring; the centre cells become
+       one tile showing a single logo, enlarged and in full color */
+    #home-logos-wrap.is-animated .home-logos img {
+        opacity: 0; /* the static list stays for screen readers; the layer above shows the logos */
+    }
     .home-logo-layer {
         position: absolute;
         inset: 0;
+    }
+    .home-logo-feature {
+        position: absolute;
+        left: 0;
+        top: 0;
+        background: var(--paper);
     }
     .home-logo-float {
         position: absolute;
@@ -546,8 +556,26 @@
         align-items: center;
         justify-content: center;
         padding: 1rem;
-        transition: transform 1.2s var(--ease);
-        will-change: transform;
+        mix-blend-mode: multiply; /* the logos' white backgrounds drop into the paper */
+        transition: transform 1.2s var(--ease), opacity 0.6s var(--ease);
+    }
+    .home-logo-float img {
+        max-height: 100%;
+        max-width: 100%;
+        object-fit: contain;
+        filter: grayscale(1);
+        opacity: 0.75;
+        transition: opacity 0.6s var(--ease), filter 0.6s var(--ease);
+    }
+    .home-logo-float[data-state='featured'] img {
+        filter: none;
+        opacity: 1;
+    }
+    /* Leaving the centre: fade out first, then move back to the start of the ring unseen */
+    .home-logo-float[data-state='waiting'] {
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s var(--ease), transform 0s linear 0.4s;
     }
     .home-logo-layer.is-still .home-logo-float {
         transition: none;

@@ -1783,11 +1783,13 @@ function selectHomeColor(name) {
 }
 
 // ==========================================
-// CLIENT LOGO GRID: the outer ring of logos moves one cell clockwise at a time. Between ring moves, one
-// ring logo trades places with a logo in the centre block, so every client takes a turn in the middle.
-// The static grid is the fallback: no JavaScript, reduced motion, or a grid too small to have a centre.
+// CLIENT LOGO GRID: logos travel clockwise around the outer ring of the grid. The centre block of cells
+// becomes one large tile: at the end of each lap a logo slides in there and is shown large, then waits
+// off the grid while the others take their turn, and comes back in at the top-left corner. Every client
+// logo takes part, not only the ones that fit in the grid. The static grid is the fallback: no JavaScript,
+// reduced motion, or a grid too small to have a centre.
 // ==========================================
-const LOGO_GRID_STEP_MS = 2800;
+const LOGO_GRID_STEP_MS = 3200;
 let logoGrid = null;
 
 // Cell indexes (row-major) around the edge of a rows x cols grid, clockwise from the top-left corner
@@ -1798,25 +1800,6 @@ function logoRingOrder(rows, cols) {
     for (let c = cols - 2; c >= 0; c--) ring.push((rows - 1) * cols + c);
     for (let r = rows - 2; r >= 1; r--) ring.push(r * cols);
     return ring;
-}
-
-// Centre cells in the order logos visit them: left to right along the first row, back along the next
-function logoInnerOrder(rows, cols) {
-    const inner = [];
-    for (let r = 1; r < rows - 1; r++) {
-        const row = [];
-        for (let c = 1; c < cols - 1; c++) row.push(r * cols + c);
-        inner.push(...((r - 1) % 2 ? row.reverse() : row));
-    }
-    return inner;
-}
-
-// The ring cell a centre cell exchanges with: the one directly above or below it, else beside it
-function logoGateFor(cell, rows, cols) {
-    const r = Math.floor(cell / cols), c = cell % cols;
-    if (r === 1) return c;
-    if (r === rows - 2) return (rows - 1) * cols + c;
-    return c < cols / 2 ? r * cols : r * cols + cols - 1;
 }
 
 function initLogoGrid() {
@@ -1832,32 +1815,60 @@ function initLogoGrid() {
     if (reduceMotion || rows < 3 || cols < 3 || rows * cols !== cells.length) return;
 
     const ring = logoRingOrder(rows, cols);
-    const inner = logoInnerOrder(rows, cols);
+    const inner = cells.map((_, i) => i).filter(i => !ring.includes(i));
 
-    // Lift each logo out of its cell into a layer above the grid, where it can slide between cells.
-    // at[cell] is the logo currently showing in that cell.
+    // The path every logo follows: each ring cell in turn, then the centre tile, then the waiting line
+    // (hidden), then back to the first ring cell. One step moves every logo one place along it.
+    const pathLength = Math.max(CLIENT_LOGOS.length, ring.length + 1);
     const layer = document.createElement('div');
     layer.className = 'home-logo-layer';
-    layer.setAttribute('role', 'list');
-    layer.setAttribute('aria-label', 'Clients');
-    const at = cells.map(cell => {
+    layer.setAttribute('aria-hidden', 'true'); // the static list underneath keeps the logos' names for screen readers
+    const feature = document.createElement('div');
+    feature.className = 'home-logo-feature';
+    layer.appendChild(feature);
+    const logos = CLIENT_LOGOS.map(src => {
         const item = document.createElement('div');
         item.className = 'home-logo-float';
-        item.setAttribute('role', 'listitem');
-        item.appendChild(cell.querySelector('img'));
+        item.innerHTML = `<img src="${src}" alt="" decoding="async">`;
         layer.appendChild(item);
         return item;
     });
     wrap.appendChild(layer);
-    grid.setAttribute('aria-hidden', 'true');
+    wrap.classList.add('is-animated');
+
+    let offset = 0; // logo i sits at path position (i + offset) % pathLength
 
     const place = (animate = true) => {
         layer.classList.toggle('is-still', !animate);
-        at.forEach((item, i) => {
-            const cell = cells[i];
-            item.style.width = `${cell.offsetWidth}px`;
-            item.style.height = `${cell.offsetHeight}px`;
-            item.style.transform = `translate(${cell.offsetLeft}px, ${cell.offsetTop}px)`;
+        const box = cell => ({ x: cell.offsetLeft, y: cell.offsetTop, w: cell.offsetWidth, h: cell.offsetHeight });
+        const first = box(cells[inner[0]]), last = box(cells[inner[inner.length - 1]]);
+        // The centre tile covers the inner cells; it stops 1px short so the ring's grid lines stay visible
+        const centre = { x: first.x, y: first.y, w: last.x + last.w - first.x - 1, h: last.y + last.h - first.y - 1 };
+        Object.assign(feature.style, { width: `${centre.w}px`, height: `${centre.h}px`, transform: `translate(${centre.x}px, ${centre.y}px)` });
+        const cellBox = box(cells[ring[0]]);
+        const grow = Math.min(centre.w / cellBox.w, centre.h / cellBox.h) * 0.9;
+
+        logos.forEach((item, i) => {
+            const pos = (i + offset) % pathLength;
+            let x, y, scale = 1, state;
+            if (pos < ring.length) {
+                ({ x, y } = box(cells[ring[pos]]));
+                state = 'ring';
+            } else if (pos === ring.length) {
+                // Centred in the big tile and enlarged
+                x = centre.x + (centre.w - cellBox.w) / 2;
+                y = centre.y + (centre.h - cellBox.h) / 2;
+                scale = grow;
+                state = 'featured';
+            } else {
+                // Waiting: hidden on the first ring cell, ready to fade in there
+                ({ x, y } = box(cells[ring[0]]));
+                state = 'waiting';
+            }
+            item.style.width = `${cellBox.w}px`;
+            item.style.height = `${cellBox.h}px`;
+            item.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+            item.dataset.state = state;
         });
         if (!animate) {
             void layer.offsetWidth; // apply positions before transitions come back
@@ -1866,19 +1877,10 @@ function initLogoGrid() {
     };
     place(false);
 
-    const state = { step: 0, next: 0, paused: false, hovered: false, onScreen: true };
+    const state = { paused: false, hovered: false, onScreen: true };
     const tick = () => {
         if (state.paused || state.hovered || !state.onScreen || document.hidden) return;
-        if (state.step++ % 2 === 0) {
-            // Ring: every edge logo moves one cell clockwise
-            const moving = ring.map(c => at[c]);
-            ring.forEach((c, k) => { at[ring[(k + 1) % ring.length]] = moving[k]; });
-        } else {
-            // Centre: one edge logo moves in, the logo it replaces moves out into the ring
-            const target = inner[state.next++ % inner.length];
-            const gate = logoGateFor(target, rows, cols);
-            [at[gate], at[target]] = [at[target], at[gate]];
-        }
+        offset = (offset + 1) % pathLength;
         place();
     };
 
@@ -1888,11 +1890,9 @@ function initLogoGrid() {
         toggle.setAttribute('aria-pressed', String(paused));
     };
     const onToggle = () => setPaused(!state.paused);
-    const onEnter = () => { state.hovered = true; };
-    const onLeave = () => { state.hovered = false; };
     toggle.addEventListener('click', onToggle);
-    layer.addEventListener('mouseenter', onEnter);
-    layer.addEventListener('mouseleave', onLeave);
+    layer.addEventListener('mouseenter', () => { state.hovered = true; });
+    layer.addEventListener('mouseleave', () => { state.hovered = false; });
     setPaused(false);
     toggle.hidden = false;
 
@@ -1913,10 +1913,8 @@ function initLogoGrid() {
             resized.disconnect();
             toggle.removeEventListener('click', onToggle);
             toggle.hidden = true;
-            // Put each logo back into the cell it is showing in, so the static grid keeps the current order
-            at.forEach((item, i) => { const img = item.querySelector('img'); if (img) cells[i].appendChild(img); });
             layer.remove();
-            grid.removeAttribute('aria-hidden');
+            wrap.classList.remove('is-animated');
         }
     };
 }
