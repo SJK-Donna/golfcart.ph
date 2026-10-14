@@ -1533,7 +1533,8 @@ function renderQuoteSummary() {
 function renderApp() {
     const viewport = document.getElementById('app-viewport');
     if (!viewport) return;
-    
+    stopLogoGrid();
+
     if (currentPage === 'home') {
         viewport.innerHTML = renderHomePage();
         initHomePage();
@@ -1781,6 +1782,152 @@ function selectHomeColor(name) {
     }).catch(() => { livePreviewAvailable = false; });
 }
 
+// ==========================================
+// CLIENT LOGO GRID: the outer ring of logos moves one cell clockwise at a time. Between ring moves, one
+// ring logo trades places with a logo in the centre block, so every client takes a turn in the middle.
+// The static grid is the fallback: no JavaScript, reduced motion, or a grid too small to have a centre.
+// ==========================================
+const LOGO_GRID_STEP_MS = 2800;
+let logoGrid = null;
+
+// Cell indexes (row-major) around the edge of a rows x cols grid, clockwise from the top-left corner
+function logoRingOrder(rows, cols) {
+    const ring = [];
+    for (let c = 0; c < cols; c++) ring.push(c);
+    for (let r = 1; r < rows; r++) ring.push(r * cols + cols - 1);
+    for (let c = cols - 2; c >= 0; c--) ring.push((rows - 1) * cols + c);
+    for (let r = rows - 2; r >= 1; r--) ring.push(r * cols);
+    return ring;
+}
+
+// Centre cells in the order logos visit them: left to right along the first row, back along the next
+function logoInnerOrder(rows, cols) {
+    const inner = [];
+    for (let r = 1; r < rows - 1; r++) {
+        const row = [];
+        for (let c = 1; c < cols - 1; c++) row.push(r * cols + c);
+        inner.push(...((r - 1) % 2 ? row.reverse() : row));
+    }
+    return inner;
+}
+
+// The ring cell a centre cell exchanges with: the one directly above or below it, else beside it
+function logoGateFor(cell, rows, cols) {
+    const r = Math.floor(cell / cols), c = cell % cols;
+    if (r === 1) return c;
+    if (r === rows - 2) return (rows - 1) * cols + c;
+    return c < cols / 2 ? r * cols : r * cols + cols - 1;
+}
+
+function initLogoGrid() {
+    stopLogoGrid();
+    const wrap = document.getElementById('home-logos-wrap');
+    const grid = document.getElementById('home-logos');
+    const toggle = document.getElementById('home-logos-toggle');
+    if (!wrap || !grid || !toggle) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const cells = [...grid.children].filter(li => li.offsetParent !== null);
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+    const rows = cols ? Math.floor(cells.length / cols) : 0;
+    if (reduceMotion || rows < 3 || cols < 3 || rows * cols !== cells.length) return;
+
+    const ring = logoRingOrder(rows, cols);
+    const inner = logoInnerOrder(rows, cols);
+
+    // Lift each logo out of its cell into a layer above the grid, where it can slide between cells.
+    // at[cell] is the logo currently showing in that cell.
+    const layer = document.createElement('div');
+    layer.className = 'home-logo-layer';
+    layer.setAttribute('role', 'list');
+    layer.setAttribute('aria-label', 'Clients');
+    const at = cells.map(cell => {
+        const item = document.createElement('div');
+        item.className = 'home-logo-float';
+        item.setAttribute('role', 'listitem');
+        item.appendChild(cell.querySelector('img'));
+        layer.appendChild(item);
+        return item;
+    });
+    wrap.appendChild(layer);
+    grid.setAttribute('aria-hidden', 'true');
+
+    const place = (animate = true) => {
+        layer.classList.toggle('is-still', !animate);
+        at.forEach((item, i) => {
+            const cell = cells[i];
+            item.style.width = `${cell.offsetWidth}px`;
+            item.style.height = `${cell.offsetHeight}px`;
+            item.style.transform = `translate(${cell.offsetLeft}px, ${cell.offsetTop}px)`;
+        });
+        if (!animate) {
+            void layer.offsetWidth; // apply positions before transitions come back
+            layer.classList.remove('is-still');
+        }
+    };
+    place(false);
+
+    const state = { step: 0, next: 0, paused: false, hovered: false, onScreen: true };
+    const tick = () => {
+        if (state.paused || state.hovered || !state.onScreen || document.hidden) return;
+        if (state.step++ % 2 === 0) {
+            // Ring: every edge logo moves one cell clockwise
+            const moving = ring.map(c => at[c]);
+            ring.forEach((c, k) => { at[ring[(k + 1) % ring.length]] = moving[k]; });
+        } else {
+            // Centre: one edge logo moves in, the logo it replaces moves out into the ring
+            const target = inner[state.next++ % inner.length];
+            const gate = logoGateFor(target, rows, cols);
+            [at[gate], at[target]] = [at[target], at[gate]];
+        }
+        place();
+    };
+
+    const setPaused = paused => {
+        state.paused = paused;
+        toggle.textContent = paused ? 'Play logos' : 'Pause logos';
+        toggle.setAttribute('aria-pressed', String(paused));
+    };
+    const onToggle = () => setPaused(!state.paused);
+    const onEnter = () => { state.hovered = true; };
+    const onLeave = () => { state.hovered = false; };
+    toggle.addEventListener('click', onToggle);
+    layer.addEventListener('mouseenter', onEnter);
+    layer.addEventListener('mouseleave', onLeave);
+    setPaused(false);
+    toggle.hidden = false;
+
+    const onScreen = new IntersectionObserver(([entry]) => { state.onScreen = entry.isIntersecting; });
+    onScreen.observe(wrap);
+    // Keep logos on their cells when the layout changes; a different column count rebuilds the grid
+    const resized = new ResizeObserver(() => {
+        const nowCols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+        if (nowCols !== cols) initLogoGrid();
+        else place(false);
+    });
+    resized.observe(grid);
+
+    logoGrid = {
+        timer: setInterval(tick, LOGO_GRID_STEP_MS),
+        stop() {
+            onScreen.disconnect();
+            resized.disconnect();
+            toggle.removeEventListener('click', onToggle);
+            toggle.hidden = true;
+            // Put each logo back into the cell it is showing in, so the static grid keeps the current order
+            at.forEach((item, i) => { const img = item.querySelector('img'); if (img) cells[i].appendChild(img); });
+            layer.remove();
+            grid.removeAttribute('aria-hidden');
+        }
+    };
+}
+
+function stopLogoGrid() {
+    if (!logoGrid) return;
+    clearInterval(logoGrid.timer);
+    logoGrid.stop();
+    logoGrid = null;
+}
+
 function renderHomeTrust() {
     return `
         <section class="rise home-section" aria-labelledby="home-trust-title">
@@ -1792,11 +1939,17 @@ function renderHomeTrust() {
                         <div><dt class="text-sm text-mute">Branches</dt><dd class="type-xl text-ink mt-2">${BRANCHES.length}</dd></div>
                     </dl>
                 </div>
-                <ul class="lg:col-span-8 home-logos" aria-label="Clients">
-                    ${CLIENT_LOGOS.slice(0, 24).map((logo, i) => `
-                        <li class="${i >= 12 ? 'hidden md:flex' : 'flex'}"><img src="${logo}" alt="Client logo ${i + 1}" loading="lazy" decoding="async"></li>
-                    `).join('')}
-                </ul>
+                <div class="lg:col-span-8">
+                    <!-- Logos animate around the grid (initLogoGrid); without JavaScript or with reduced motion it stays static -->
+                    <div id="home-logos-wrap" class="relative">
+                        <ul id="home-logos" class="home-logos" aria-label="Clients">
+                            ${CLIENT_LOGOS.slice(0, 24).map((logo, i) => `
+                                <li class="${i >= 12 ? 'hidden md:flex' : 'flex'}"><img src="${logo}" alt="Client logo ${i + 1}" loading="lazy" decoding="async"></li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <button type="button" id="home-logos-toggle" class="link text-sm mt-4" aria-pressed="false" hidden>Pause logos</button>
+                </div>
             </div>
         </section>
     `;
@@ -1937,6 +2090,7 @@ function initHomePage() {
     toggle.hidden = false;
     sync();
     if (!reduceMotion) play();
+    initLogoGrid();
 }
 
 function renderNotFoundPage() {
