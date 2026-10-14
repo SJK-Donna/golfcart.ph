@@ -1755,6 +1755,75 @@ function renderHomeUses() {
 }
 
 // One Tempo 2 that repaints from a few swatches, leading into the full builder
+// "What's under the seat": the animated tour of a Tempo 2 (video/vid1.mp4), leading into the battery
+// comparison. The figures come from the Tempo 2's own data so they always match its model page.
+function renderHomeInside() {
+    const tempo = PRODUCTS_DATA.find(p => p.slug === 'golfer-tempo-2');
+    const facts = [
+        ['Battery', tempo.battery],
+        ['Motor', tempo.powertrain],
+        ['Full charge', tempo.chargingTime]
+    ].filter(([, v]) => isMeaningful(v));
+    return `
+        <section class="rise home-inside" aria-labelledby="home-inside-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32">
+                <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-10 lg:mb-14">
+                    <h2 id="home-inside-title" class="type-xl text-paper lg:col-span-7">What's under the seat.</h2>
+                    <p class="measure text-[#B9BAB3] lg:col-span-5">The battery, the drive and the frame decide how far a cart goes, how it climbs and how long it lasts. Here is the Tempo 2, taken apart.</p>
+                </div>
+                <div class="home-inside-frame">
+                    <video id="home-inside-video" class="home-inside-media" muted playsinline loop preload="none" poster="image/Hero/vid1-poster.jpg" aria-label="Animation: a Tempo 2 opens to show its suspension, lithium battery and motor, then reassembles">
+                        <source src="video/vid1.mp4" type="video/mp4">
+                    </video>
+                    <button type="button" id="home-inside-toggle" class="home-hero-toggle" aria-label="Pause video" hidden>
+                        <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                        <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+                    </button>
+                </div>
+                <div class="mt-10 grid sm:grid-cols-12 gap-8 items-end">
+                    <dl class="sm:col-span-9 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-white/15 pt-6">
+                        ${facts.map(([k, v]) => `<div><dt class="text-sm text-[#B9BAB3]">${k}</dt><dd class="type-md text-paper mt-2">${v}</dd></div>`).join('')}
+                    </dl>
+                    <div class="sm:col-span-3 sm:text-right">
+                        <a href="${routeHref('product-details', tempo.slug)}" data-route="product-details" data-slug="${tempo.slug}" class="btn btn-on-dark">See the Tempo 2</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    `;
+}
+
+// Plays the tour only while it's on screen, loads it only when it comes near, and follows reduced motion
+function initHomeInside() {
+    const video = document.getElementById('home-inside-video');
+    const toggle = document.getElementById('home-inside-toggle');
+    if (!video || !toggle || !('IntersectionObserver' in window)) return;
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduceMotion) return; // the poster stays as a still
+    let userPaused = false;
+    const sync = () => {
+        toggle.classList.toggle('is-paused', video.paused);
+        toggle.setAttribute('aria-label', video.paused ? 'Play video' : 'Pause video');
+    };
+    const play = () => { const p = video.play(); if (p && p.catch) p.catch(sync); };
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    toggle.addEventListener('click', () => {
+        userPaused = !video.paused;
+        if (video.paused) play(); else video.pause();
+    });
+    toggle.hidden = false;
+    sync();
+    new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+            if (video.preload === 'none') { video.preload = 'auto'; video.load(); }
+            if (!userPaused) play();
+        } else if (!video.paused) {
+            video.pause();
+        }
+    }, { rootMargin: '200px 0px', threshold: 0.25 }).observe(video);
+}
+
 function renderHomeConfigurator() {
     const colors = getProductBodyColors(PRODUCTS_DATA.find(p => p.slug === HOME_PREVIEW_SLUG))
         .filter(c => HOME_PREVIEW_COLORS.includes(c.name));
@@ -2290,6 +2359,7 @@ function renderHomePage() {
         ${renderHomeRange()}
         ${renderHomeUses()}
         ${renderHomeConfigurator()}
+        ${renderHomeInside()}
         ${renderHomeBatteryCompare()}
         ${renderHomeTrust()}
         ${renderHomeQuote()}
@@ -2327,6 +2397,7 @@ function initHomePage() {
     if (!reduceMotion) play();
     initLogoGrid();
     initBranchMap();
+    initHomeInside();
 }
 
 function renderNotFoundPage() {
