@@ -1766,26 +1766,24 @@ function renderHomeInside() {
     ].filter(([, v]) => isMeaningful(v));
     return `
         <section class="rise home-inside" aria-labelledby="home-inside-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32">
-                <div class="grid lg:grid-cols-12 gap-8 lg:gap-12 items-end mb-10 lg:mb-14">
-                    <h2 id="home-inside-title" class="type-xl text-paper lg:col-span-7">What's under the seat.</h2>
-                    <p class="measure text-[#B9BAB3] lg:col-span-5">The battery, the drive and the frame decide how far a cart goes, how it climbs and how long it lasts. Here is the Tempo 2, taken apart.</p>
-                </div>
-                <div class="home-inside-frame">
-                    <video id="home-inside-video" class="home-inside-media" muted playsinline loop preload="none" poster="image/Hero/vid1-poster.jpg" aria-label="Animation: a Tempo 2 opens to show its suspension, lithium battery and motor, then reassembles">
-                        <source src="video/vid1.mp4" type="video/mp4">
-                    </video>
-                    <button type="button" id="home-inside-toggle" class="home-hero-toggle" aria-label="Pause video" hidden>
-                        <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
-                        <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
-                    </button>
-                </div>
-                <div class="mt-10 grid sm:grid-cols-12 gap-8 items-end">
-                    <dl class="sm:col-span-9 grid grid-cols-1 sm:grid-cols-3 gap-6 border-t border-white/15 pt-6">
-                        ${facts.map(([k, v]) => `<div><dt class="text-sm text-[#B9BAB3]">${k}</dt><dd class="type-md text-paper mt-2">${v}</dd></div>`).join('')}
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+                <div class="lg:col-span-5 space-y-8">
+                    <h2 id="home-inside-title" class="type-xl text-ink">What's under the seat.</h2>
+                    <p class="measure">The battery, the drive and the frame decide how far a cart goes, how it climbs and how long it lasts. Here is the Tempo 2, taken apart.</p>
+                    <dl class="border-t border-line">
+                        ${facts.map(([k, v]) => `<div class="grid grid-cols-[7rem_1fr] gap-4 py-3 border-b border-line"><dt class="text-sm text-mute pt-1">${k}</dt><dd class="text-lg text-ink">${v}</dd></div>`).join('')}
                     </dl>
-                    <div class="sm:col-span-3 sm:text-right">
-                        <a href="${routeHref('product-details', tempo.slug)}" data-route="product-details" data-slug="${tempo.slug}" class="btn btn-on-dark">See the Tempo 2</a>
+                    <a href="${routeHref('product-details', tempo.slug)}" data-route="product-details" data-slug="${tempo.slug}" class="btn btn-outline">See the Tempo 2</a>
+                </div>
+                <div class="lg:col-span-7">
+                    <div class="home-inside-frame">
+                        <video id="home-inside-video" class="home-inside-media" muted playsinline loop preload="none" poster="image/Hero/vid1-poster.jpg" aria-label="Animation: a Tempo 2 opens to show its suspension, lithium battery and motor, then reassembles">
+                            <source src="video/vid1.mp4" type="video/mp4">
+                        </video>
+                        <button type="button" id="home-inside-toggle" class="home-hero-toggle" aria-label="Pause video" hidden>
+                            <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                            <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>

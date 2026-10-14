@@ -832,14 +832,14 @@
 
     /* ---- "What's under the seat" video band (renderHomeInside / initHomeInside in app.js) ---- */
     .home-inside {
-        background: var(--ink);
+        background: var(--paper);
+        border-top: 1px solid var(--line);
     }
     .home-inside-frame {
         position: relative;
         aspect-ratio: 16 / 9;
         overflow: hidden;
-        background: #0B100E;
-        border: 1px solid rgba(246, 246, 242, 0.12);
+        background: #0B100E; /* the footage's own dark set, shown while the video loads */
     }
     .home-inside-media {
         display: block;
