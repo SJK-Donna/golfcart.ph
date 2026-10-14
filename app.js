@@ -986,8 +986,6 @@ let homePreviewColor = 'White';
 let pendingBodyColor = null;
 let homePreviewToken = 0;
 
-// The hero video (vid2) fades to a white logo card from about 6.7s; the hero loops only the footage before it
-const HERO_LOOP_END = 6.4;
 
 // lat / lon from OpenStreetMap: Manila and Clark match the building; Cebu (Casuntingan) and Laguna
 // (Pulong Santa Cruz) match the neighbourhood, so the site shows them to 2 decimals (about 1 km)
@@ -1733,45 +1731,41 @@ let homeBanners = null;
 function renderHomeBanners() {
     const total = HOME_BANNERS.length;
     return `
-        <section class="rise home-section pt-0" aria-roledescription="carousel" aria-labelledby="home-banners-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
-                <div class="flex items-end justify-between gap-6 mb-6">
-                    <h2 id="home-banners-title" class="type-lg text-ink">What's on.</h2>
-                    <div class="flex items-center gap-2">
-                        <button type="button" class="banner-control" data-banner="prev" aria-label="Previous banner">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
-                        </button>
-                        <button type="button" class="banner-control" data-banner="toggle" aria-label="Pause banners" hidden>
-                            <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
-                            <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
-                        </button>
-                        <button type="button" class="banner-control" data-banner="next" aria-label="Next banner">
-                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
-                        </button>
+        <section class="home-banners" aria-roledescription="carousel" aria-label="Golfcarts.ph highlights">
+            <h1 class="sr-only">Golfcarts.ph: low-speed electric vehicles for private roads</h1>
+            <div id="home-banners" class="banner-stage">
+                ${HOME_BANNERS.map((b, i) => `
+                    <div class="banner-slide ${i === 0 ? 'is-active' : ''}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" ${i === 0 ? '' : 'aria-hidden="true" inert'}>
+                        <img src="${b.image}" alt="${b.alt}" width="1920" height="1080" ${i === 0 ? 'fetchpriority="high"' : 'loading="lazy"'} decoding="async">
                     </div>
-                </div>
-
-                <div id="home-banners" class="banner-stage">
-                    ${HOME_BANNERS.map((b, i) => `
-                        <div class="banner-slide ${i === 0 ? 'is-active' : ''}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" ${i === 0 ? '' : 'aria-hidden="true" inert'}>
-                            <img src="${b.image}" alt="${b.alt}" width="1920" height="1080" loading="lazy" decoding="async">
-                        </div>
-                    `).join('')}
-                </div>
-
-                <div class="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                `).join('')}
+            </div>
+            <div class="banner-bar">
+                <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-4 flex flex-wrap items-center justify-between gap-4">
                     <div id="home-banner-ctas">
                         ${HOME_BANNERS.map((b, i) => `<a href="${routeHref(b.route, b.slug)}" data-route="${b.route}" ${b.slug ? `data-slug="${b.slug}"` : ''} class="btn btn-primary ${i === 0 ? '' : 'hidden'}" data-banner-cta="${i}">${b.cta}</a>`).join('')}
                     </div>
                     <div class="flex items-center gap-4">
-                        <p class="text-sm text-mute tabular-nums"><span id="home-banner-index">1</span> / ${total}</p>
+                        <p class="text-sm text-mute tabular-nums hidden sm:block"><span id="home-banner-index">1</span> / ${total}</p>
                         <div class="banner-progress" aria-hidden="true">
                             ${HOME_BANNERS.map((_, i) => `<button type="button" tabindex="-1" class="banner-dot ${i === 0 ? 'is-active' : ''}" data-banner-go="${i}"><span></span></button>`).join('')}
                         </div>
+                        <div class="flex items-center gap-2">
+                            <button type="button" class="banner-control" data-banner="prev" aria-label="Previous banner">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                            </button>
+                            <button type="button" class="banner-control" data-banner="toggle" aria-label="Pause banners" hidden>
+                                <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                                <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+                            </button>
+                            <button type="button" class="banner-control" data-banner="next" aria-label="Next banner">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                <p id="home-banner-status" class="sr-only" aria-live="polite"></p>
             </div>
+            <p id="home-banner-status" class="sr-only" aria-live="polite"></p>
         </section>
     `;
 }
@@ -2503,24 +2497,9 @@ function renderHomeFaq() {
 
 function renderHomePage() {
     return `
-        <section class="home-hero" aria-labelledby="home-hero-title">
-            <video id="home-hero-video" class="home-hero-media" muted playsinline preload="metadata" poster="image/Hero/hero-poster.jpg" aria-hidden="true" tabindex="-1">
-                <source src="video/vid2.mp4" type="video/mp4">
-            </video>
-            <div class="home-hero-scrim" aria-hidden="true"></div>
-            <div class="home-hero-copy max-w-site mx-auto px-5 sm:px-8 lg:px-12">
-                <h1 id="home-hero-title" class="type-hero text-on-band max-w-[11ch]">Built for private roads.</h1>
-                <p class="home-hero-sub measure">Golf carts, shuttles and utility vehicles for courses, resorts, villages and estates.</p>
-                <button type="button" onclick="buildYourCart()" class="btn btn-primary">Build your cart</button>
-            </div>
-            <button type="button" id="home-hero-toggle" class="home-hero-toggle" aria-label="Pause background video" hidden>
-                <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
-                <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
-            </button>
-        </section>
+        ${renderHomeBanners()}
 
         ${renderHomeRange()}
-        ${renderHomeBanners()}
         ${renderHomeUses()}
         ${renderHomeConfigurator()}
         ${renderHomeInside()}
@@ -2532,37 +2511,12 @@ function renderHomePage() {
     `;
 }
 
-// Starts the hero video (unless reduced motion is on) and wires its pause control
+// Starts the homepage's moving parts: banner slider (the hero), client logos, branch map and the video tour
 function initHomePage() {
-    const video = document.getElementById('home-hero-video');
-    const toggle = document.getElementById('home-hero-toggle');
-    if (!video || !toggle) return;
-    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const sync = () => {
-        toggle.classList.toggle('is-paused', video.paused);
-        toggle.setAttribute('aria-label', video.paused ? 'Play background video' : 'Pause background video');
-    };
-    const play = () => {
-        const p = video.play && video.play();
-        if (p && p.catch) p.catch(() => sync());
-    };
-    video.addEventListener('timeupdate', () => {
-        if (video.currentTime >= HERO_LOOP_END) {
-            video.currentTime = 0;
-            play();
-        }
-    });
-    video.addEventListener('ended', () => { video.currentTime = 0; play(); });
-    video.addEventListener('play', sync);
-    video.addEventListener('pause', sync);
-    toggle.addEventListener('click', () => (video.paused ? play() : video.pause()));
-    toggle.hidden = false;
-    sync();
-    if (!reduceMotion) play();
+    initHomeBanners();
     initLogoGrid();
     initBranchMap();
     initHomeInside();
-    initHomeBanners();
 }
 
 function renderNotFoundPage() {

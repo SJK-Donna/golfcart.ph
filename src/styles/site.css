@@ -410,46 +410,6 @@
             padding-bottom: 8rem;
         }
     }
-    .home-hero {
-        position: relative;
-        display: flex;
-        align-items: flex-end;
-        height: calc(100svh - 4rem);
-        min-height: 34rem;
-        max-height: 60rem;
-        overflow: hidden;
-        background: var(--band);
-    }
-    .home-hero-media {
-        position: absolute;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    /* Functional scrim: keeps the headline readable over the brightest frames */
-    .home-hero-scrim {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to top, rgba(21, 23, 20, 0.82) 0%, rgba(21, 23, 20, 0.45) 45%, rgba(21, 23, 20, 0.1) 75%);
-    }
-    .home-hero-copy {
-        position: relative;
-        width: 100%;
-        padding-bottom: 4rem;
-    }
-    .home-hero-copy > * + * {
-        margin-top: 1.5rem;
-    }
-    @media (min-width: 1024px) {
-        .home-hero-copy {
-            padding-bottom: 6rem;
-        }
-    }
-    .home-hero-sub {
-        font-size: 1.125rem;
-        color: rgba(246, 246, 242, 0.88);
-    }
     .home-hero-toggle {
         position: absolute;
         right: 1.25rem;
@@ -840,6 +800,16 @@
         aspect-ratio: 16 / 9;
         overflow: hidden;
         background: var(--stone);
+    }
+    /* As the homepage hero: full width, short enough that the control bar shows on a laptop screen.
+       The banners' own text sits well inside the frame, so the slight crop on tall screens is safe. */
+    .home-banners .banner-stage {
+        max-height: calc(100svh - 4rem - 4.5rem);
+        width: 100%;
+    }
+    .banner-bar {
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
     }
     .banner-slide {
         position: absolute;
