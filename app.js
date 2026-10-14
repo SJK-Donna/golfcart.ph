@@ -971,13 +971,13 @@ function buildYourCart() {
 
 // The range as one group photo: the four families standing together, largest to smallest, each sized by
 // its real height (about 2.4 m, 2.0 m, 1.9 m and 1.8 m) on one ground line. Photos are the product
-// cut-outs trimmed to the cart (image/lineup/). Positions are percentages of a 3.5 : 1 stage; each cart
+// cut-outs trimmed to the cart (image/lineup/). Positions are percentages of a 3.57 : 1 stage; each cart
 // overlaps the next slightly, and later carts sit in front, so every cart's front stays visible.
 const HOME_LINEUP = [
-    { name: 'Minibus', seats: '14 and 21 seats', image: 'image/lineup/minibus.png', slug: 'minibus-14', left: 1.14, width: 33.4, height: 82 },
-    { name: 'Villager', seats: '6 to 8 seats', image: 'image/lineup/villager.png', slug: 'villager-8', left: 31.69, width: 29.6, height: 68 },
-    { name: 'Carryall', seats: '2 seats and a cargo bed', image: 'image/lineup/carryall.png', slug: 'carryall-500', left: 58.43, width: 25.7, height: 65 },
-    { name: 'Tempo', seats: '2 to 6 seats', image: 'image/lineup/tempo.png', slug: 'golfer-tempo-2', left: 81.29, width: 17.6, height: 61 }
+    { name: 'Minibus', seats: '14 and 21 seats', image: 'image/lineup/minibus.png', slug: 'minibus-14', left: 1.12, width: 34.76, height: 82 },
+    { name: 'Villager', seats: '6 to 8 seats', image: 'image/lineup/villager.png', slug: 'villager-8', left: 33.08, width: 29, height: 68 },
+    { name: 'Carryall', seats: '2 seats and a cargo bed', image: 'image/lineup/carryall.png', slug: 'carryall-500', left: 59.28, width: 25.18, height: 65 },
+    { name: 'Tempo', seats: '2 to 6 seats', image: 'image/lineup/tempo.png', slug: 'golfer-tempo-2', left: 81.67, width: 17.21, height: 61 }
 ];
 
 // Shop by use. Golfer leads with the largest photo; Remanufactured is a text-led strip (see renderHomeUses)

@@ -796,10 +796,10 @@
     }
 
     /* ---- Model family line-up: one group photo of the four families (HOME_LINEUP in app.js).
-            Each cart is placed by --left / --width / --height (percent of the 3.5 : 1 stage). ---- */
+            Each cart is placed by --left / --width / --height (percent of the 3.57 : 1 stage). ---- */
     .lineup {
         position: relative;
-        aspect-ratio: 3.5 / 1;
+        aspect-ratio: 3.57 / 1;
         margin-top: 4.5rem; /* room for the name above the tallest cart */
     }
     /* The showroom floor the carts stand on */
