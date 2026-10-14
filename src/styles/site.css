@@ -1010,6 +1010,41 @@
         text-underline-offset: 0.3em;
     }
 
+    /* ---- Edge light: on hover, a green light runs along the element's edge following the mouse.
+            The page sets --mx / --my (pointer position inside the element) from app.js. ---- */
+    .edge-light {
+        position: relative;
+    }
+    .edge-light::before,
+    .edge-light::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.35s var(--ease);
+    }
+    /* Faint glare inside */
+    .edge-light::before {
+        z-index: 1;
+        background: radial-gradient(360px circle at var(--mx, -500px) var(--my, -500px), rgba(116, 158, 53, 0.09), transparent 75%);
+    }
+    /* The light on the edge: a 2px ring cut out of a glow centred on the pointer */
+    .edge-light::after {
+        z-index: 3;
+        padding: 2px;
+        background: radial-gradient(220px circle at var(--mx, -500px) var(--my, -500px), #A2E048 0%, var(--green) 45%, transparent 80%);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask: linear-gradient(#fff 0 0) content-box exclude, linear-gradient(#fff 0 0);
+    }
+    @media (hover: hover) {
+        .edge-light:hover::before,
+        .edge-light:hover::after {
+            opacity: 1;
+        }
+    }
+
     /* ---- Media ---- */
     .media-zoom {
         overflow: hidden;

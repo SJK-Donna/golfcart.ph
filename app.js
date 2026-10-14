@@ -1196,6 +1196,17 @@ function applyPageMeta(page, slug) {
     if (desc) desc.setAttribute('content', meta.description);
 }
 
+// Edge light: elements with .edge-light get a green light on their border that follows the mouse
+// (positions come from --mx / --my; the look is in site.css). Mouse only: touch has no hover.
+document.addEventListener('pointermove', e => {
+    if (e.pointerType !== 'mouse') return;
+    const el = e.target.closest && e.target.closest('.edge-light');
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    el.style.setProperty('--my', `${e.clientY - r.top}px`);
+}, { passive: true });
+
 // Real links: <a href="..." data-route="page" data-slug="..."> navigate in place (new tab / modifier clicks still work)
 document.addEventListener('click', e => {
     const a = e.target.closest('a[data-route]');
@@ -1704,7 +1715,7 @@ function renderHomeUseTile(id, sizeClass, imageClass) {
     const use = HOME_USES[id];
     return `
         <a href="${routeHref('segment', id)}" data-route="segment" data-slug="${id}" class="group block ${sizeClass}">
-            <div class="media-zoom ${imageClass}">
+            <div class="media-zoom edge-light ${imageClass}">
                 <img src="${use.image}" alt="${use.alt}" width="${use.width}" height="${use.height}" loading="lazy" decoding="async" class="w-full h-full object-cover">
             </div>
             <div class="pt-5 space-y-2">
@@ -2086,7 +2097,7 @@ function renderBranchMap(sectionId = 'home-branches') {
 
                     <ol class="branch-list lg:col-span-4" aria-label="Branches">
                         ${BRANCHES.map((b, i) => `
-                            <li class="branch-item" data-branch="${i}">
+                            <li class="branch-item edge-light" data-branch="${i}">
                                 <button type="button" class="branch-item-select" data-branch="${i}" aria-pressed="false" aria-controls="branch-map">
                                     <span class="flex items-baseline justify-between gap-4">
                                         <span class="type-md text-ink">${b.name.replace(' Branch', '')}</span>
@@ -3036,7 +3047,7 @@ function renderModelTile(p, { eager = false } = {}) {
     const isVehicle = p.category !== 'Accessories';
     return `
         <a href="${routeHref('product-details', p.slug)}" data-route="product-details" data-slug="${p.slug}" class="group block h-full">
-            <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
+            <div class="media-zoom edge-light bg-stone aspect-[4/3] flex items-center justify-center p-6 lg:p-10">
                 <img src="${p.image}" alt="${p.name}${isVehicle ? `, ${categoryLabel(p.category)}` : ''}" loading="${eager ? 'eager' : 'lazy'}" decoding="async" class="max-h-full w-auto object-contain mix-blend-multiply">
             </div>
             <div class="pt-5 pb-2 pr-4">
@@ -3084,7 +3095,7 @@ function renderBuildSection(product, buildSet, packageKeys) {
 
             <div class="grid grid-cols-1 md:grid-cols-${buildSet.builds.length} gap-4" role="radiogroup" aria-label="Build level">
                 ${buildSet.builds.map((b, i) => `
-                    <button type="button" role="radio" aria-checked="${i === 0}" onclick="selectBuildLevel('${b.id}')" data-build="${b.id}" class="build-card ${i === 0 ? 'build-card-active' : ''} text-left p-6 lg:p-8 flex flex-col gap-5">
+                    <button type="button" role="radio" aria-checked="${i === 0}" onclick="selectBuildLevel('${b.id}')" data-build="${b.id}" class="build-card edge-light ${i === 0 ? 'build-card-active' : ''} text-left p-6 lg:p-8 flex flex-col gap-5">
                         <span class="flex items-start justify-between gap-4">
                             <span>
                                 <span class="block type-md text-ink">${product.name} ${b.name}</span>
@@ -3109,7 +3120,7 @@ function renderBuildSection(product, buildSet, packageKeys) {
                             const pkg = BUILD_PACKAGES[key];
                             if (pkg.choices) {
                                 return `
-                                    <div class="build-package p-5 space-y-3">
+                                    <div class="build-package edge-light p-5 space-y-3">
                                         <p class="font-semibold text-ink">${pkg.name}</p>
                                         <div class="flex flex-wrap gap-2" role="group" aria-label="${pkg.name}">
                                             ${pkg.choices.map((c, i) => `<button type="button" onclick="selectBuildRims('${c}')" data-rims="${c}" aria-pressed="${i === 0}" class="detail-trim ${i === 0 ? 'detail-trim-active' : ''}">${c}</button>`).join('')}
@@ -3118,7 +3129,7 @@ function renderBuildSection(product, buildSet, packageKeys) {
                                     </div>`;
                             }
                             return `
-                                <button type="button" onclick="toggleBuildPackage('${key}')" data-package="${key}" aria-pressed="false" class="build-package text-left p-5 space-y-2">
+                                <button type="button" onclick="toggleBuildPackage('${key}')" data-package="${key}" aria-pressed="false" class="build-package edge-light text-left p-5 space-y-2">
                                     <span class="flex items-center justify-between gap-3">
                                         <span class="font-semibold text-ink">${pkg.name}</span>
                                         <span class="build-package-toggle text-sm font-medium text-green-text">Add</span>
@@ -3433,7 +3444,7 @@ function renderSegmentModelCard(segmentId, subId, modelKey) {
 
     return `
         <div id="${modelAnchorId(segmentId, subId, modelKey)}" class="flex flex-col scroll-mt-40">
-            <div class="${product ? 'media-zoom' : ''} relative overflow-hidden bg-stone aspect-[4/3] flex items-center justify-center p-6">
+            <div class="${product ? 'media-zoom edge-light' : ''} relative overflow-hidden bg-stone aspect-[4/3] flex items-center justify-center p-6">
                 ${model.image
                     ? `<img src="${model.image}" alt="${model.name}" loading="lazy" decoding="async" class="max-h-full w-auto object-contain">`
                     : '<span class="text-sm text-ink-2">Photo to follow</span>'}
@@ -3703,7 +3714,7 @@ function renderBlogsPage() {
                 ${posts.map(post => `
                     <li>
                         <a href="${routeHref('blog-details', post.slug)}" data-route="blog-details" data-slug="${post.slug}" class="group block">
-                            <div class="media-zoom bg-stone aspect-[4/3] flex items-center justify-center p-6">
+                            <div class="media-zoom edge-light bg-stone aspect-[4/3] flex items-center justify-center p-6">
                                 <img src="${post.image}" alt="" loading="lazy" decoding="async" class="max-h-full w-auto object-contain">
                             </div>
                             <p class="text-sm text-mute mt-5">${post.category} · <time datetime="${post.date}">${formatBlogDate(post.date)}</time></p>
