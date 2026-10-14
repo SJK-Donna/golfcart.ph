@@ -7,7 +7,8 @@
 //      before any JavaScript loads. In the browser, app.js re-renders in place and the configurator runs.
 //
 // Environment:
-//   SITE_ORIGIN  origin for canonical / Open Graph URLs   (default http://localhost:8765)
+//   SITE_ORIGIN  origin for canonical / Open Graph URLs   (default: the hosting platform's public address
+//                when it sets one, else http://localhost:8765)
 //   SITE_BASE    path the site is served from              (default /; GitHub Pages uses /golfcarts.ph/)
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
@@ -20,7 +21,13 @@ import sharp from 'sharp';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const dist = path.join(root, 'dist');
-const origin = (process.env.SITE_ORIGIN || 'http://localhost:8765').replace(/\/$/, '');
+// Hosting platforms announce their public address; SITE_ORIGIN, when set, wins
+const platformOrigin =
+    (process.env.RAILWAY_PUBLIC_DOMAIN && `https://${process.env.RAILWAY_PUBLIC_DOMAIN}`) ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL && `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`) ||
+    process.env.URL ||                 // Netlify
+    process.env.RENDER_EXTERNAL_URL;   // Render
+const origin = (process.env.SITE_ORIGIN || platformOrigin || 'http://localhost:8765').replace(/\/$/, '');
 const base = ('/' + (process.env.SITE_BASE || '/').replace(/^\/|\/$/g, '') + '/').replace('//', '/');
 const siteUrl = origin + base;
 

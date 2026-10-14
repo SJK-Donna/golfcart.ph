@@ -4,14 +4,18 @@
   "description": "Golfcarts.ph website: static build with pre-rendered pages",
   "scripts": {
     "build": "node scripts/build.mjs",
-    "dev": "node scripts/build.mjs && npx --yes http-server dist -p 8765 -c-1",
+    "start": "node scripts/serve.mjs",
+    "dev": "node scripts/build.mjs && node scripts/serve.mjs",
     "css:watch": "tailwindcss -i src/styles/site.css -o css/site.css --watch"
   },
-  "devDependencies": {
+  "dependencies": {
     "@fontsource-variable/instrument-sans": "^5.3.0",
     "@fontsource-variable/newsreader": "^5.3.0",
     "jsdom": "^24.1.3",
     "sharp": "^0.34.5",
     "tailwindcss": "^3.4.19"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

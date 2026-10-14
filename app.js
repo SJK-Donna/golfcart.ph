@@ -2048,8 +2048,8 @@ function renderBranchMap(sectionId = 'home-branches') {
         <section id="${sectionId}" class="branch-map-section scroll-mt-16" aria-labelledby="${sectionId}-title">
             <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 lg:mb-14">
-                    <h2 id="${sectionId}-title" class="type-xl text-paper">Four branches.</h2>
-                    <p class="measure text-[#B9BAB3]">Showrooms and service in Manila, Cebu, Laguna and Clark. Choose a branch to find it on the map.</p>
+                    <h2 id="${sectionId}-title" class="type-xl text-ink">Four branches.</h2>
+                    <p class="measure">Showrooms and service in Manila, Cebu, Laguna and Clark. Choose a branch to find it on the map.</p>
                 </div>
                 <div class="grid lg:grid-cols-12 gap-6 lg:gap-8">
                     <div id="branch-map" class="branch-map lg:col-span-8">
@@ -2057,7 +2057,7 @@ function renderBranchMap(sectionId = 'home-branches') {
                              role="img" aria-label="Map of the Philippines showing the four Golfcarts.ph branches">
                             <defs>
                                 <pattern id="branch-map-dots" width="6" height="6" patternUnits="userSpaceOnUse">
-                                    <circle cx="3" cy="3" r="1.1" fill="#4A4D45"></circle>
+                                    <circle cx="3" cy="3" r="1.1" fill="#A3A59C"></circle>
                                 </pattern>
                             </defs>
                             <g id="branch-map-land"></g>
@@ -2089,15 +2089,15 @@ function renderBranchMap(sectionId = 'home-branches') {
                             <li class="branch-item" data-branch="${i}">
                                 <button type="button" class="branch-item-select" data-branch="${i}" aria-pressed="false" aria-controls="branch-map">
                                     <span class="flex items-baseline justify-between gap-4">
-                                        <span class="type-md text-paper">${b.name.replace(' Branch', '')}</span>
+                                        <span class="type-md text-ink">${b.name.replace(' Branch', '')}</span>
                                         <span class="branch-coords">${formatLatLon(b.lat, b.lon)}</span>
                                     </span>
-                                    <span class="block text-sm text-[#B9BAB3] mt-2">${b.address}</span>
+                                    <span class="block text-sm text-ink-2 mt-2">${b.address}</span>
                                 </button>
                                 <p class="flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm mt-3">
                                     ${b.phones.length
-                                        ? b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="text-paper hover:underline underline-offset-4">${ph}</a>`).join('')
-                                        : `<a href="${routeHref('contact')}" data-route="contact" class="text-paper hover:underline underline-offset-4">Contact us</a>`}
+                                        ? b.phones.map(ph => `<a href="tel:${ph.replace(/[^\d+]/g, '')}" class="text-ink hover:underline underline-offset-4">${ph}</a>`).join('')
+                                        : `<a href="${routeHref('contact')}" data-route="contact" class="text-ink hover:underline underline-offset-4">Contact us</a>`}
                                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(b.address)}" target="_blank" rel="noopener" class="branch-directions">Get directions<span class="sr-only"> to the ${b.name} (opens Google Maps)</span></a>
                                 </p>
                             </li>
