@@ -400,14 +400,15 @@
     }
 
     /* ---- Homepage ---- */
+    /* Section rhythm: two neighbouring sections sit 96px apart on phones, 144px on desktop */
     .home-section {
-        padding-top: 6rem;
-        padding-bottom: 6rem;
+        padding-top: 3rem;
+        padding-bottom: 3rem;
     }
     @media (min-width: 1024px) {
         .home-section {
-            padding-top: 8rem;
-            padding-bottom: 8rem;
+            padding-top: 4.5rem;
+            padding-bottom: 4.5rem;
         }
     }
     .home-hero-toggle {
@@ -799,7 +800,7 @@
     .lineup {
         position: relative;
         aspect-ratio: 3.5 / 1;
-        margin-top: 6rem; /* room for the name above the tallest cart */
+        margin-top: 4.5rem; /* room for the name above the tallest cart */
     }
     /* The showroom floor the carts stand on */
     .lineup::before {

@@ -1942,7 +1942,7 @@ function renderHomeInside() {
     ].filter(([, v]) => isMeaningful(v));
     return `
         <section class="rise home-inside" aria-labelledby="home-inside-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-12 lg:py-[4.5rem] grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                 <div class="lg:col-span-5 space-y-8">
                     <h2 id="home-inside-title" class="type-xl text-ink">What's under the seat.</h2>
                     <p class="measure">The battery, the drive and the frame decide how far a cart goes, how it climbs and how long it lasts. Here is the Tempo 2, taken apart.</p>
@@ -2300,7 +2300,7 @@ function renderBranchMap(sectionId = 'home-branches') {
     const hub = pts[BRANCH_MAP.hub];
     return `
         <section id="${sectionId}" class="branch-map-section scroll-mt-16" aria-labelledby="${sectionId}-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-12 lg:py-[4.5rem]">
                 <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 lg:mb-14">
                     <h2 id="${sectionId}-title" class="type-xl text-ink">Four branches.</h2>
                     <p class="measure">Showrooms and service in Manila, Cebu, Laguna and Clark. Choose a branch to find it on the map.</p>
@@ -2591,7 +2591,7 @@ function renderProductsPage() {
             </div>
         ` : ''}
 
-        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-12 pb-24 lg:pb-32">
+        <section class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 pt-12 pb-12 lg:pb-[4.5rem]">
             <ul id="product-grid-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-14">
                 ${renderProductGridItems(filtered)}
             </ul>
@@ -3615,7 +3615,7 @@ function renderProductDetailsPage() {
         </section>
 
         <section class="rise bg-band text-on-band">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-8 items-end">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-12 lg:py-[4.5rem] grid lg:grid-cols-12 gap-8 items-end">
                 <h2 class="type-xl lg:col-span-7">Make it yours.</h2>
                 <div class="lg:col-span-5 space-y-6">
                     <p class="text-on-band-mute measure">Pricing, lead times and customization for the ${product.name}, from your nearest branch.</p>
@@ -3733,7 +3733,7 @@ function renderSegmentPage() {
 
         ${segment.id === 'lifestyle' ? `
             <section id="lifestyle-lifted" class="bg-stone scroll-mt-20">
-                <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+                <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-12 lg:py-[4.5rem] grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
                     <div class="lg:col-span-5 space-y-6">
                         <p class="text-sm text-ink-2">Lifted package</p>
                         <h2 class="type-xl text-ink">Ready for rougher ground.</h2>
@@ -4014,7 +4014,7 @@ function renderAboutPage() {
             </ul>
         </section>
 
-        <section class="home-section bg-stone mt-24 lg:mt-32" aria-labelledby="about-voices-title">
+        <section class="home-section bg-stone mt-12 lg:mt-[4.5rem]" aria-labelledby="about-voices-title">
             <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
                 <h2 id="about-voices-title" class="type-lg text-ink mb-12">From our customers.</h2>
                 <div class="grid md:grid-cols-2 gap-x-12 gap-y-12">
