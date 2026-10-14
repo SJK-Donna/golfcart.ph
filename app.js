@@ -1207,6 +1207,30 @@ document.addEventListener('pointermove', e => {
     el.style.setProperty('--my', `${e.clientY - r.top}px`);
 }, { passive: true });
 
+// Light / dark mode. Light is the default; the choice is kept in this browser (localStorage) and applied
+// before first paint by a small script in index.html. The toggle buttons sit in the header.
+function currentTheme() {
+    return document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
+}
+
+function setTheme(theme) {
+    if (theme === 'dark') document.documentElement.dataset.theme = 'dark';
+    else delete document.documentElement.dataset.theme;
+    try { localStorage.setItem('theme', theme); } catch (e) { /* private mode: the choice lasts for this page only */ }
+    syncThemeToggles();
+}
+
+function syncThemeToggles() {
+    const dark = currentTheme() === 'dark';
+    document.querySelectorAll('.theme-toggle').forEach(btn => btn.setAttribute('aria-pressed', String(dark)));
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute('content', dark ? '#121411' : '#F6F6F2');
+}
+
+document.addEventListener('click', e => {
+    if (e.target.closest && e.target.closest('.theme-toggle')) setTheme(currentTheme() === 'dark' ? 'light' : 'dark');
+});
+
 // Real links: <a href="..." data-route="page" data-slug="..."> navigate in place (new tab / modifier clicks still work)
 document.addEventListener('click', e => {
     const a = e.target.closest('a[data-route]');
@@ -1231,6 +1255,7 @@ window.addEventListener('DOMContentLoaded', () => {
     currentSlug = route.slug;
     if (route.category) productFilterCategory = route.category;
 
+    syncThemeToggles();
     renderSegmentMenus();
     initMobileMenu();
     populateModalProductDropdown();
@@ -1755,7 +1780,7 @@ function renderHomeUses() {
 }
 
 // One Tempo 2 that repaints from a few swatches, leading into the full builder
-// "What's under the seat": the animated tour of a Tempo 2 (video/vid1.mp4), leading into the battery
+// "What's under the seat": the animated tour of a Tempo 2 (video/vid2.mp4), leading into the battery
 // comparison. The figures come from the Tempo 2's own data so they always match its model page.
 function renderHomeInside() {
     const tempo = PRODUCTS_DATA.find(p => p.slug === 'golfer-tempo-2');
@@ -1777,8 +1802,8 @@ function renderHomeInside() {
                 </div>
                 <div class="lg:col-span-7">
                     <div class="home-inside-frame">
-                        <video id="home-inside-video" class="home-inside-media" muted playsinline loop preload="none" poster="image/Hero/vid1-poster.jpg" aria-label="Animation: a Tempo 2 opens to show its suspension, lithium battery and motor, then reassembles">
-                            <source src="video/vid1.mp4" type="video/mp4">
+                        <video id="home-inside-video" class="home-inside-media" muted playsinline loop preload="none" poster="image/Hero/vid2-poster.jpg" aria-label="Animation: a Tempo 2 opens to show its suspension, lithium battery and motor, then reassembles">
+                            <source src="video/vid2.mp4" type="video/mp4">
                         </video>
                         <button type="button" id="home-inside-toggle" class="home-hero-toggle" aria-label="Pause video" hidden>
                             <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
@@ -2135,7 +2160,7 @@ function renderBranchMap(sectionId = 'home-branches') {
                              role="img" aria-label="Map of the Philippines showing the four Golfcarts.ph branches">
                             <defs>
                                 <pattern id="branch-map-dots" width="6" height="6" patternUnits="userSpaceOnUse">
-                                    <circle cx="3" cy="3" r="1.1" fill="#A3A59C"></circle>
+                                    <circle cx="3" cy="3" r="1.1"></circle>
                                 </pattern>
                             </defs>
                             <g id="branch-map-land"></g>
@@ -2344,7 +2369,7 @@ function renderHomePage() {
             </video>
             <div class="home-hero-scrim" aria-hidden="true"></div>
             <div class="home-hero-copy max-w-site mx-auto px-5 sm:px-8 lg:px-12">
-                <h1 id="home-hero-title" class="type-hero text-paper max-w-[11ch]">Built for private roads.</h1>
+                <h1 id="home-hero-title" class="type-hero text-on-band max-w-[11ch]">Built for private roads.</h1>
                 <p class="home-hero-sub measure">Golf carts, shuttles and utility vehicles for courses, resorts, villages and estates.</p>
                 <button type="button" onclick="buildYourCart()" class="btn btn-primary">Build your cart</button>
             </div>
@@ -3211,11 +3236,11 @@ function renderBuildSection(product, buildSet, packageKeys) {
                 </div>
             ` : ''}
 
-            <div class="mt-16 bg-ink text-paper p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+            <div class="mt-16 bg-band text-on-band p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
-                    <p class="text-sm text-[#B9BAB3]">Your build</p>
+                    <p class="text-sm text-on-band-mute">Your build</p>
                     <p id="build-summary-line" class="type-md mt-2" aria-live="polite"></p>
-                    <p class="text-sm text-[#B9BAB3] mt-3 measure">Choose colors next, then send it to us. We confirm inclusions, pricing and availability in the quote.</p>
+                    <p class="text-sm text-on-band-mute mt-3 measure">Choose colors next, then send it to us. We confirm inclusions, pricing and availability in the quote.</p>
                 </div>
                 <div class="flex flex-wrap gap-3 flex-shrink-0">
                     <button type="button" onclick="scrollToDetailSection('colors')" class="btn btn-primary">Choose colors</button>
@@ -3476,11 +3501,11 @@ function renderProductDetailsPage() {
             </div>
         </section>
 
-        <section class="rise bg-ink text-paper">
+        <section class="rise bg-band text-on-band">
             <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 py-24 lg:py-32 grid lg:grid-cols-12 gap-8 items-end">
                 <h2 class="type-xl lg:col-span-7">Make it yours.</h2>
                 <div class="lg:col-span-5 space-y-6">
-                    <p class="text-[#B9BAB3] measure">Pricing, lead times and customization for the ${product.name}, from your nearest branch.</p>
+                    <p class="text-on-band-mute measure">Pricing, lead times and customization for the ${product.name}, from your nearest branch.</p>
                     <div class="flex flex-wrap gap-3">
                         <button type="button" onclick="openQuoteModal('${safeName}')" class="btn btn-primary">Get a quote</button>
                         <button type="button" onclick="goToHomeSection('home-branches')" class="btn btn-on-dark">Find a branch</button>
@@ -3535,7 +3560,7 @@ function renderSegmentModelCard(segmentId, subId, modelKey) {
 // Business enquiry prompt (Guest Transportation, Fit-to-Task): leads to the fleet proposal form
 function renderEnquiryPrompt(text) {
     return `
-        <div class="bg-ink text-paper p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+        <div class="bg-band text-on-band p-6 sm:p-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
             <p class="type-md max-w-2xl">${text}</p>
             <a href="${routeHref('solutions')}" data-route="solutions" class="btn btn-primary flex-shrink-0">Request a fleet proposal</a>
         </div>`;

@@ -96,7 +96,7 @@
     }
     .btn-primary {
         background: var(--green);
-        color: var(--ink);
+        color: var(--on-green);
     }
     .btn-primary:hover {
         background: var(--ink);
@@ -113,11 +113,11 @@
     }
     .btn-on-dark {
         border: 1px solid rgba(246, 246, 242, 0.6);
-        color: var(--paper);
+        color: var(--on-band);
     }
     .btn-on-dark:hover {
-        background: var(--paper);
-        color: var(--ink);
+        background: var(--on-band);
+        color: var(--band);
     }
     .link {
         color: var(--ink);
@@ -165,6 +165,10 @@
     .header-icon:hover,
     .header-icon[aria-current='page'] {
         background: var(--stone);
+    }
+    /* Narrower laptops: a little less space between menu items so the header stays on one line */
+    @media (max-width: 1439px) {
+        .header-nav-link { padding-left: 0.375rem; padding-right: 0.375rem; }
     }
     .nav-chevron {
         transition: transform 0.25s var(--ease);
@@ -291,22 +295,22 @@
     .site-footer {
         margin-top: 0;
         padding: 6rem 0 3rem;
-        background: var(--ink);
-        color: #B9BAB3; /* 9.3:1 on ink */
+        background: var(--band);
+        color: var(--on-band-mute);
         font-size: 0.9375rem;
     }
     .footer-head {
         margin-bottom: 1.25rem;
         font-size: 0.8125rem;
         font-weight: 500;
-        color: var(--paper);
+        color: var(--on-band);
     }
     .footer-link {
-        color: #B9BAB3;
+        color: var(--on-band-mute);
         transition: color 0.25s var(--ease);
     }
     .footer-link:hover {
-        color: var(--paper);
+        color: var(--on-band);
     }
     .footer-social {
         display: inline-flex;
@@ -316,12 +320,12 @@
         height: 2.5rem;
         border: 1px solid rgba(246, 246, 242, 0.25);
         border-radius: var(--radius);
-        color: var(--paper);
+        color: var(--on-band);
         transition: background-color 0.25s var(--ease), color 0.25s var(--ease);
     }
     .footer-social:hover {
-        background: var(--paper);
-        color: var(--ink);
+        background: var(--on-band);
+        color: var(--band);
     }
 
     .header-nav-link[aria-current='page'] {
@@ -381,7 +385,7 @@
         min-height: 3rem;
         padding: 0.75rem 0.875rem;
         background: var(--paper);
-        border: 1px solid #8A8B83; /* 3.2:1 against paper; form control borders need 3:1 */
+        border: 1px solid var(--field-border);
         border-radius: var(--radius);
         color: var(--ink);
         font-size: 1rem;
@@ -414,7 +418,7 @@
         min-height: 34rem;
         max-height: 60rem;
         overflow: hidden;
-        background: var(--ink);
+        background: var(--band);
     }
     .home-hero-media {
         position: absolute;
@@ -457,11 +461,11 @@
         height: 2.5rem;
         border: 1px solid rgba(246, 246, 242, 0.5);
         border-radius: var(--radius);
-        color: var(--paper);
+        color: var(--on-band);
     }
     .home-hero-toggle:hover {
-        background: var(--paper);
-        color: var(--ink);
+        background: var(--on-band);
+        color: var(--band);
     }
     .home-hero-toggle .icon-play,
     .home-hero-toggle.is-paused .icon-pause {
@@ -501,11 +505,11 @@
         height: 2.5rem;
         border-radius: 9999px; /* swatches are the one place circles are used */
         background: var(--swatch);
-        box-shadow: inset 0 0 0 1px rgba(21, 23, 20, 0.2);
+        box-shadow: inset 0 0 0 1px var(--swatch-ring);
         transition: box-shadow 0.25s var(--ease);
     }
     .home-swatch[aria-checked='true'] {
-        box-shadow: inset 0 0 0 1px rgba(21, 23, 20, 0.2), 0 0 0 3px var(--stone), 0 0 0 4.5px var(--ink);
+        box-shadow: inset 0 0 0 1px var(--swatch-ring), 0 0 0 3px var(--stone), 0 0 0 4.5px var(--ink);
     }
     .home-logos {
         display: grid;
@@ -719,11 +723,11 @@
         width: 2.5rem;
         height: 2.5rem;
         border-radius: 9999px; /* swatches are the one place circles are used */
-        box-shadow: inset 0 0 0 1px rgba(21, 23, 20, 0.2);
+        box-shadow: inset 0 0 0 1px var(--swatch-ring);
         transition: box-shadow 0.25s var(--ease);
     }
     .detail-swatch-active {
-        box-shadow: inset 0 0 0 1px rgba(21, 23, 20, 0.2), 0 0 0 3px var(--paper), 0 0 0 4.5px var(--ink);
+        box-shadow: inset 0 0 0 1px var(--swatch-ring), 0 0 0 3px var(--paper), 0 0 0 4.5px var(--ink);
     }
     .detail-trim {
         display: inline-flex;
@@ -751,7 +755,7 @@
         width: 1.125rem;
         height: 1.125rem;
         border-radius: 9999px;
-        box-shadow: inset 0 0 0 1px rgba(21, 23, 20, 0.2);
+        box-shadow: inset 0 0 0 1px var(--swatch-ring);
         flex-shrink: 0;
     }
     .seat-photo-panel {
@@ -874,9 +878,12 @@
     }
     .branch-map-land {
         fill: url(#branch-map-dots);
-        stroke: rgba(79, 110, 34, 0.55);
+        stroke: var(--map-coast);
         stroke-width: 1;
         vector-effect: non-scaling-stroke;
+    }
+    #branch-map-dots circle {
+        fill: var(--map-dot);
     }
     .branch-route {
         fill: none;
@@ -941,8 +948,8 @@
         inset: 0;
         pointer-events: none;
         background-image:
-            linear-gradient(rgba(21, 23, 20, 0.06) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(21, 23, 20, 0.06) 1px, transparent 1px);
+            linear-gradient(var(--map-grid) 1px, transparent 1px),
+            linear-gradient(90deg, var(--map-grid) 1px, transparent 1px);
         background-size: 48px 48px;
     }
     .branch-map-sweep {
@@ -1061,6 +1068,41 @@
         .edge-light:hover::after {
             opacity: 1;
         }
+    }
+
+    /* ---- Theme toggle (header): the moon shows in light mode, the sun in dark mode ---- */
+    .theme-toggle .icon-sun,
+    [data-theme='dark'] .theme-toggle .icon-moon {
+        display: none;
+    }
+    [data-theme='dark'] .theme-toggle .icon-sun {
+        display: block;
+    }
+
+    /* ---- Dark mode adjustments ---- */
+    /* Client logos have white backgrounds: inverted and screened they become light logos on dark */
+    [data-theme='dark'] .home-logos img,
+    [data-theme='dark'] .home-logo-float img {
+        filter: grayscale(1) invert(1);
+        mix-blend-mode: screen;
+    }
+    [data-theme='dark'] .home-logo-float {
+        mix-blend-mode: screen;
+    }
+    [data-theme='dark'] .home-logo-float[data-state='featured'] img,
+    [data-theme='dark'] .home-logo-float:hover img,
+    [data-theme='dark'] .home-logos li:hover img {
+        filter: grayscale(1) invert(1);
+        opacity: 1;
+    }
+    /* Photos blended into light tiles (white-background accessory shots) show as they are on dark */
+    [data-theme='dark'] .mix-blend-multiply {
+        mix-blend-mode: normal;
+    }
+    /* The dark-blue SJK logo turns light */
+    [data-theme='dark'] .logo-sjk {
+        filter: brightness(0) invert(1);
+        opacity: 0.85;
     }
 
     /* ---- Media ---- */

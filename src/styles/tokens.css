@@ -23,6 +23,44 @@
     --space-8: 32px; --space-12: 48px; --space-16: 64px; --space-24: 96px; --space-32: 128px; --space-40: 160px;
 
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* Surfaces that stay dark in both themes (footer, call-to-action bands, text on photos and video) */
+    --band: #151714;
+    --on-band: #F6F6F2;
+    --on-band-mute: #B9BAB3; /* 9.3:1 on band */
+    --on-green: #151714;     /* text on the green accent: 5.7:1 */
+
+    /* Details that change with the theme */
+    --field-border: #8A8B83; /* 3.2:1 on paper; form controls need 3:1 */
+    --swatch-ring: rgba(21, 23, 20, 0.2);
+    --map-dot: #A3A59C;
+    --map-grid: rgba(21, 23, 20, 0.06);
+    --map-coast: rgba(79, 110, 34, 0.55);
+
+    color-scheme: light;
+}
+
+/* Dark mode (the header toggle sets data-theme="dark" on <html>; light is the default).
+   Contrast on paper: ink 17:1, ink-2 11:1, mute 6.9:1, green-text 10:1; field borders 3.6:1. */
+:root[data-theme='dark'] {
+    --paper: #121411;
+    --stone: #1B1D19;
+    --line: #2F322C;
+    --mute: #9C9E95;
+    --ink-2: #C8CAC1;
+    --ink: #F1F1EC;
+    --green-text: #A3CC5E;
+
+    --band: #0B0C0A;
+    --on-band-mute: #A9AAA2;
+
+    --field-border: #6E7068;
+    --swatch-ring: rgba(246, 246, 242, 0.25);
+    --map-dot: #3F423B;
+    --map-grid: rgba(246, 246, 242, 0.05);
+    --map-coast: rgba(116, 158, 53, 0.5);
+
+    color-scheme: dark;
 }
 
 /* Self-hosted fonts (copied from @fontsource-variable at build time) */

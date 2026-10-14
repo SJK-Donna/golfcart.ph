@@ -14,7 +14,11 @@ module.exports = {
                 'ink-2': 'var(--ink-2)',
                 ink: 'var(--ink)',
                 green: 'var(--green)',
-                'green-text': 'var(--green-text)'
+                'green-text': 'var(--green-text)',
+                band: 'var(--band)',
+                'on-band': 'var(--on-band)',
+                'on-band-mute': 'var(--on-band-mute)',
+                'on-green': 'var(--on-green)'
             },
             fontFamily: {
                 sans: ['"Instrument Sans Variable"', 'system-ui', 'sans-serif'],
