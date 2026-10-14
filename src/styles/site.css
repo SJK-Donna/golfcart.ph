@@ -834,6 +834,87 @@
         height: 0.875rem;
     }
 
+    /* ---- Banner slider (renderHomeBanners / initHomeBanners in app.js) ---- */
+    .banner-stage {
+        position: relative;
+        aspect-ratio: 16 / 9;
+        overflow: hidden;
+        background: var(--stone);
+    }
+    .banner-slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity 0.9s var(--ease);
+    }
+    .banner-slide.is-active {
+        opacity: 1;
+    }
+    .banner-slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .banner-control {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        color: var(--ink);
+        transition: background-color 0.25s var(--ease), border-color 0.25s var(--ease);
+    }
+    .banner-control:hover {
+        background: var(--stone);
+        border-color: var(--ink-2);
+    }
+    .banner-control .icon-play,
+    .banner-control.is-paused .icon-pause {
+        display: none;
+    }
+    .banner-control.is-paused .icon-play {
+        display: block;
+    }
+    .banner-progress {
+        display: flex;
+        gap: 4px;
+    }
+    .banner-dot {
+        position: relative;
+        width: 2rem;
+        padding: 0.75rem 0;
+    }
+    .banner-dot::before,
+    .banner-dot span {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 50%;
+        height: 2px;
+        margin-top: -1px;
+    }
+    .banner-dot::before {
+        right: 0;
+        background: var(--line);
+    }
+    .banner-dot span {
+        width: 0;
+        background: var(--ink);
+    }
+    .banner-dot.is-active span {
+        width: 100%;
+    }
+    /* While the slider runs, the active segment fills over the interval (6 s, HOME_BANNER_MS) */
+    .is-running .banner-dot.is-active span {
+        animation: banner-fill 6s linear;
+    }
+    @keyframes banner-fill {
+        from { width: 0; }
+        to { width: 100%; }
+    }
+
     /* ---- "What's under the seat" video band (renderHomeInside / initHomeInside in app.js) ---- */
     .home-inside {
         background: var(--paper);
@@ -1133,6 +1214,9 @@
 @media (prefers-reduced-motion: reduce) {
     html {
         scroll-behavior: auto;
+    }
+    .banner-slide {
+        transition: none;
     }
     .branch-map-sweep {
         display: none;

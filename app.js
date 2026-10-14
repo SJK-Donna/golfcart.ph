@@ -986,8 +986,8 @@ let homePreviewColor = 'White';
 let pendingBodyColor = null;
 let homePreviewToken = 0;
 
-// The intro video ends on a white logo card at about 4.5s; the hero loops only the footage before it
-const HERO_LOOP_END = 4;
+// The hero video (vid2) fades to a white logo card from about 6.7s; the hero loops only the footage before it
+const HERO_LOOP_END = 6.4;
 
 // lat / lon from OpenStreetMap: Manila and Clark match the building; Cebu (Casuntingan) and Laguna
 // (Pulong Santa Cruz) match the neighbourhood, so the site shows them to 2 decimals (about 1 km)
@@ -1577,6 +1577,7 @@ function renderApp() {
     if (!viewport) return;
     stopLogoGrid();
     if (branchMap) { branchMap.stop(); branchMap = null; }
+    if (homeBanners) { homeBanners.stop(); homeBanners = null; }
 
     if (currentPage === 'home') {
         viewport.innerHTML = renderHomePage();
@@ -1716,6 +1717,145 @@ function renderHomeBatteryCompare() {
 function homeSpecLine(p) {
     const seats = (p.seating || '').replace(/\s*\(.*\)/, '').replace('Seats', 'seats').replace('Cargo Box', 'cargo bed');
     return [seats, p.range && p.range.replace(' per charge', ' range'), p.speed && p.speed.replace(' max', '')].filter(Boolean).join(' · ');
+}
+
+// Promotional banners (the original homepage slider). The text is part of each image, so `alt`
+// repeats it for screen readers; each banner has its own action under the slider.
+const HOME_BANNERS = [
+    { image: 'image/Hero/hero-1.jpg', alt: 'Fairway? Covered. Quiet, smooth, and ready to roll. Upgrade your ride with us!', cta: 'Explore The Golfer', route: 'segment', slug: 'golfer' },
+    { image: 'image/Hero/hero-2.webp', alt: 'End of Year Sale: 5% off', cta: 'Shop the sale', route: 'products', slug: null },
+    { image: 'image/Hero/hero-3.webp', alt: 'More than just golf carts. We keep you rolling. Message us to learn how we can help!', cta: 'Book a service', route: 'service', slug: null },
+    { image: 'image/Hero/hero-5.png', alt: 'One cart is great. A whole fleet? Even better. Outfit your golf course, resort, subdivision, or campus with carts that keep up all day.', cta: 'Request a fleet proposal', route: 'solutions', slug: null }
+];
+const HOME_BANNER_MS = 6000;
+let homeBanners = null;
+
+function renderHomeBanners() {
+    const total = HOME_BANNERS.length;
+    return `
+        <section class="rise home-section pt-0" aria-roledescription="carousel" aria-labelledby="home-banners-title">
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <div class="flex items-end justify-between gap-6 mb-6">
+                    <h2 id="home-banners-title" class="type-lg text-ink">What's on.</h2>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="banner-control" data-banner="prev" aria-label="Previous banner">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+                        </button>
+                        <button type="button" class="banner-control" data-banner="toggle" aria-label="Pause banners" hidden>
+                            <svg class="icon-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><rect x="6" y="5" width="4" height="14"/><rect x="14" y="5" width="4" height="14"/></svg>
+                            <svg class="icon-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5v14l12-7z"/></svg>
+                        </button>
+                        <button type="button" class="banner-control" data-banner="next" aria-label="Next banner">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.75" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="home-banners" class="banner-stage">
+                    ${HOME_BANNERS.map((b, i) => `
+                        <div class="banner-slide ${i === 0 ? 'is-active' : ''}" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${total}" ${i === 0 ? '' : 'aria-hidden="true" inert'}>
+                            <img src="${b.image}" alt="${b.alt}" width="1920" height="1080" loading="lazy" decoding="async">
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div id="home-banner-ctas">
+                        ${HOME_BANNERS.map((b, i) => `<a href="${routeHref(b.route, b.slug)}" data-route="${b.route}" ${b.slug ? `data-slug="${b.slug}"` : ''} class="btn btn-primary ${i === 0 ? '' : 'hidden'}" data-banner-cta="${i}">${b.cta}</a>`).join('')}
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <p class="text-sm text-mute tabular-nums"><span id="home-banner-index">1</span> / ${total}</p>
+                        <div class="banner-progress" aria-hidden="true">
+                            ${HOME_BANNERS.map((_, i) => `<button type="button" tabindex="-1" class="banner-dot ${i === 0 ? 'is-active' : ''}" data-banner-go="${i}"><span></span></button>`).join('')}
+                        </div>
+                    </div>
+                </div>
+                <p id="home-banner-status" class="sr-only" aria-live="polite"></p>
+            </div>
+        </section>
+    `;
+}
+
+// Crossfades between banners; advances every few seconds unless paused, hovered, focused, off screen,
+// or the visitor prefers reduced motion
+function initHomeBanners() {
+    if (homeBanners) homeBanners.stop();
+    homeBanners = null;
+    const stage = document.getElementById('home-banners');
+    if (!stage) return;
+    const section = stage.closest('section');
+    const slides = [...stage.querySelectorAll('.banner-slide')];
+    const ctas = [...document.querySelectorAll('[data-banner-cta]')];
+    const dots = [...section.querySelectorAll('.banner-dot')];
+    const toggle = section.querySelector('[data-banner="toggle"]');
+    const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const state = { index: 0, paused: reduceMotion, hovered: false, focused: false, onScreen: true, timer: 0 };
+
+    const show = (i, announce) => {
+        state.index = (i + slides.length) % slides.length;
+        slides.forEach((s, k) => {
+            const on = k === state.index;
+            s.classList.toggle('is-active', on);
+            if (on) { s.removeAttribute('aria-hidden'); s.inert = false; }
+            else { s.setAttribute('aria-hidden', 'true'); s.inert = true; }
+        });
+        ctas.forEach((a, k) => a.classList.toggle('hidden', k !== state.index));
+        dots.forEach((d, k) => d.classList.toggle('is-active', k === state.index));
+        document.getElementById('home-banner-index').textContent = state.index + 1;
+        if (announce) document.getElementById('home-banner-status').textContent = `Banner ${state.index + 1} of ${slides.length}`;
+        restart();
+    };
+    const running = () => !state.paused && !state.hovered && !state.focused && state.onScreen && !document.hidden;
+    // The progress bar of the active banner fills over the interval while the slider runs
+    const restart = () => {
+        clearTimeout(state.timer);
+        section.classList.toggle('is-running', running());
+        dots.forEach(d => { const bar = d.firstElementChild; bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; });
+        if (running()) state.timer = setTimeout(() => show(state.index + 1, false), HOME_BANNER_MS);
+    };
+    const setPaused = paused => {
+        state.paused = paused;
+        toggle.classList.toggle('is-paused', paused);
+        toggle.setAttribute('aria-label', paused ? 'Play banners' : 'Pause banners');
+        restart();
+    };
+
+    const onClick = e => {
+        const ctl = e.target.closest('[data-banner]');
+        if (ctl) {
+            const what = ctl.dataset.banner;
+            if (what === 'prev') show(state.index - 1, true);
+            if (what === 'next') show(state.index + 1, true);
+            if (what === 'toggle') setPaused(!state.paused);
+        }
+        const go = e.target.closest('[data-banner-go]');
+        if (go) show(+go.dataset.bannerGo, true);
+    };
+    const hover = on => () => { state.hovered = on; restart(); };
+    const focus = on => () => { state.focused = on && section.contains(document.activeElement); restart(); };
+    section.addEventListener('click', onClick);
+    stage.addEventListener('mouseenter', hover(true));
+    stage.addEventListener('mouseleave', hover(false));
+    section.addEventListener('focusin', focus(true));
+    section.addEventListener('focusout', () => setTimeout(focus(true), 0));
+    const onVisibility = () => restart();
+    document.addEventListener('visibilitychange', onVisibility);
+    const observer = 'IntersectionObserver' in window
+        ? new IntersectionObserver(([entry]) => { state.onScreen = entry.isIntersecting; restart(); }, { threshold: 0.3 })
+        : null;
+    if (observer) observer.observe(stage);
+
+    toggle.hidden = reduceMotion; // nothing moves by itself with reduced motion, so no pause control
+    setPaused(state.paused);
+
+    homeBanners = {
+        stop() {
+            clearTimeout(state.timer);
+            if (observer) observer.disconnect();
+            document.removeEventListener('visibilitychange', onVisibility);
+            section.removeEventListener('click', onClick);
+        }
+    };
 }
 
 function renderHomeRange() {
@@ -2365,7 +2505,7 @@ function renderHomePage() {
     return `
         <section class="home-hero" aria-labelledby="home-hero-title">
             <video id="home-hero-video" class="home-hero-media" muted playsinline preload="metadata" poster="image/Hero/hero-poster.jpg" aria-hidden="true" tabindex="-1">
-                <source src="video/intro_golfcartph.mp4" type="video/mp4">
+                <source src="video/vid2.mp4" type="video/mp4">
             </video>
             <div class="home-hero-scrim" aria-hidden="true"></div>
             <div class="home-hero-copy max-w-site mx-auto px-5 sm:px-8 lg:px-12">
@@ -2380,6 +2520,7 @@ function renderHomePage() {
         </section>
 
         ${renderHomeRange()}
+        ${renderHomeBanners()}
         ${renderHomeUses()}
         ${renderHomeConfigurator()}
         ${renderHomeInside()}
@@ -2421,6 +2562,7 @@ function initHomePage() {
     initLogoGrid();
     initBranchMap();
     initHomeInside();
+    initHomeBanners();
 }
 
 function renderNotFoundPage() {
