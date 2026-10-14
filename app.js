@@ -969,8 +969,16 @@ function buildYourCart() {
 // HOMEPAGE CONTENT
 // ==========================================
 
-// The range: one model per seating size, shown as studio cutouts with the model name set large
-const HOME_RANGE = ['golfer-tempo-2', 'golfer-tempo-2-2', 'lifestyle-tempo-4-2', 'villager-8', 'minibus-14', 'carryall-500'];
+// The range as one group photo: the four families standing together, largest to smallest, each sized by
+// its real height (about 2.4 m, 2.0 m, 1.9 m and 1.8 m) on one ground line. Photos are the product
+// cut-outs trimmed to the cart (image/lineup/). Positions are percentages of a 3.5 : 1 stage; each cart
+// overlaps the next slightly, and later carts sit in front, so every cart's front stays visible.
+const HOME_LINEUP = [
+    { name: 'Minibus', seats: '14 and 21 seats', image: 'image/lineup/minibus.png', slug: 'minibus-14', left: 1.14, width: 33.4, height: 82 },
+    { name: 'Villager', seats: '6 to 8 seats', image: 'image/lineup/villager.png', slug: 'villager-8', left: 31.69, width: 29.6, height: 68 },
+    { name: 'Carryall', seats: '2 seats and a cargo bed', image: 'image/lineup/carryall.png', slug: 'carryall-500', left: 58.43, width: 25.7, height: 65 },
+    { name: 'Tempo', seats: '2 to 6 seats', image: 'image/lineup/tempo.png', slug: 'golfer-tempo-2', left: 81.29, width: 17.6, height: 61 }
+];
 
 // Shop by use. Golfer leads with the largest photo; Remanufactured is a text-led strip (see renderHomeUses)
 const HOME_USES = {
@@ -1853,16 +1861,25 @@ function initHomeBanners() {
 }
 
 function renderHomeRange() {
-    const models = HOME_RANGE.map(slug => PRODUCTS_DATA.find(p => p.slug === slug)).filter(Boolean);
     return `
         <section class="rise home-section" aria-labelledby="home-range-title">
-            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12 flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10 lg:mb-14">
-                <h2 id="home-range-title" class="type-xl text-ink">Two seats. Four.<br>Fourteen.</h2>
-                <a href="${routeHref('products')}" data-route="products" class="link self-start md:self-auto">See every cart</a>
-            </div>
-            <div class="max-w-site mx-auto md:px-8 lg:px-12">
-                <ul class="home-range">
-                    ${models.map((p, i) => `<li class="home-range-item">${renderModelTile(p, { eager: i < 3 })}</li>`).join('')}
+            <div class="max-w-site mx-auto px-5 sm:px-8 lg:px-12">
+                <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-6 lg:mb-8">
+                    <h2 id="home-range-title" class="type-xl text-ink max-w-[13ch]">From two seats to fourteen.</h2>
+                    <a href="${routeHref('products')}" data-route="products" class="link self-start md:self-auto">See every cart</a>
+                </div>
+                <ul class="lineup" aria-label="Model families">
+                    ${HOME_LINEUP.map((c, i) => `
+                        <li class="lineup-item" style="--left:${c.left}%; --width:${c.width}%; --height:${c.height}%; z-index:${i + 1}">
+                            <a href="${routeHref('product-details', c.slug)}" data-route="product-details" data-slug="${c.slug}" class="lineup-cart">
+                                <img src="${c.image}" alt="">
+                                <span class="lineup-label">
+                                    <span class="lineup-name">${c.name}</span>
+                                    <span class="lineup-seats">${c.seats}</span>
+                                </span>
+                            </a>
+                        </li>
+                    `).join('')}
                 </ul>
             </div>
         </section>
