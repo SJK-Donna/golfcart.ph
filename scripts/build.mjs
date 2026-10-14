@@ -8,7 +8,7 @@
 //
 // Environment:
 //   SITE_ORIGIN  origin for canonical / Open Graph URLs   (default http://localhost:8765)
-//   SITE_BASE    path the site is served from              (default /; GitHub Pages uses /golfcart.ph/)
+//   SITE_BASE    path the site is served from              (default /; GitHub Pages uses /golfcarts.ph/)
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';

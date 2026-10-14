@@ -1117,7 +1117,7 @@ let productSearchQuery = '';
 // ==========================================
 // ROUTING: every page has a real URL
 // ==========================================
-// The site's base path comes from <base href>: "/" locally, "/golfcart.ph/" on GitHub Pages
+// The site's base path comes from <base href>: "/" locally, "/golfcarts.ph/" on GitHub Pages
 // (set by scripts/build.mjs). Paths below are relative to it.
 function siteBasePath() {
     const base = document.querySelector('base');

@@ -38,7 +38,7 @@ jobs:
         run: npm ci && npm run build
         env:
           SITE_ORIGIN: https://sjk-donna.github.io
-          SITE_BASE: /golfcart.ph/
+          SITE_BASE: /golfcarts.ph/
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
